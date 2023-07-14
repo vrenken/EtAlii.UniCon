@@ -1,0 +1,22 @@
+{
+  "name": "com.etalii.unicon",
+  "version": "1.0.0",
+  "license": "MIT",
+  "displayName": "UniCon",
+  "description": "Replacement of the Unity Console that is fully compatible with structured logging using Serilog. Also heavily influenced by the Seq Centralized Logging solution.",
+  "unity": "2021.3.24f1",
+  "author": {
+    "name": "Peter Vrenken",
+    "email": "unicon@vrenken.eu"
+  },
+  "keywords": [
+    "console",
+    "serilog",
+    "seq",
+    "structured logging",
+    "logging"
+  ],
+  "dependencies": {
+    "com.serilog.sinks.unity3d": "3.0.0"
+  }
+}
