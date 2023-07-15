@@ -1,10 +1,9 @@
-namespace EtAlii.UniCon
+namespace EtAlii.UniCon.Editor
 {
     using UnityEditor;
     using UnityEngine;
     using UnityEngine.UIElements;
-
-
+    
     public class ConsoleWindow : EditorWindow
     {
         [MenuItem("Window/General/Console (UniCon) %#C", false, 7)]
@@ -20,20 +19,24 @@ namespace EtAlii.UniCon
             var root = rootVisualElement;
 
             // VisualElements objects can contain other VisualElement following a tree hierarchy.
-            var label = new Label("Hello World! From C#");
-            root.Add(label);
+            // var label = new Label("Hello World! From C#");
+            // root.Add(label);
 
             // Import UXML
-            var visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/com.etalii.unicon/Editor/Window/ConsoleWindow.uxml");
-            var labelFromUXML = visualTree.Instantiate();
-            root.Add(labelFromUXML);
+            var visualTree = AssetDatabase
+                .LoadAssetAtPath<VisualTreeAsset>("Assets/com.etalii.unicon/Editor/Window/ConsoleWindow.uxml")
+                .Instantiate();
+            root.Add(visualTree);
 
+            // var splitView = root.Q<TwoPaneSplitView>("TwoPanelSplitView");
+            // splitView.fixedPaneInitialDimension = 400;
+            
             // A stylesheet can be added to a VisualElement.
             // The style will be applied to the VisualElement and all of its children.
             var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/com.etalii.unicon/Editor/Window/ConsoleWindow.uss");
-            var labelWithStyle = new Label("Hello World! With Style");
-            labelWithStyle.styleSheets.Add(styleSheet);
-            root.Add(labelWithStyle);
+            //var labelWithStyle = new Label("Hello World! With Style");
+            //labelWithStyle.styleSheets.Add(styleSheet);
+            //root.Add(labelWithStyle);
         }
     }    
 }

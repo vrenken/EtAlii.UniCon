@@ -1,0 +1,16 @@
+{
+    "name": "EtAlii.UniCon.Runtime",
+    "rootNamespace": "EtAlii.UniCon",
+    "autoReferenced": true,
+    "noEngineReferences": false,
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "precompiledReferences": [
+        "Serilog.dll"
+    ],
+    "defineConstraints": [],
+    "versionDefines": []
+}

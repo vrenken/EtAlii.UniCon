@@ -1,0 +1,20 @@
+{
+    "name": "EtAlii.UniCon.Editor",
+    "rootNamespace": "EtAlii.UniCon.Editor",
+    "autoReferenced": true,
+    "noEngineReferences": false,
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "references": [
+        "UnityEditor.UI",
+        "Serilog.Sinks.Unity3D",
+        "EtAlii.UniCon.Runtime"
+    ],
+    "includePlatforms": [ "Editor" ],
+    "excludePlatforms": [],
+    "precompiledReferences": [
+        "Serilog.dll"
+    ],
+    "defineConstraints": [],
+    "versionDefines": []
+}
