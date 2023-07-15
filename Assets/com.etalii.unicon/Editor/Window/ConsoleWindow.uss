@@ -1,5 +1,5 @@
-Label {
-    font-size: 20px;
-    -unity-font-style: bold;
-    color: rgb(68, 138, 255);
+.toolbar-button {
+    width: 75px;
+    border-left-width: 0;
+    -unity-text-align: middle-center;
 }

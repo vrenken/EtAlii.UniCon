@@ -17,11 +17,13 @@
 #endif
         private static void Load()
         {
-             new LoggerConfiguration()
+             _logger = new LoggerConfiguration()
                  .MinimumLevel.Information()
                  .WriteTo.Unity3D()
                  .WriteTo.UniCon()
                  .CreateLogger();
+             
+             _logger.Information("Serilog logging with UniCon console started");
          }
     }
 }
