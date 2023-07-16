@@ -33,8 +33,7 @@ namespace EtAlii.UniCon.Editor
             Debug.unityLogger.logHandler = this;
             
             _logger = Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Information()
-                //.WriteTo.Unity3D()
+                .MinimumLevel.Verbose()
                 .WriteTo.UniCon()
                 .CreateLogger();
             _logger.Information("Started Serilog logging");
