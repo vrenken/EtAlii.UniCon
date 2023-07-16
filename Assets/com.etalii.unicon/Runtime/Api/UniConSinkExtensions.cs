@@ -60,7 +60,8 @@ namespace Serilog.Sinks.UniCon
             if (sinkConfiguration == null) throw new ArgumentNullException(nameof(sinkConfiguration));
             if (formatter == null) throw new ArgumentNullException(nameof(formatter));
 
-            return sinkConfiguration.Sink(new UniConLogEventSink(formatter), restrictedToMinimumLevel, levelSwitch);
+            return sinkConfiguration.Sink(new UniConLogEventSink(), restrictedToMinimumLevel, levelSwitch);
+            // return sinkConfiguration.Sink(new UniConLogEventSink(formatter), restrictedToMinimumLevel, levelSwitch);
         }
     }
 }

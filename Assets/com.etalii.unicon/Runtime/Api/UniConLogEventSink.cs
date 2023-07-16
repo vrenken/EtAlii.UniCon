@@ -1,7 +1,7 @@
 ﻿#nullable enable
 using Serilog.Core;
 using Serilog.Events;
-using Serilog.Formatting;
+// using Serilog.Formatting;
 using EtAlii.UniCon;
 
 // ReSharper disable once CheckNamespace
@@ -10,12 +10,12 @@ namespace Serilog.Sinks.UniCon
 {
     public sealed class UniConLogEventSink : ILogEventSink
     {
-        private readonly ITextFormatter _formatter;
-
-        public UniConLogEventSink(ITextFormatter formatter)
-        {
-            _formatter = formatter;
-        }
+        // private readonly ITextFormatter _formatter;
+        //
+        // public UniConLogEventSink(ITextFormatter formatter)
+        // {
+        //     _formatter = formatter;
+        // }
 
         public void Emit(LogEvent logEvent)
         {

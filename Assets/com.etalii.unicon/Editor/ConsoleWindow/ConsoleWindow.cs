@@ -39,6 +39,6 @@ namespace EtAlii.UniCon.Editor
 
         // private void OnEnable() => _viewModel?.OnEnable();
 
-        public void Update() => _viewModel?.Update();
+        public void Update() => _viewModel.Update();
     }    
 }
