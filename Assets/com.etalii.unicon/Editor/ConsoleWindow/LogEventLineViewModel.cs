@@ -8,7 +8,7 @@ namespace EtAlii.UniCon.Editor
 
     public class LogEventLineViewModel : ScriptableObject
     {
-        // private LogEvent _logEvent;
+        public LogEvent LogEvent { get; private set; }
 
         // private const string DefaultDebugOutputTemplate = "[{Level:u3}] {Message:lj}{NewLine}{Exception}";
         private const string DefaultDebugOutputTemplate = "{Message:lj}";
@@ -21,7 +21,7 @@ namespace EtAlii.UniCon.Editor
 
         public void Init(LogEvent logEvent)
         {
-            // _logEvent = logEvent;
+            LogEvent = logEvent;
             timestamp = $"{logEvent.Timestamp:yyyy-MM-dd HH:mm:ss.fffffff}";
             level = logEvent.Level.ToString();
             using var buffer = new StringWriter();

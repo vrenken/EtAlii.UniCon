@@ -33,15 +33,20 @@
             _listView.itemsSource = _items;
             
             // Make
-            _listView.columns["timestamp"].makeCell = () => new Label();
-            _listView.columns["log-level"].makeCell = () => new Label();
-            _listView.columns["message"].makeCell = () => new Label();
+            _listView.columns["timestamp"].makeCell = () => new Label { style = { unityTextAlign = TextAnchor.MiddleLeft }};
+            _listView.columns["log-level"].makeCell = () => new Label { style = { unityTextAlign = TextAnchor.MiddleLeft }};
+            _listView.columns["message"].makeCell = () => new Label { enableRichText = true, style = { unityTextAlign = TextAnchor.MiddleLeft }};
             
             _listView.columns["timestamp"].bindCell = (e, i) => ((Label)e).text = _items[i].timestamp;
             _listView.columns["log-level"].bindCell = (e, i) => ((Label)e).text = _items[i].level;
-            _listView.columns["message"].bindCell = (e, i) => ((Label)e).text = _items[i].message;
+            _listView.columns["message"].bindCell = (e, i) => ((Label)e).text = BuildMessage(_items[i]);
         }
 
+        private string BuildMessage(LogEventLineViewModel viewModel)
+        {
+            return MarkerMessageTemplateRenderer.Render(viewModel.LogEvent.MessageTemplate, viewModel.LogEvent.Properties);
+        }
+        
         public void Bind(ConsoleViewModel viewModel)
         {
             _listView.Clear();
@@ -67,7 +72,6 @@
                     {
                         Add(item);
                     }
-                    // _listView.Rebuild();
                     break;
             }
         }
@@ -76,7 +80,7 @@
         {
             _items.Add(viewModel);
             _listView.RefreshItems();
-            _listView.ScrollToItem(_items.Count);
+            _listView.ScrollToItem(-1);
         }
         
         //
