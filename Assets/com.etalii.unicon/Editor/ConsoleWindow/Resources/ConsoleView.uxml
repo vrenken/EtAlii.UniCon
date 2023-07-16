@@ -1,18 +1,17 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
     <Style src="project://database/Assets/com.etalii.unicon/Editor/ConsoleWindow/ConsoleWindow.uss?fileID=7433441132597879392&amp;guid=36c5b64153226674f929bea9b08e60c3&amp;type=3#ConsoleWindow" />
     <uie:Toolbar>
-        <uie:ToolbarButton text="Clear" display-tooltip-when-elided="true" focusable="false" class="toolbar-button" style="width: 100px;" />
+        <uie:ToolbarButton text="Clear" display-tooltip-when-elided="true" focusable="false" class="toolbar-button" />
         <uie:ToolbarButton text="Pause" display-tooltip-when-elided="true" focusable="false" class="toolbar-button" style="width: 100px;" />
-        <uie:ToolbarButton text="Tail" display-tooltip-when-elided="true" focusable="false" class="toolbar-button" style="width: 100px;" />
         <uie:ToolbarSpacer style="width: 100%;" />
         <uie:ToolbarPopupSearchField focusable="false" />
     </uie:Toolbar>
     <ui:TwoPaneSplitView fixed-pane-initial-dimension="150" fixed-pane-index="1">
-        <ui:MultiColumnListView show-bound-collection-size="false" show-foldout-header="false" style="width: auto;">
+        <ui:MultiColumnListView show-bound-collection-size="false" show-foldout-header="false" style="width: auto; -unity-font: resource(&apos;Fonts/FiraCode-Regular&apos;); -unity-font-definition: initial;">
             <ui:Columns>
-                <ui:Column name="timestamp" title="Timestamp" width="200" />
-                <ui:Column name="log-level" width="100" />
-                <ui:Column name="message" title="Message" width="700" />
+                <ui:Column name="timestamp" title="Timestamp" width="100" />
+                <ui:Column name="log-level" width="50" />
+                <ui:Column name="message" title="Message" />
             </ui:Columns>
         </ui:MultiColumnListView>
         <ui:VisualElement style="flex-grow: 1; align-items: auto;">
