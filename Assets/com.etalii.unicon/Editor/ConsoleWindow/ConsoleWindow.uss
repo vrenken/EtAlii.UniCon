@@ -3,3 +3,13 @@
     border-left-width: 0;
     -unity-text-align: middle-center;
 }
+
+.unity-foldout {
+}
+
+.unity-foldout--depth-0 {
+}
+
+.unity-radio-button #unity-checkmark {
+    background-image: none;
+}

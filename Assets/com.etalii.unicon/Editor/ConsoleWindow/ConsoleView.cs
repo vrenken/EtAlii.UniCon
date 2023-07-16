@@ -7,7 +7,7 @@
 
     public class ConsoleView : VisualElement
     {
-        private readonly MultiColumnListView _listView;
+        private readonly ListView _listView;
 
         private readonly List<LogEventLineViewModel> _items = new ();
         
@@ -29,22 +29,11 @@
             var visualTree = Resources.Load<VisualTreeAsset>(nameof(ConsoleView));
             visualTree.CloneTree(this);
             
-            _listView = this.Q<MultiColumnListView>();
+            _listView = this.Q<ListView>();
             _listView.itemsSource = _items;
             
-            // Make
-            _listView.columns["timestamp"].makeCell = () => new Label { style = { unityTextAlign = TextAnchor.MiddleLeft }};
-            _listView.columns["log-level"].makeCell = () => new Label { style = { unityTextAlign = TextAnchor.MiddleLeft }};
-            _listView.columns["message"].makeCell = () => new Label { enableRichText = true, style = { unityTextAlign = TextAnchor.MiddleLeft }};
-            
-            _listView.columns["timestamp"].bindCell = (e, i) => ((Label)e).text = _items[i].timestamp;
-            _listView.columns["log-level"].bindCell = (e, i) => ((Label)e).text = _items[i].level;
-            _listView.columns["message"].bindCell = (e, i) => ((Label)e).text = BuildMessage(_items[i]);
-        }
-
-        private string BuildMessage(LogEventLineViewModel viewModel)
-        {
-            return MarkerMessageTemplateRenderer.Render(viewModel.LogEvent.MessageTemplate, viewModel.LogEvent.Properties);
+            _listView.makeItem = () => new LogEventLine();
+            _listView.bindItem = (e, i) => ((LogEventLine)e).Bind(_items[i]);
         }
         
         public void Bind(ConsoleViewModel viewModel)
