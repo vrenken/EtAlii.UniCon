@@ -1,5 +1,6 @@
 ﻿namespace Tests
 {
+    using System;
     using UnityEngine;
     using Serilog;
     using System.Collections;
@@ -23,12 +24,12 @@
                 yield return new WaitForSeconds(1);
                 switch (Random.Range(0,6))
                 {
-                    case 0: _logger.Verbose("New verbose log entry"); break;
+                    case 0: _logger.Verbose("New verbose log entry {Property1}, and {Property2}", Environment.TickCount, "something"); break;
                     case 1: _logger.Information("New information log entry"); break;
                     case 2: _logger.Debug("New debug log entry"); break;
                     case 3: _logger.Error("New error log entry"); break;
                     case 4: _logger.Warning("New warning log entry"); break;
-                    case 5: _logger.Fatal("New fatal log entry"); break;
+                    case 5: _logger.Fatal("New fatal log entry {FatalError}", "Some weird crash"); break;
                 }
             }
         }

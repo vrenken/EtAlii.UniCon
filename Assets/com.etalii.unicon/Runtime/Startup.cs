@@ -3,8 +3,6 @@
     using UnityEngine;
     using Serilog;
     using Serilog.Sinks.UniCon;
-    using Serilog.Sinks.Unity3D;
-
     public static class Startup
     {
         // Debug initialization should happen as early as possible, before any other system is started.
@@ -18,8 +16,7 @@
             Debug.Log($"Startup running");
 
             Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Information()
-                .WriteTo.Unity3D()
+                .MinimumLevel.Verbose()
                 .WriteTo.UniCon()
                 .CreateLogger();
         }
