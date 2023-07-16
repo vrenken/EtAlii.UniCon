@@ -5,7 +5,9 @@
     "noEngineReferences": false,
     "allowUnsafeCode": false,
     "overrideReferences": true,
-    "references": [],
+    "references": [
+        "Serilog.Sinks.Unity3D"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "precompiledReferences": [

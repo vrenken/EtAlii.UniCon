@@ -1,0 +1,7 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="VisualElement" style="flex-grow: 1; flex-direction: row; height: 20px;">
+        <ui:Label tabindex="-1" text="HH:mm:ss.ffffff" display-tooltip-when-elided="true" style="-unity-text-align: middle-left; height: 20px;" />
+        <ui:RadioButton style="width: 23px; height: 20px;" />
+        <ui:Label tabindex="-1" text="Label" display-tooltip-when-elided="true" style="width: auto; -unity-text-align: middle-left; height: 20px; flex-grow: 1;" />
+    </ui:VisualElement>
+</ui:UXML>

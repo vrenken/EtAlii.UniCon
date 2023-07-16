@@ -1,0 +1,41 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/com.etalii.unicon/Editor/ConsoleWindow/ConsoleWindow.uss?fileID=7433441132597879392&amp;guid=36c5b64153226674f929bea9b08e60c3&amp;type=3#ConsoleWindow" />
+    <uie:Toolbar>
+        <uie:ToolbarButton text="Clear" display-tooltip-when-elided="true" focusable="false" class="toolbar-button" />
+        <uie:ToolbarButton text="Pause" display-tooltip-when-elided="true" focusable="false" class="toolbar-button" style="width: 100px;" />
+        <uie:ToolbarSpacer style="width: 100%;" />
+        <uie:ToolbarPopupSearchField focusable="false" />
+    </uie:Toolbar>
+    <ui:TwoPaneSplitView fixed-pane-initial-dimension="150" fixed-pane-index="1">
+        <ui:MultiColumnListView show-bound-collection-size="false" show-foldout-header="false" style="width: auto;">
+            <ui:Columns>
+                <ui:Column name="timestamp" title="Timestamp" width="200" />
+                <ui:Column name="log-level" width="100" />
+                <ui:Column name="message" title="Message" width="700" />
+            </ui:Columns>
+        </ui:MultiColumnListView>
+        <ui:VisualElement style="flex-grow: 1; align-items: auto;">
+            <ui:ScrollView horizontal-scroller-visibility="Hidden">
+                <ui:Foldout text="Log levels" name="LogLevelFoldout" style="width: 100%;">
+                    <ui:Toggle text="Verbose" />
+                    <ui:Toggle text="Debug" />
+                    <ui:Toggle text="Information" />
+                    <ui:Toggle text="Warning" />
+                    <ui:Toggle text="Error" />
+                    <ui:Toggle text="Fatal" />
+                </ui:Foldout>
+                <ui:Foldout text="Time" name="TimeFoldout" style="width: 100%;">
+                    <ui:RadioButton text="1 hour" />
+                    <ui:RadioButton text="30 minutes" />
+                    <ui:RadioButton text="10 minutes" />
+                    <ui:RadioButton text="5 minutes" />
+                    <ui:RadioButton text="1 minute" />
+                    <ui:RadioButton text="30 seconds" />
+                    <ui:RadioButton text="1 seconds" />
+                    <ui:RadioButton text="100 milliseconds" />
+                </ui:Foldout>
+                <ui:Foldout text="Signals" name="SignalsFoldout" style="width: 100%;" />
+            </ui:ScrollView>
+        </ui:VisualElement>
+    </ui:TwoPaneSplitView>
+</ui:UXML>

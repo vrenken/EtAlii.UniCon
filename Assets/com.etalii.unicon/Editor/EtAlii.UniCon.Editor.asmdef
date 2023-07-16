@@ -8,8 +8,7 @@
     "references": [
         "UnityEditor.UI",
         "Serilog.Sinks.Unity3D",
-        "EtAlii.UniCon.Runtime",
-        "UniRx"
+        "EtAlii.UniCon.Runtime"
     ],
     "includePlatforms": [ "Editor" ],
     "excludePlatforms": [],

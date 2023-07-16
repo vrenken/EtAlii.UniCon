@@ -4,13 +4,11 @@
       "name": "package.openupm.com",
       "url": "https://package.openupm.com",
       "scopes": [
-        "com.serilog.sinks.unity3d",
-        "com.neuecc.unirx"
+        "com.serilog.sinks.unity3d"
       ]
     }
   ],
   "dependencies": {
-    "com.neuecc.unirx": "7.1.0",
     "com.serilog.sinks.unity3d": "3.0.0",
     "com.unity.collab-proxy": "2.0.5",
     "com.unity.feature.2d": "2.0.0",
