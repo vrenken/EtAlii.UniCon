@@ -1,0 +1,13 @@
+{
+    "name": "EtAlii.UniCon.External.UniRx.Examples",
+    "rootNamespace": "UniRx.Examples",
+    "references": [
+        "EtAlii.UniCon.External.UniRx"
+    ],
+    "optionalUnityReferences": [
+        "TestAssemblies"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false
+}

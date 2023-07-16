@@ -1,0 +1,18 @@
+{
+    "name": "EtAlii.UniCon.External.UnityMvvmToolkit.UITK",
+    "rootNamespace": "UnityMvvmToolkit.UITK",
+    "references": [
+        "EtAlii.UniCon.External.UnityMvvmToolkit.Core",
+        "EtAlii.UniCon.External.UnityMvvmToolkit.Common",
+        "GUID:d63bf47557a71534d82ecda7a3a700a2"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
