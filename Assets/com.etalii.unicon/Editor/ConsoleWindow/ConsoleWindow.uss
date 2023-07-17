@@ -13,9 +13,23 @@
 .unity-foldout {
     flex: 0 0 auto;
 }
+
 .unity-foldout:checked {
     flex-grow: 1;
 }
+
 .unity-foldout__content {
     flex-grow: 1;
+}
+
+.text-dropdown {
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.text-dropdown Label {
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.text-dropdown VisualElement {
+    background-color: rgba(0, 0, 0, 0);
 }
