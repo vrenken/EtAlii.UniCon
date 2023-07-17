@@ -3,7 +3,7 @@
     <uie:Toolbar style="border-top-width: 1px;">
         <uie:ToolbarButton text="Clear" name="clear-button" display-tooltip-when-elided="true" focusable="false" class="toolbar-button" />
         <uie:ToolbarButton text="Pause" display-tooltip-when-elided="true" focusable="false" class="toolbar-button" style="width: 100px;" />
-        <uie:ToolbarButton text="Tail" name="tail-button" display-tooltip-when-elided="true" focusable="false" class="toolbar-button" style="width: 100px;" />
+        <uie:ToolbarButton text="\u221E Tail" name="tail-button" display-tooltip-when-elided="true" focusable="false" class="toolbar-button" style="width: 100px;" />
         <uie:ToolbarSpacer style="width: 100%;" />
         <uie:ToolbarPopupSearchField focusable="false" />
     </uie:Toolbar>
