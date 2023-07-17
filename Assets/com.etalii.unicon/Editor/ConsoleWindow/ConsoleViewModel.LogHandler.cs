@@ -12,13 +12,7 @@ namespace EtAlii.UniCon.Editor
         {
             _originalLogHandler.LogFormat(logType, context, format, args);
 
-            var logger = _logger;
-            if (context != null)
-            {
-                logger = logger
-                    .ForContext("GameObjectName", context.name)
-                    .ForContext("SourceContext", context.GetType().FullName);
-            }
+            var logger = ExpandLogger(_logger, context);
             switch (logType)
             {
                 // ReSharper disable TemplateIsNotCompileTimeConstantProblem
@@ -35,7 +29,20 @@ namespace EtAlii.UniCon.Editor
         public void LogException(Exception exception, Object context)
         {
             _originalLogHandler.LogException(exception, context);
-            _logger.Error(exception, "Exception occurred");
+            var logger = ExpandLogger(_logger, context);
+            logger.Error(exception, "Exception occurred");
+        }
+
+        private Serilog.ILogger ExpandLogger(Serilog.ILogger logger, Object context)
+        {
+            if (context != null)
+            {
+                logger = logger
+                    .ForContext("GameObjectName", context.name)
+                    .ForContext("SourceContext", context.GetType().FullName);
+            }
+
+            return logger;
         }
     }    
 }
