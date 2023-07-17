@@ -6,7 +6,6 @@ namespace EtAlii.UniCon.Editor
 
     public class ConsoleWindow : EditorWindow
     {
-        private Rect _previousSize;
         private ConsoleView _view;
         private ConsoleViewModel _viewModel;
 
@@ -15,8 +14,9 @@ namespace EtAlii.UniCon.Editor
         {
             var window = GetWindow<ConsoleWindow>();
 
-            window.titleContent = new GUIContent("UniCon Console");
-            //window.Initialize();
+            var icon = EditorGUIUtility.IconContent("d_UnityEditor.ConsoleWindow@2x").image;
+
+            window.titleContent = new GUIContent("UniCon Console", icon);
         }
         
         public void CreateGUI()
@@ -26,18 +26,13 @@ namespace EtAlii.UniCon.Editor
             _viewModel = ConsoleViewModel.Instance;
             rootVisualElement.Add(_view);
             _view.Bind(_viewModel);
-        }
-        
-        private void OnGUI()
-        {
-            if (_previousSize != position)
-            {
-                _previousSize = position;
-                _view.StretchToParentSize();
-            }
+            _view.StretchToParentSize();
         }
 
-        // private void OnEnable() => _viewModel?.OnEnable();
+        private void OnDidOpenScene()
+        {
+            _view.StretchToParentSize();
+        }
 
         public void Update() => _viewModel.Update();
     }    

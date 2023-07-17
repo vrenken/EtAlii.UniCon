@@ -31,11 +31,16 @@ namespace EtAlii.UniCon.Editor
         {
             _originalLogHandler = Debug.unityLogger.logHandler;
             Debug.unityLogger.logHandler = this;
-            
-            _logger = Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Verbose()
-                .WriteTo.UniCon()
-                .CreateLogger();
+
+            if (Log.Logger == Serilog.Core.Logger.None)
+            {
+                Log.Logger = new LoggerConfiguration()
+                    .MinimumLevel.Verbose()
+                    .WriteTo.UniCon()
+                    .CreateLogger();
+            }
+
+            _logger = Log.Logger;
             _logger.Information("Started Serilog logging");
             _logger.Information("Started UniCon Console");
         }

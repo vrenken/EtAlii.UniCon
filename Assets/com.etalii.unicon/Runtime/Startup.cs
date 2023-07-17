@@ -13,12 +13,13 @@
 #endif
         private static void Load()
         {
-            Debug.Log($"Startup running");
-
-            Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Verbose()
-                .WriteTo.UniCon()
-                .CreateLogger();
+            if (Log.Logger == Serilog.Core.Logger.None)
+            {
+                Log.Logger = new LoggerConfiguration()
+                    .MinimumLevel.Verbose()
+                    .WriteTo.UniCon()
+                    .CreateLogger();
+            }
         }
     }
 }
