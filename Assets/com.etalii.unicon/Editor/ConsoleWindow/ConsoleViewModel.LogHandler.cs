@@ -12,14 +12,21 @@ namespace EtAlii.UniCon.Editor
         {
             _originalLogHandler.LogFormat(logType, context, format, args);
 
+            var logger = _logger;
+            if (context != null)
+            {
+                logger = logger
+                    .ForContext("GameObjectName", context.name)
+                    .ForContext("SourceContext", context.GetType().FullName);
+            }
             switch (logType)
             {
                 // ReSharper disable TemplateIsNotCompileTimeConstantProblem
-                case LogType.Log: _logger.Information(string.Format(format, args)); break;
-                case LogType.Error: _logger.Error(string.Format(format, args)); break;
-                case LogType.Exception: _logger.Error(string.Format(format, args)); break;
-                case LogType.Assert: _logger.Error(string.Format(format, args)); break;
-                case LogType.Warning: _logger.Warning(string.Format(format, args)); break;
+                case LogType.Log: logger.Information(string.Format(format, args)); break;
+                case LogType.Error: logger.Error(string.Format(format, args)); break;
+                case LogType.Exception: logger.Error(string.Format(format, args)); break;
+                case LogType.Assert: logger.Error(string.Format(format, args)); break;
+                case LogType.Warning: logger.Warning(string.Format(format, args)); break;
                 default: throw new ArgumentOutOfRangeException(nameof(logType), logType, null);
                 // ReSharper restore TemplateIsNotCompileTimeConstantProblem
             }
