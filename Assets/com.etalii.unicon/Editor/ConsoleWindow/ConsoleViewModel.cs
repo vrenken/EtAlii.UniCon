@@ -29,7 +29,7 @@ namespace EtAlii.UniCon.Editor
 
         public ConsoleViewModel()
         {
-            _logEventsSource = LogSink.LogEvents;
+            _logEventsSource = LogSink.Instance.LogEvents;
             _logEventsSource.CollectionChanged += OnSourceChanged;
 
             _originalLogHandler = Debug.unityLogger.logHandler;
