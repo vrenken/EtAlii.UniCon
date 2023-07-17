@@ -1,5 +1,7 @@
 ﻿namespace EtAlii.UniCon.Editor
 {
+    using System;
+    using Serilog.Events;
     using UnityEngine;
     using UnityEngine.UIElements;
 
@@ -32,8 +34,19 @@
 
         public void Bind(LogEventLineViewModel viewModel)
         {
+            var color = viewModel.LogEvent.Level switch
+            {
+                LogEventLevel.Verbose => "<color=#5A5A5A>",
+                LogEventLevel.Information => "<color=white>",
+                LogEventLevel.Debug => "<color=#808080>",
+                LogEventLevel.Warning => "<color=yellow>",
+                LogEventLevel.Error => "<color=red>",
+                LogEventLevel.Fatal => "<color=red>",
+                _ => throw new ArgumentOutOfRangeException(nameof(viewModel.LogEvent.Level))
+            };
             _timestampLabel.text = viewModel.timestamp;
-            _messageLabel.text = BuildMessage(viewModel);
+            
+            _messageLabel.text = $"{color}\u25CF</color> " + BuildMessage(viewModel);
         }
         
         private string BuildMessage(LogEventLineViewModel viewModel)
