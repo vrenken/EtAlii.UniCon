@@ -9,6 +9,6 @@ namespace Serilog.Sinks.UniCon
 {
     public sealed class UniConLogEventSink : ILogEventSink
     {
-        public void Emit(LogEvent logEvent) => LogSink.Instance.LogEvents.Add(logEvent);
+        public void Emit(LogEvent logEvent) => LogSink.Instance.Add(logEvent);
     }
 }

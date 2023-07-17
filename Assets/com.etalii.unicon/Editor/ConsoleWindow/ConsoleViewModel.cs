@@ -1,10 +1,10 @@
 namespace EtAlii.UniCon.Editor
 {
+    using System;
     using System.Collections.ObjectModel;
-    using System.Collections.Specialized;
     using Serilog;
-    using Serilog.Events;
     using Serilog.Sinks.UniCon;
+    using UniRx;
     using UnityEngine;
 
     public partial class ConsoleViewModel : ScriptableObject
@@ -25,13 +25,10 @@ namespace EtAlii.UniCon.Editor
         // ReSharper disable once MemberCanBePrivate.Global
         public readonly ObservableCollection<LogEventViewModel> LogEvents = new();
 
-        private readonly ObservableCollection<LogEvent> _logEventsSource;
+        private IDisposable _logEventsSource;
 
         public ConsoleViewModel()
         {
-            _logEventsSource = LogSink.Instance.LogEvents;
-            _logEventsSource.CollectionChanged += OnSourceChanged;
-
             _originalLogHandler = Debug.unityLogger.logHandler;
             Debug.unityLogger.logHandler = this;
 
@@ -44,27 +41,19 @@ namespace EtAlii.UniCon.Editor
             }
 
             _logger = Log.Logger;
-            _logger.Information("Started Serilog logging");
-            _logger.Information("Started UniCon Console");
         }
 
-        // public void Init()
-        // {
-        // }
-
-        private void OnSourceChanged(object sender, NotifyCollectionChangedEventArgs e)
+        public void Init()
         {
-            switch (e.Action)
-            {
-                case NotifyCollectionChangedAction.Add:
-                    foreach (var item in e.NewItems)
-                    {
-                        var viewModel = CreateInstance<LogEventViewModel>();
-                        viewModel.Init((LogEvent)item); 
-                        LogEvents.Add(viewModel);
-                    }
-                    break;
-            }
+            _logEventsSource = LogSink.Instance
+                .Observe()
+                .SubscribeOn(Scheduler.Immediate)
+                .Subscribe(onNext: logEvent =>
+                {
+                    var viewModel = CreateInstance<LogEventViewModel>();
+                    viewModel.Init(logEvent); 
+                    LogEvents.Add(viewModel);
+                });
         }
     }    
 }
