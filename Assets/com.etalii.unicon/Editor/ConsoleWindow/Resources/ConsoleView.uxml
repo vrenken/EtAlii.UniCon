@@ -8,7 +8,7 @@
         <uie:ToolbarPopupSearchField focusable="false" />
     </uie:Toolbar>
     <ui:TwoPaneSplitView fixed-pane-initial-dimension="150" fixed-pane-index="1">
-        <ui:ListView show-bound-collection-size="false" style="width: auto; -unity-font: resource(&apos;Fonts/FiraCode-Regular&apos;); -unity-font-definition: initial;" />
+        <ui:ListView show-bound-collection-size="true" focusable="false" style="width: auto;" />
         <ui:VisualElement style="flex-grow: 1; align-items: auto;">
             <ui:ScrollView horizontal-scroller-visibility="Hidden">
                 <ui:Foldout text="Source" name="SourceFoldout" style="width: 100%;">
@@ -22,6 +22,7 @@
                     <ui:Toggle text="Warning" value="true" />
                     <ui:Toggle text="Error" value="true" />
                     <ui:Toggle text="Fatal" value="true" />
+                    <ui:Toggle text="Exceptions" value="true" />
                 </ui:Foldout>
                 <ui:Foldout text="Time" name="TimeFoldout" style="width: 100%;">
                     <ui:RadioButton text="1 hour" />

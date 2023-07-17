@@ -4,12 +4,18 @@
     -unity-text-align: middle-center;
 }
 
-.unity-foldout {
-}
-
-.unity-foldout--depth-0 {
-}
-
 .unity-radio-button #unity-checkmark {
     background-image: none;
+    -unity-font: resource('Fonts/FiraCode-Regular');
+    -unity-font-definition: initial;
+}
+
+.unity-foldout {
+    flex: 0 0 auto;
+}
+.unity-foldout:checked {
+    flex-grow: 1;
+}
+.unity-foldout__content {
+    flex-grow: 1;
 }
