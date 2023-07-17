@@ -6,22 +6,28 @@
     using System.Collections;
     using Random = UnityEngine.Random;
 
-    public class LogTicker : MonoBehaviour
+    public class SerilogLogTicker : MonoBehaviour
     {
         private Serilog.ILogger _logger;
 
-        private void Awake()
+        public float interval = 1;
+        private void OnEnable()
         {
-            _logger = Log.ForContext<LogTicker>();
-            Debug.Log($"Starting LogTicker");
+            _logger = Log.ForContext<SerilogLogTicker>().ForContext("UniConSource", "Serilog");
+            Debug.Log($"Starting SerilogLogTicker");
             StartCoroutine(WriteLogEntries());
+        }
+
+        private void OnDisable()
+        {
+            StopCoroutine(nameof(WriteLogEntries));
         }
 
         private IEnumerator WriteLogEntries()
         {
             while (gameObject.activeSelf)
             {
-                yield return new WaitForSeconds(1);
+                yield return new WaitForSeconds(interval);
                 switch (Random.Range(0,6))
                 {
                     case 0: _logger.Verbose("New verbose log entry {Property1}, and {Property2}", Environment.TickCount, "something"); break;
