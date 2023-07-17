@@ -6,7 +6,8 @@
     "allowUnsafeCode": false,
     "overrideReferences": true,
     "references": [
-        "Serilog.Sinks.Unity3D"
+        "Serilog.Sinks.Unity3D",
+        "EtAlii.UniCon.External.UniRx"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
