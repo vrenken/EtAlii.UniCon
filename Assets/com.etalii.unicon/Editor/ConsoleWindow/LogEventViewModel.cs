@@ -6,7 +6,7 @@ namespace EtAlii.UniCon.Editor
     using Serilog.Formatting.Display;
     using UnityEngine;
 
-    public class LogEventLineViewModel : ScriptableObject
+    public class LogEventViewModel : ScriptableObject
     {
         public LogEvent LogEvent { get; private set; }
 

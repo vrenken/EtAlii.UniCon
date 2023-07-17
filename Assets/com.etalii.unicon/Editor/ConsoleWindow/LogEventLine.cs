@@ -32,14 +32,14 @@
             _messageLabel = this.Q<Label>("message");
         }
 
-        public void Bind(LogEventLineViewModel viewModel)
+        public void Bind(LogEventViewModel viewModel)
         {
             _timestampLabel.text = viewModel.timestamp;
             
             _messageLabel.text = GetMessage(viewModel);
         }
 
-        public static string GetMessage(LogEventLineViewModel viewModel)
+        public static string GetMessage(LogEventViewModel viewModel)
         {
             var color = viewModel.LogEvent.Level switch
             {
