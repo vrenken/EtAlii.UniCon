@@ -16,13 +16,13 @@
                     <ui:Toggle text="Unity" value="true" />
                 </ui:Foldout>
                 <ui:Foldout text="Log levels" name="LogLevelFoldout" style="width: 100%;">
-                    <ui:Toggle text="Verbose" value="true" />
-                    <ui:Toggle text="Debug" value="true" />
-                    <ui:Toggle text="Information" value="true" />
-                    <ui:Toggle text="Warning" value="true" />
-                    <ui:Toggle text="Error" value="true" />
-                    <ui:Toggle text="Fatal" value="true" />
-                    <ui:Toggle text="Exceptions" value="true" />
+                    <ui:Toggle text="&lt;color=#5A5A5A&gt;\u25CF&lt;/color&gt; Verbose" value="true" />
+                    <ui:Toggle text="&lt;color=white&gt;\u25CF&lt;/color&gt; Information" value="true" />
+                    <ui:Toggle text="&lt;color=#808080&gt;\u25CF&lt;/color&gt; Debug" value="true" />
+                    <ui:Toggle text="&lt;color=yellow&gt;\u25CF&lt;/color&gt; Warning" value="true" />
+                    <ui:Toggle text="&lt;color=red&gt;\u25CF&lt;/color&gt; Error" value="true" />
+                    <ui:Toggle text="&lt;color=red&gt;\u25CF&lt;/color&gt; Fatal" value="true" />
+                    <ui:Toggle text="&lt;color=red&gt;\u25CF&lt;/color&gt; Exceptions" value="true" />
                 </ui:Foldout>
                 <ui:Foldout text="Time" name="TimeFoldout" style="width: 100%;">
                     <ui:RadioButton text="1 hour" />
