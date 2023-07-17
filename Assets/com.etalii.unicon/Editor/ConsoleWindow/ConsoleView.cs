@@ -1,7 +1,6 @@
 ﻿namespace EtAlii.UniCon.Editor
 {
     using System.Collections.Generic;
-    using System.Collections.Specialized;
     using UnityEngine;
     using UnityEngine.UIElements;
 
@@ -64,6 +63,8 @@
         }
 
         private float _previousScrollValue;
+        private ConsoleViewModel _viewModel;
+
         private void OnScrolledVertically(float value)
         {
             if (_isTrackingTail)
@@ -90,69 +91,13 @@
         
         public void Bind(ConsoleViewModel viewModel)
         {
-            _listView.Clear();
-            foreach (var item in viewModel.LogEvents)
+            if (_viewModel != null)
             {
-                Add(item);
+                _viewModel.StreamChanged -= OnStreamChanged;
             }
-            viewModel.LogEvents.CollectionChanged += OnLogEventsChanged;
+            _viewModel = viewModel;
+            _viewModel.StreamChanged += OnStreamChanged;
+            OnStreamChanged();
         }
-
-        public void Unbind(ConsoleViewModel viewModel)
-        {
-            viewModel.LogEvents.CollectionChanged -= OnLogEventsChanged;
-            _listView.Clear();
-        }
-
-        private void OnLogEventsChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            switch (e.Action)
-            {
-                case NotifyCollectionChangedAction.Add:
-                    foreach (LogEventViewModel item in e.NewItems)
-                    {
-                        Add(item);
-                    }
-                    break;
-            }
-        }
-
-        private void Add(LogEventViewModel viewModel)
-        {
-            _items.Add(viewModel);
-            _listView.RefreshItems();
-
-            if (_isTrackingTail)
-            {
-                _listViewScrollView.verticalScroller.value = _listViewScrollView.verticalScroller.highValue > 0 ? _listViewScrollView.verticalScroller.highValue : 0;
-                //_listViewScrollView.ScrollTo(_listViewScrollView...itemsSource[_listView.itemsSource.Count - 1]);
-                //_listView.ScrollToItem(-1);
-                //_listViewScrollView.verticalScroller.ScrollPageDown();
-            }
-        }
-        
-        //
-        // private void RemoveEntry(VisualElement element)
-        // {
-        // }
-        //
-        // private VisualElement AddLogEntry()
-        // {
-        //     return new LogEventLine();
-        // }
-        //
-        // private void BindLogEntry(VisualElement element, int index)
-        // {
-        //     var item = (Object)_items[index];
-        //     element.Bind(new SerializedObject(item));
-        //     element.userData = item;
-        // }
-        
-        // private void UnbindEntry(VisualElement element, int index)
-        // {
-        //     element.Unbind();
-        //     element.userData = null;
-        // }
-
     }    
 }
