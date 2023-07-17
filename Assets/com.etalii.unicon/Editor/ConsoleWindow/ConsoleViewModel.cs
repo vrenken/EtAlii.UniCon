@@ -23,12 +23,15 @@ namespace EtAlii.UniCon.Editor
 
         // ReSharper disable once CollectionNeverQueried.Global
         // ReSharper disable once MemberCanBePrivate.Global
-        public readonly ObservableCollection<LogEventLineViewModel> LogEvents = new();
+        public readonly ObservableCollection<LogEventViewModel> LogEvents = new();
 
-        private ObservableCollection<LogEvent> _logEventsSource = new ();
+        private readonly ObservableCollection<LogEvent> _logEventsSource;
 
         public ConsoleViewModel()
         {
+            _logEventsSource = LogSink.LogEvents;
+            _logEventsSource.CollectionChanged += OnSourceChanged;
+
             _originalLogHandler = Debug.unityLogger.logHandler;
             Debug.unityLogger.logHandler = this;
 
@@ -45,15 +48,9 @@ namespace EtAlii.UniCon.Editor
             _logger.Information("Started UniCon Console");
         }
 
-        public void Update()
-        {
-            if (LogSink.LogEvents != _logEventsSource)
-            {
-                _logEventsSource.CollectionChanged -= OnSourceChanged;
-                _logEventsSource = LogSink.LogEvents;
-                _logEventsSource.CollectionChanged += OnSourceChanged;
-            }
-        }
+        // public void Init()
+        // {
+        // }
 
         private void OnSourceChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
@@ -62,7 +59,7 @@ namespace EtAlii.UniCon.Editor
                 case NotifyCollectionChangedAction.Add:
                     foreach (var item in e.NewItems)
                     {
-                        var viewModel = CreateInstance<LogEventLineViewModel>();
+                        var viewModel = CreateInstance<LogEventViewModel>();
                         viewModel.Init((LogEvent)item); 
                         LogEvents.Add(viewModel);
                     }

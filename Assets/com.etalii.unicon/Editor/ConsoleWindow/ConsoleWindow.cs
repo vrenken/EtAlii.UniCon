@@ -33,7 +33,5 @@ namespace EtAlii.UniCon.Editor
         {
             _view.StretchToParentSize();
         }
-
-        public void Update() => _viewModel.Update();
     }    
 }

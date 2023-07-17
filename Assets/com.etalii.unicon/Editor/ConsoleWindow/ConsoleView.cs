@@ -9,7 +9,7 @@
     {
         private readonly ListView _listView;
 
-        private readonly List<LogEventLineViewModel> _items = new ();
+        private readonly List<LogEventViewModel> _items = new ();
 
         private readonly Font _consoleFont = Resources.Load<Font>("Fonts/FiraCode-Regular");
 
@@ -76,9 +76,9 @@
             }
         }
 
-        private void Bind(Foldout foldout, LogEventLineViewModel viewModel)
+        private void Bind(Foldout foldout, LogEventViewModel viewModel)
         {
-            if (foldout.userData as LogEventLineViewModel != viewModel)
+            if (foldout.userData as LogEventViewModel != viewModel)
             {
                 foldout.value = false;
                 foldout.text = LogEventLine.GetMessage(viewModel);
@@ -109,7 +109,7 @@
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
-                    foreach (LogEventLineViewModel item in e.NewItems)
+                    foreach (LogEventViewModel item in e.NewItems)
                     {
                         Add(item);
                     }
@@ -117,7 +117,7 @@
             }
         }
 
-        private void Add(LogEventLineViewModel viewModel)
+        private void Add(LogEventViewModel viewModel)
         {
             _items.Add(viewModel);
             _listView.RefreshItems();
