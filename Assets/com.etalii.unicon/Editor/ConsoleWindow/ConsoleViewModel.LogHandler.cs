@@ -12,7 +12,7 @@ namespace EtAlii.UniCon.Editor
         {
             _originalLogHandler.LogFormat(logType, context, format, args);
 
-            var logger = ExpandLogger(_logger, context);
+            var logger = ExpandLoggerForUnity(_logger, context);
             switch (logType)
             {
                 // ReSharper disable TemplateIsNotCompileTimeConstantProblem
@@ -29,16 +29,17 @@ namespace EtAlii.UniCon.Editor
         public void LogException(Exception exception, Object context)
         {
             _originalLogHandler.LogException(exception, context);
-            var logger = ExpandLogger(_logger, context);
+            var logger = ExpandLoggerForUnity(_logger, context);
             logger.Error(exception, "Exception occurred");
         }
 
-        private Serilog.ILogger ExpandLogger(Serilog.ILogger logger, Object context)
+        private Serilog.ILogger ExpandLoggerForUnity(Serilog.ILogger logger, Object context)
         {
             if (context != null)
             {
                 logger = logger
-                    .ForContext("GameObjectName", context.name)
+                    .ForContext(WellKnownProperties.IsUnityLogEvent, true)
+                    .ForContext("Context", context.name)
                     .ForContext("SourceContext", context.GetType().FullName);
             }
 
