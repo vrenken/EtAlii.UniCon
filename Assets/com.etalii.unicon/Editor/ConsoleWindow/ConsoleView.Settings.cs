@@ -15,9 +15,23 @@ namespace EtAlii.UniCon.Editor
             _previousScrollValue = _listViewScrollView.verticalScroller.value;
         }
 
-        private void BindSettings(ConsoleViewModel viewModel, CompositeDisposable disposable)
+        private void BindLogSourceSettings(ConsoleViewModel viewModel, CompositeDisposable disposable)
         {
+            var serilogSourceToggle = this.Q<Toggle>("serilog-source-toggle");
+            serilogSourceToggle.value = viewModel.Settings.UseSerilogSource;
+            serilogSourceToggle
+                .BindValueChanged(viewModel.OnLogLevelSerilogToggleChange)
+                .AddTo(disposable); 
             
+            var unitySourceToggle = this.Q<Toggle>("unity-source-toggle");
+            unitySourceToggle.value = viewModel.Settings.UseUnitySource;
+            unitySourceToggle
+                .BindValueChanged(viewModel.OnLogLevelUnityToggleChange)
+                .AddTo(disposable);
+        }
+
+        private void BindLogLevelsSettings(ConsoleViewModel viewModel, CompositeDisposable disposable)
+        {
             var verboseToggle = this.Q<Toggle>("verbose-toggle");
             verboseToggle.value = viewModel.Settings.LogLevel.HasFlag(LogLevel.Verbose);
             verboseToggle
@@ -52,9 +66,7 @@ namespace EtAlii.UniCon.Editor
             fatalToggle.value = viewModel.Settings.LogLevel.HasFlag(LogLevel.Fatal);
             fatalToggle
                 .BindValueChanged(viewModel.OnLogLevelFatalToggleChange)
-                .AddTo(disposable); 
-
-
+                .AddTo(disposable);
         }
     }    
 }

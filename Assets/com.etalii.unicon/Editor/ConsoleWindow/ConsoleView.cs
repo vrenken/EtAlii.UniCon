@@ -98,7 +98,8 @@
                 _disposable.Dispose();
             }
             _disposable = new CompositeDisposable();
-            BindSettings(viewModel, _disposable);
+            BindLogSourceSettings(viewModel, _disposable);
+            BindLogLevelsSettings(viewModel, _disposable);
             
             if (_viewModel != null)
             {

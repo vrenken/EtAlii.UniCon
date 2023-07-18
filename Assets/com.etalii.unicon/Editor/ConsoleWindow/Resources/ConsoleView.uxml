@@ -11,9 +11,9 @@
         <ui:ListView show-bound-collection-size="true" focusable="false" virtualization-method="DynamicHeight" style="width: auto;" />
         <ui:VisualElement style="flex-grow: 1; align-items: auto;">
             <ui:ScrollView horizontal-scroller-visibility="Hidden">
-                <ui:Foldout text="Source" name="SourceFoldout" style="width: 100%;">
-                    <ui:Toggle focusable="false" text="Serilog" value="true" />
-                    <ui:Toggle focusable="false" text="Unity" value="true" />
+                <ui:Foldout text=" Log source" name="SourceFoldout" style="width: 100%;">
+                    <ui:Toggle focusable="false" text="Serilog" value="true" name="serilog-source-toggle" />
+                    <ui:Toggle focusable="false" text="Unity" value="true" name="unity-source-toggle" />
                 </ui:Foldout>
                 <ui:Foldout text="Log levels" name="LogLevelFoldout" style="width: 100%;">
                     <ui:Toggle focusable="false" text="&lt;color=#5A5A5A&gt;\u25CF&lt;/color&gt; Verbose" name="verbose-toggle" value="true" />
