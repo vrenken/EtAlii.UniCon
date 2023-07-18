@@ -9,16 +9,21 @@ namespace EtAlii.UniCon.Editor
         private ConsoleView _view;
         private ConsoleViewModel _viewModel;
 
+        public Sprite logo;
+        
         [MenuItem("Window/General/Console (UniCon) %#C", false, 7)]
         public static void ShowConsole()
         {
-            var window = GetWindow<ConsoleWindow>();
-
-            var icon = EditorGUIUtility.IconContent("d_UnityEditor.ConsoleWindow@2x").image;
-
-            window.titleContent = new GUIContent("UniCon Console", icon);
+            GetWindow<ConsoleWindow>();
         }
-        
+
+        private void OnEnable()
+        {
+            // var icon = EditorGUIUtility.IconContent("d_UnityEditor.ConsoleWindow@2x").image;
+
+            titleContent = new GUIContent("UniCon Console", logo.texture);
+        }
+
         public void CreateGUI()
         {
             // Import UXML

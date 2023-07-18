@@ -5,8 +5,7 @@ MonoImporter:
   serializedVersion: 2
   defaultReferences:
   - m_ViewDataDictionary: {instanceID: 0}
-  - viewAsset: {fileID: 9197481963319205126, guid: 70bcf4d34cceff04d9514f8b2fb5b0d7, type: 3}
-  - lineAsset: {fileID: 9197481963319205126, guid: 02028190cc905844c9902b2dab7b9457, type: 3}
+  - logo: {fileID: 21300000, guid: 37ea39e0eb290424f82a5a663229023f, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
