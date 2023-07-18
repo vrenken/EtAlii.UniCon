@@ -6,7 +6,7 @@ namespace EtAlii.UniCon.Editor
     public partial class ConsoleView
     {
         private IDisposable _streamSubscription;
-        
+
         private void OnStreamChanged()
         {
             if (_streamSubscription != null)
@@ -16,7 +16,8 @@ namespace EtAlii.UniCon.Editor
             }
             _items.Clear();
             _listView.Rebuild();
-            _streamSubscription = _viewModel.Stream.Subscribe(onNext: Add);
+            _streamSubscription = _viewModel.Stream
+                .Subscribe(onNext: Add);
         }
 
         private void Add(LogEventViewModel viewModel)

@@ -1,7 +1,7 @@
 ﻿namespace EtAlii.UniCon
 {
     using System;
-    using System.Collections.Generic;
+    using System.Collections.Concurrent;
     using Serilog.Events;
     using UniRx;
 
@@ -9,40 +9,41 @@
     {
         public TimeSpan Window = TimeSpan.FromHours(1);
         public static readonly LogSink Instance = new();
-        private readonly Queue<LogEvent> _logEvents = new();
-        private readonly object _lockObject = new();
+        private readonly ConcurrentQueue<LogEvent> _logEvents = new();
         private readonly Subject<LogEvent> _subject = new();
 
         private LogSink() { }
 
         public void Add(LogEvent logEvent)
         {
-            lock (_lockObject)
+            _logEvents.Enqueue(logEvent);
+            _subject.OnNext(logEvent);
+            do
             {
-                _logEvents.Enqueue(logEvent);
-                _subject.OnNext(logEvent);
-                var completed = false;
-                do
+                if (!_logEvents.TryPeek(out var peek))
                 {
-                    var peek = _logEvents.Peek();
-                    if (peek.Timestamp < DateTimeOffset.Now - Window)
+                    break;
+                }
+
+                if (peek.Timestamp < DateTimeOffset.Now - Window)
+                {
+                    if (!_logEvents.TryDequeue(out _))
                     {
-                        _logEvents.Dequeue();
+                        break;
                     }
-                    else
-                    {
-                        completed = true;
-                    }
-                } while (!completed);
-            }
+                }
+                else
+                {
+                    break;
+                }
+            } while (true);
         }
 
         public IObservable<LogEvent> Observe()
         {
-            lock (_lockObject)
-            {
-                return _logEvents.ToObservable().Concat(_subject);
-            }
+             return _logEvents
+                 .ToObservable()
+                .Concat(_subject);
         }
     }
 }
