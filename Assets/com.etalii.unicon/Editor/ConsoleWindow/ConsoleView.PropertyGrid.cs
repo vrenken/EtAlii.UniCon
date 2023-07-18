@@ -32,7 +32,7 @@ namespace EtAlii.UniCon.Editor
                     }
                     
                 };
-                row.contentContainer.Add(new Label { name = $"key-{property.Key}", text = property.Key, style = { flexGrow = 0, width = 200, unityTextAlign = TextAnchor.MiddleLeft }});
+                row.contentContainer.Add(new Label { name = $"key-{property.Key}", text = $"<b><color=green>\u002B</color> <color=red>\u00D7</color></b> {property.Key}", style = { flexGrow = 0, width = 200, unityTextAlign = TextAnchor.MiddleLeft }});
                 row.contentContainer.Add(new Label { name = $"value-{property.Key}", text = property.Value.ToString(), style = { flexGrow = 1, alignSelf = Align.FlexStart, unityTextAlign = TextAnchor.MiddleLeft }});
                 grid.contentContainer.Add(row);
             }

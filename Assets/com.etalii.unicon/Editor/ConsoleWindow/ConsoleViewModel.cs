@@ -35,6 +35,8 @@ namespace EtAlii.UniCon.Editor
             }
 
             _logger = Log.Logger;
+            
+            SetupSettings();
         }
 
         public void Init() => ConfigureStream();

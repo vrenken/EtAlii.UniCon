@@ -13,8 +13,9 @@ namespace EtAlii.UniCon.Editor
             {
                 _streamSubscription.Dispose();
                 _streamSubscription = null;
-                _listView.Clear();
             }
+            _items.Clear();
+            _listView.Rebuild();
             _streamSubscription = _viewModel.Stream.Subscribe(onNext: Add);
         }
 

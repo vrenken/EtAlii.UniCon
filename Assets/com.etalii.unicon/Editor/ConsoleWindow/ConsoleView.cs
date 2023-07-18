@@ -1,6 +1,7 @@
 ﻿namespace EtAlii.UniCon.Editor
 {
     using System.Collections.Generic;
+    using UniRx;
     using UnityEngine;
     using UnityEngine.UIElements;
 
@@ -64,6 +65,7 @@
 
         private float _previousScrollValue;
         private ConsoleViewModel _viewModel;
+        private CompositeDisposable _disposable;
 
         private void OnScrolledVertically(float value)
         {
@@ -91,6 +93,13 @@
         
         public void Bind(ConsoleViewModel viewModel)
         {
+            if (_disposable != null)
+            {
+                _disposable.Dispose();
+            }
+            _disposable = new CompositeDisposable();
+            BindSettings(viewModel, _disposable);
+            
             if (_viewModel != null)
             {
                 _viewModel.StreamChanged -= OnStreamChanged;
