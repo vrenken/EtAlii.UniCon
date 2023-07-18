@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using EtAlii.UniCon;
+using UnityEngine;
 using Serilog;
 using Serilog.Sinks.UniCon;
 
@@ -24,6 +25,11 @@ public static partial class UniConStartup
             Log.Logger = loggerConfiguration
                 .WriteTo.UniCon()
                 .CreateLogger();
+        }
+
+        if (Debug.unityLogger.logHandler is not UniConLogHandler)
+        {
+            Debug.unityLogger.logHandler = new UniConLogHandler(Debug.unityLogger.logHandler, Log.Logger);
         }
     }
 

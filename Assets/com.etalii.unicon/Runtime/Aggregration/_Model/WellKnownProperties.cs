@@ -1,4 +1,4 @@
-namespace EtAlii.UniCon.Editor
+namespace EtAlii.UniCon
 {
     public static class WellKnownProperties
     {

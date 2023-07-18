@@ -1,13 +1,20 @@
-namespace EtAlii.UniCon.Editor
+namespace EtAlii.UniCon
 {
     using System;
     using UnityEngine;
     using Object = UnityEngine.Object;
     
-    public partial class ConsoleViewModel : ILogHandler
+    public class UniConLogHandler : ILogHandler
     {
         private readonly ILogHandler _originalLogHandler;
-
+        private readonly Serilog.ILogger _logger;
+        
+        public UniConLogHandler(ILogHandler originalLogHandler, Serilog.ILogger logger)
+        {
+            _originalLogHandler = originalLogHandler;
+            _logger = logger;
+        }
+        
         public void LogFormat(LogType logType, Object context, string format, params object[] args)
         {
             _originalLogHandler.LogFormat(logType, context, format, args);
@@ -30,7 +37,13 @@ namespace EtAlii.UniCon.Editor
         {
             _originalLogHandler.LogException(exception, context);
             var logger = ExpandLoggerForUnity(_logger, context);
-            logger.Error(exception, "Exception occurred");
+            var exceptionType = exception.GetType().FullName;
+            // ReSharper disable TemplateIsNotCompileTimeConstantProblem
+            logger
+                .ForContext("ExceptionType", exceptionType)
+                .ForContext("ExceptionMessage", exception.Message)
+                .Error(exception, $"{exception.GetType().Name}: {exception.Message}");
+            // ReSharper restore TemplateIsNotCompileTimeConstantProblem
         }
 
         private Serilog.ILogger ExpandLoggerForUnity(Serilog.ILogger logger, Object context)
@@ -42,7 +55,6 @@ namespace EtAlii.UniCon.Editor
                     .ForContext("Context", context.name)
                     .ForContext("SourceContext", context.GetType().FullName);
             }
-
             return logger;
         }
     }    
