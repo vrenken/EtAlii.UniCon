@@ -13,6 +13,7 @@ namespace EtAlii.UniCon.Editor
             _isTrackingTail = !_isTrackingTail;
             _tailButton.style.backgroundColor = _isTrackingTail ? _tailButtonTrackingColor : _tailButtonNonTrackingColor;
             _previousScrollValue = _listViewScrollView.verticalScroller.value;
+            ScrollToTailWhenNeeded();
         }
 
         private void BindLogSourceSettings(ConsoleViewModel viewModel, CompositeDisposable disposable)

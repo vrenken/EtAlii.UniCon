@@ -14,6 +14,12 @@ namespace EtAlii.UniCon.Editor
                 _streamSubscription.Dispose();
                 _streamSubscription = null;
             }
+
+            if (_isTrackingTail)
+            {
+                OnTailButtonClicked();                
+            }
+            
             _items.Clear();
             _listView.Rebuild();
             _streamSubscription = _viewModel.Stream
@@ -25,14 +31,20 @@ namespace EtAlii.UniCon.Editor
             _items.Add(viewModel);
             _listView.RefreshItems();
 
+            ScrollToTailWhenNeeded();
+        }
+
+        private void ScrollToTailWhenNeeded()
+        {
             if (_isTrackingTail)
             {
-                _listViewScrollView.verticalScroller.value = _listViewScrollView.verticalScroller.highValue > 0 ? _listViewScrollView.verticalScroller.highValue : 0;
+                _listViewScrollView.verticalScroller.value = _listViewScrollView.verticalScroller.highValue > 0
+                    ? _listViewScrollView.verticalScroller.highValue
+                    : 0;
                 //_listViewScrollView.ScrollTo(_listViewScrollView...itemsSource[_listView.itemsSource.Count - 1]);
                 //_listView.ScrollToItem(-1);
                 //_listViewScrollView.verticalScroller.ScrollPageDown();
             }
         }
-
     }    
 }
