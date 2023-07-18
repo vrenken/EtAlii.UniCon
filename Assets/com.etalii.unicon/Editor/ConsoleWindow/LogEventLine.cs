@@ -34,7 +34,7 @@
 
         public void Bind(LogEventViewModel viewModel)
         {
-            _timestampLabel.text = viewModel.timestamp;
+            _timestampLabel.text = viewModel.Timestamp;
             
             _messageLabel.text = GetMessage(viewModel);
         }
@@ -51,7 +51,7 @@
                 LogEventLevel.Fatal => "<color=red>",
                 _ => throw new ArgumentOutOfRangeException(nameof(viewModel.LogEvent.Level))
             };
-            return $"{viewModel.timestamp} {color}\u25CF</color> " + MarkerMessageTemplateRenderer.Render(viewModel.LogEvent.MessageTemplate, viewModel.LogEvent.Properties);
+            return $"{viewModel.Timestamp} {color}\u25CF</color> " + MarkerMessageTemplateRenderer.Render(viewModel.LogEvent.MessageTemplate, viewModel.LogEvent.Properties);
         }
     }    
 }

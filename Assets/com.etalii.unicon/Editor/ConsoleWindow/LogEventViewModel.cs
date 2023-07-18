@@ -4,9 +4,8 @@ namespace EtAlii.UniCon.Editor
     using Serilog.Events;
     using Serilog.Formatting;
     using Serilog.Formatting.Display;
-    using UnityEngine;
-
-    public class LogEventViewModel : ScriptableObject
+    
+    public class LogEventViewModel
     {
         public LogEvent LogEvent { get; private set; }
 
@@ -15,18 +14,18 @@ namespace EtAlii.UniCon.Editor
 
         private static readonly ITextFormatter Formatter = new MessageTemplateTextFormatter(DefaultDebugOutputTemplate);
         
-        public string timestamp;
-        public string message;
-        public string level;
+        public readonly string Timestamp;
+        public readonly string Message;
+        public readonly string Level;
 
-        public void Init(LogEvent logEvent)
+        public LogEventViewModel(LogEvent logEvent)
         {
             LogEvent = logEvent;
-            timestamp = $"{logEvent.Timestamp:yyyy-MM-dd HH:mm:ss.fffffff}";
-            level = logEvent.Level.ToString();
+            Timestamp = $"{logEvent.Timestamp:yyyy-MM-dd HH:mm:ss.fffffff}";
+            Level = logEvent.Level.ToString();
             using var buffer = new StringWriter();
             Formatter.Format(logEvent, buffer);
-            message = buffer.ToString().Trim();
+            Message = buffer.ToString().Trim();
         }
     }    
 }

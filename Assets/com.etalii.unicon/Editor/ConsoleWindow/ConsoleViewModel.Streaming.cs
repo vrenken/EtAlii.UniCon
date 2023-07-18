@@ -30,12 +30,7 @@ namespace EtAlii.UniCon.Editor
             
             
             
-            Stream = stream.Select(logEvent =>
-            {
-                var viewModel = CreateInstance<LogEventViewModel>();
-                viewModel.Init(logEvent); 
-                return viewModel;
-            });
+            Stream = stream.Select(logEvent => new LogEventViewModel(logEvent));
             StreamChanged?.Invoke();            
         }
     }    
