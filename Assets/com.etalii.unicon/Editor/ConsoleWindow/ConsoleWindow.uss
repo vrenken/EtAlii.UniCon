@@ -4,6 +4,10 @@
     -unity-text-align: middle-center;
 }
 
+.unity-list-view__empty-label {
+    display: none;
+}
+
 .unity-radio-button #unity-checkmark {
     background-image: none;
     -unity-font: resource('Fonts/FiraCode-Regular');
