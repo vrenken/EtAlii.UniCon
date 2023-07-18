@@ -6,7 +6,7 @@ namespace EtAlii.UniCon.Editor
 
     public partial class ConsoleViewModel
     {
-        public IObservable<LogEventViewModel> Stream;
+        public IObservable<LogEvent> Stream;
         public event Action StreamChanged;
 
         private void ConfigureStream()
@@ -50,9 +50,7 @@ namespace EtAlii.UniCon.Editor
                 };
             });
             
-            
-            
-            Stream = stream.Select(logEvent => new LogEventViewModel(logEvent));
+            Stream = stream;
             StreamChanged?.Invoke();            
         }
     }    

@@ -1,6 +1,7 @@
 ﻿namespace EtAlii.UniCon.Editor
 {
     using System.Collections.Generic;
+    using Serilog.Events;
     using UniRx;
     using UnityEngine;
     using UnityEngine.UIElements;
@@ -9,7 +10,7 @@
     {
         private readonly ListView _listView;
 
-        private readonly List<LogEventViewModel> _items = new ();
+        private readonly List<LogEvent> _items = new ();
 
         private readonly Font _consoleFont = Resources.Load<Font>("Fonts/FiraCode-Regular");
 
@@ -37,7 +38,6 @@
             visualTree.CloneTree(this);
 
             _tailButton = this.Q<Button>("tail-button");
-            _tailButton.clicked += OnTailButtonClicked;
             _tailButtonNonTrackingColor = _tailButton.style.backgroundColor.value;
             _tailButtonTrackingColor = new Color(
                 0.5f - _tailButtonNonTrackingColor.r, 
@@ -69,43 +69,41 @@
 
         private void OnScrolledVertically(float value)
         {
-            if (_isTrackingTail)
-            {
-                if (_previousScrollValue > _listViewScrollView.verticalScroller.value)
-                {
-                    OnTailButtonClicked();
-                }
-                _previousScrollValue = _listViewScrollView.verticalScroller.value;
-            }
+            if (!_viewModel.Settings.ScrollToTail) return;
+            if (!(_previousScrollValue > _listViewScrollView.verticalScroller.value)) return;
+            
+            _viewModel.Settings.ScrollToTail = false;
+            UpdateScrollToTailButton();
         }
 
-        private void Bind(Foldout foldout, LogEventViewModel viewModel)
+        private void Bind(Foldout foldout, LogEvent logEvent)
         {
-            if (foldout.userData as LogEventViewModel != viewModel)
-            {
-                foldout.value = false;
-                foldout.text = LogEventLine.GetMessage(viewModel);
-                foldout.contentContainer.Clear();
-                foldout.contentContainer.Add(BuildPropertyGrid(viewModel.LogEvent));
-                foldout.userData = viewModel;
-            }
+            if (foldout.userData as LogEvent == logEvent) return;
+            
+            foldout.value = false;
+            foldout.text = LogEventLine.GetMessage(logEvent);
+            foldout.contentContainer.Clear();
+            foldout.contentContainer.Add(BuildPropertyGrid(logEvent));
+            foldout.userData = logEvent;
         }
         
         public void Bind(ConsoleViewModel viewModel)
         {
-            if (_disposable != null)
-            {
-                _disposable.Dispose();
-            }
+            _disposable?.Dispose();
             _disposable = new CompositeDisposable();
-            BindLogSourceSettings(viewModel, _disposable);
-            BindLogLevelsSettings(viewModel, _disposable);
             
             if (_viewModel != null)
             {
                 _viewModel.StreamChanged -= OnStreamChanged;
+                _viewModel.SettingsChanged -= OnSettingsChanged;
             }
             _viewModel = viewModel;
+            
+            BindOtherSettings(viewModel, _disposable);
+            BindLogSourceSettings(viewModel, _disposable);
+            BindLogLevelsSettings(viewModel, _disposable);
+
+            _viewModel.SettingsChanged += OnSettingsChanged;
             _viewModel.StreamChanged += OnStreamChanged;
             OnStreamChanged();
         }

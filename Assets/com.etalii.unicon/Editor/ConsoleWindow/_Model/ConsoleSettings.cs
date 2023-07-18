@@ -6,5 +6,7 @@ namespace EtAlii.UniCon.Editor
 
         public bool UseSerilogSource = true;
         public bool UseUnitySource = false;
+
+        public bool ScrollToTail = true;
     }    
 }

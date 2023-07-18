@@ -6,6 +6,10 @@ namespace EtAlii.UniCon.Editor
 
     public partial class ConsoleViewModel
     {
+        public event Action<string> SettingsChanged;
+
+        public readonly ReactiveCommand<ClickEvent> OnTailButtonClick = new();
+        
         public readonly ReactiveCommand<ChangeEvent<bool>> OnLogLevelSerilogToggleChange = new();
         public readonly ReactiveCommand<ChangeEvent<bool>> OnLogLevelUnityToggleChange = new();
 
@@ -21,6 +25,12 @@ namespace EtAlii.UniCon.Editor
 
         private void SetupSettings()
         {
+            OnTailButtonClick.Subscribe(_ =>
+            {
+                Settings.ScrollToTail = !Settings.ScrollToTail;
+                SettingsChanged?.Invoke(nameof(Settings.ScrollToTail));
+            });
+
             OnLogLevelSerilogToggleChange.Subscribe(e => ToggleSource(e.newValue, value => Settings.UseSerilogSource = value));
             OnLogLevelUnityToggleChange.Subscribe(e => ToggleSource(e.newValue, value => Settings.UseUnitySource = value));
                 

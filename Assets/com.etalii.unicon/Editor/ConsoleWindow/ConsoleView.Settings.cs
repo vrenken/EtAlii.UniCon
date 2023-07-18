@@ -6,16 +6,36 @@ namespace EtAlii.UniCon.Editor
 
     public partial class ConsoleView
     {
-        private bool _isTrackingTail;
-
-        private void OnTailButtonClicked()
+        private void UpdateScrollToTailButton()
         {
-            _isTrackingTail = !_isTrackingTail;
-            _tailButton.style.backgroundColor = _isTrackingTail ? _tailButtonTrackingColor : _tailButtonNonTrackingColor;
-            _previousScrollValue = _listViewScrollView.verticalScroller.value;
-            ScrollToTailWhenNeeded();
+            _tailButton.style.backgroundColor = _viewModel.Settings.ScrollToTail 
+                ? _tailButtonTrackingColor 
+                : _tailButtonNonTrackingColor;
         }
 
+        
+        private void OnSettingsChanged(string settingName)
+        {
+            switch (settingName)
+            {
+                case nameof(_viewModel.Settings.ScrollToTail):
+                    UpdateScrollToTailButton();
+                    if (_viewModel.Settings.ScrollToTail)
+                    {
+                        ScrollToTailWhenNeeded();
+                    }
+                    break;
+            }
+        }
+        
+        private void BindOtherSettings(ConsoleViewModel viewModel, CompositeDisposable disposable)
+        {
+            _tailButton
+                .BindClick(viewModel.OnTailButtonClick)
+                .AddTo(disposable);
+            UpdateScrollToTailButton();
+        }
+        
         private void BindLogSourceSettings(ConsoleViewModel viewModel, CompositeDisposable disposable)
         {
             var serilogSourceToggle = this.Q<Toggle>("serilog-source-toggle");
