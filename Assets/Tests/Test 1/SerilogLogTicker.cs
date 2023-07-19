@@ -99,7 +99,7 @@
             var sentence = _lorem.Sentence();
             var words = sentence.Split(" ");
             var indexToReplace=  Random.Range(0, words.Length);
-            words[indexToReplace] = $"{{{words[indexToReplace]}}}";
+            words[indexToReplace] = $"{{{words[indexToReplace].TrimEnd('.')}}}";
             var propertyValue = _lorem.Word();
             sentence = string.Join(" ", words);
             return (sentence, propertyValue);
