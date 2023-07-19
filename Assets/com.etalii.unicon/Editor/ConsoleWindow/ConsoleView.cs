@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using Serilog.Events;
     using UniRx;
+    using UnityEditor.UIElements;
     using UnityEngine;
     using UnityEngine.UIElements;
 
@@ -17,6 +18,11 @@
         private readonly Color _buttonNotToggledColor;
         private readonly Color _buttonToggledColor;
         private readonly ScrollView _listViewScrollView;
+        private readonly ToolbarMenu _rulesAddButtonMenu;
+        
+        private float _previousScrollValue;
+        private ConsoleViewModel _viewModel;
+        private CompositeDisposable _disposable;
 
         public new class UxmlFactory : UxmlFactory<ConsoleView, UxmlTraits>
         {
@@ -36,14 +42,13 @@
             var visualTree = Resources.Load<VisualTreeAsset>(nameof(ConsoleView));
             visualTree.CloneTree(this);
 
-            _rightPanelGroup = this.Q<TwoPaneSplitView>("right-panel-group");
-            
             _filterPanel = this.Q<VisualElement>("filter-panel");
             _filterButton = this.Q<Button>("filter-button");
             
             _rulesPanel = this.Q<VisualElement>("rules-panel");
             _rulesButton = this.Q<Button>("rules-button");
             _rulesList = this.Q<ScrollView>("rules-list");
+            _rulesAddButtonMenu = this.Q<ToolbarMenu>("rules-add-button");
             
             _tailButton = this.Q<Button>("tail-button");
 
@@ -72,11 +77,6 @@
             };
             _listView.bindItem = (e, i) => Bind((Foldout)e, _items[i]);
         }
-
-        private float _previousScrollValue;
-        private ConsoleViewModel _viewModel;
-        private CompositeDisposable _disposable;
-        private readonly TwoPaneSplitView _rightPanelGroup;
 
         private void OnScrolledVertically(float value)
         {

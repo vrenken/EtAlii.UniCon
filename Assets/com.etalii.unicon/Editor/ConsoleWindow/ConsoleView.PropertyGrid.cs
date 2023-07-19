@@ -77,7 +77,12 @@ namespace EtAlii.UniCon.Editor
                 {
                     name = $"key-{property.Key}",
                     text = property.Key,
-                    style = { flexGrow = 0, width = 200, unityTextAlign = TextAnchor.MiddleLeft }
+                    style =
+                    {
+                        flexGrow = 0, 
+                        width = 200, 
+                        unityTextAlign = TextAnchor.MiddleLeft
+                    }
                 };
                 row.contentContainer.Add(keyLabel);
 

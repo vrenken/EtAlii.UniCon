@@ -25,6 +25,12 @@ namespace EtAlii.UniCon.Editor
             _rulesButton
                 .BindClick(viewModel.OnRulesButtonClick)
                 .AddTo(disposable);
+            
+            _rulesAddButtonMenu.menu.AppendAction("And", a => { }, a => DropdownMenuAction.Status.Normal);
+            _rulesAddButtonMenu.menu.AppendAction("Or", a => { }, a => DropdownMenuAction.Status.Normal);
+            _rulesAddButtonMenu.menu.AppendAction("Search", a => { }, a => DropdownMenuAction.Status.Normal);
+            _rulesAddButtonMenu.menu.AppendAction("Has", a => { }, a => DropdownMenuAction.Status.Normal);
+            _rulesAddButtonMenu.menu.AppendAction("Does not have", a => { }, a => DropdownMenuAction.Status.Normal);
         }
         
         private void OnRulesChanged(string settingName)
@@ -62,6 +68,9 @@ namespace EtAlii.UniCon.Editor
                     text = filterRule.Property,
                     style =
                     {
+                        marginLeft = 5,
+                        flexGrow = 0, 
+                        width = 200, 
                         unityTextAlign = TextAnchor.MiddleLeft
                     }
                 };
@@ -71,6 +80,10 @@ namespace EtAlii.UniCon.Editor
                 {
                     value = filterRule.FilterType.ToString(),
                     choices = Enum.GetNames(typeof(FilterType)).ToList(),
+                    style =
+                    {
+                        width = 100
+                    }
                 };
                 filterRuleView.contentContainer.Add(dropDown);
 
