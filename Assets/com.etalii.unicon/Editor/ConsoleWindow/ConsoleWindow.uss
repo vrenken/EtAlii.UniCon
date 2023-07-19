@@ -4,6 +4,12 @@
     -unity-text-align: middle-center;
 }
 
+.toolbar-button-right {
+    width: 75px;
+    border-right-width: 0;
+    -unity-text-align: middle-center;
+}
+
 .unity-list-view__empty-label {
     display: none;
 }

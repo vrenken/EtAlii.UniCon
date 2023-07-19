@@ -6,8 +6,8 @@
         <uie:ToolbarButton text="\u221E Tail" name="tail-button" display-tooltip-when-elided="true" focusable="false" class="toolbar-button" style="width: 75px; max-width: 75px; min-width: 75px;" />
         <uie:ToolbarSpacer style="width: 100%;" />
         <uie:ToolbarSearchField focusable="false" />
-        <uie:ToolbarButton text="Rules" name="rules-button" display-tooltip-when-elided="true" focusable="false" class="toolbar-button" style="width: 75px; min-width: 75px; max-width: 75px;" />
-        <uie:ToolbarButton text="Filters" name="filter-button" display-tooltip-when-elided="true" focusable="false" class="toolbar-button" style="width: 75px; min-width: 75px; max-width: 75px;" />
+        <uie:ToolbarButton text="Rules" name="rules-button" display-tooltip-when-elided="true" focusable="false" class="toolbar-button-right" style="width: 75px; min-width: 75px; max-width: 75px;" />
+        <uie:ToolbarButton text="Filters" name="filter-button" display-tooltip-when-elided="true" focusable="false" class="toolbar-button-right" style="width: 75px; min-width: 75px; max-width: 75px;" />
     </uie:Toolbar>
     <ui:TwoPaneSplitView fixed-pane-initial-dimension="150" fixed-pane-index="1">
         <ui:ListView show-bound-collection-size="true" focusable="false" virtualization-method="DynamicHeight" style="width: auto;" />
