@@ -70,7 +70,7 @@
         private void OnScrolledVertically(float value)
         {
             if (!_viewModel.Settings.ScrollToTail) return;
-            if (!(_previousScrollValue > _listViewScrollView.verticalScroller.value)) return;
+            if (_previousScrollValue <= _listViewScrollView.verticalScroller.value) return;
             
             _viewModel.Settings.ScrollToTail = false;
             UpdateScrollToTailButton();
