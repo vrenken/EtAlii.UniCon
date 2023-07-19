@@ -1,7 +1,7 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
     <Style src="project://database/Assets/com.etalii.unicon/Editor/ConsoleWindow/ConsoleWindow.uss?fileID=7433441132597879392&amp;guid=36c5b64153226674f929bea9b08e60c3&amp;type=3#ConsoleWindow" />
     <uie:Toolbar style="border-top-width: 1px;">
-        <uie:ToolbarButton text="Clear" name="clear-button" display-tooltip-when-elided="true" focusable="false" class="toolbar-button" style="max-width: 75px; min-width: 75px; width: 75px" />
+        <uie:ToolbarButton text="Clear" name="clear-button" display-tooltip-when-elided="true" focusable="false" class="toolbar-button" style="max-width: 75px; min-width: 75px; width: 75px;" />
         <uie:ToolbarButton text="Pause" display-tooltip-when-elided="true" focusable="false" class="toolbar-button" style="width: 75px; min-width: 75px; max-width: 75px;" />
         <uie:ToolbarButton text="\u221E Tail" name="tail-button" display-tooltip-when-elided="true" focusable="false" class="toolbar-button" style="width: 75px; max-width: 75px; min-width: 75px;" />
         <uie:ToolbarSpacer style="width: 100%;" />
@@ -9,7 +9,7 @@
     </uie:Toolbar>
     <ui:TwoPaneSplitView fixed-pane-initial-dimension="150" fixed-pane-index="1">
         <ui:ListView show-bound-collection-size="true" focusable="false" virtualization-method="DynamicHeight" style="width: auto;" />
-        <ui:VisualElement style="flex-grow: 1; align-items: auto;">
+        <ui:VisualElement style="flex-grow: 1; align-items: auto; min-width: 150px;">
             <ui:ScrollView horizontal-scroller-visibility="Hidden">
                 <ui:Foldout text=" Log source" name="SourceFoldout" style="width: 100%;">
                     <ui:Toggle focusable="false" text="Serilog" value="true" name="serilog-source-toggle" />
