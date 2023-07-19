@@ -1,43 +1,46 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
     <Style src="project://database/Assets/com.etalii.unicon/Editor/ConsoleWindow/ConsoleWindow.uss?fileID=7433441132597879392&amp;guid=36c5b64153226674f929bea9b08e60c3&amp;type=3#ConsoleWindow" />
     <uie:Toolbar style="border-top-width: 1px;">
-<!--        <uie:ToolbarButton text="Clear" name="clear-button" display-tooltip-when-elided="true" focusable="false" class="toolbar-button" style="max-width: 75px; min-width: 75px; width: 75px;" />-->
-<!--        <uie:ToolbarButton text="Pause" display-tooltip-when-elided="true" focusable="false" class="toolbar-button" style="width: 75px; min-width: 75px; max-width: 75px;" />-->
         <uie:ToolbarButton text="\u221E Tail" name="tail-button" display-tooltip-when-elided="true" focusable="false" class="toolbar-button" style="width: 75px; max-width: 75px; min-width: 75px;" />
         <uie:ToolbarSpacer style="width: 100%;" />
         <uie:ToolbarSearchField focusable="false" />
         <uie:ToolbarButton text="Rules" name="rules-button" display-tooltip-when-elided="true" focusable="false" class="toolbar-button-right" style="width: 75px; min-width: 75px; max-width: 75px;" />
         <uie:ToolbarButton text="Filters" name="filter-button" display-tooltip-when-elided="true" focusable="false" class="toolbar-button-right" style="width: 75px; min-width: 75px; max-width: 75px;" />
     </uie:Toolbar>
-    <ui:TwoPaneSplitView fixed-pane-initial-dimension="150" fixed-pane-index="1">
+    <ui:TwoPaneSplitView fixed-pane-initial-dimension="300" fixed-pane-index="1" style="flex-direction: row;">
         <ui:ListView show-bound-collection-size="true" focusable="false" virtualization-method="DynamicHeight" style="width: auto;" />
-        <ui:VisualElement style="flex-grow: 1; align-items: auto; min-width: 150px;" name="filter-panel">
-            <ui:ScrollView horizontal-scroller-visibility="Hidden">
-                <ui:Foldout text=" Log source" name="SourceFoldout" style="width: 100%;">
-                    <ui:Toggle focusable="false" text="Serilog" value="true" name="serilog-source-toggle" />
-                    <ui:Toggle focusable="false" text="Unity" value="true" name="unity-source-toggle" />
-                </ui:Foldout>
-                <ui:Foldout text="Log levels" name="LogLevelFoldout" style="width: 100%;">
-                    <ui:Toggle focusable="false" text="&lt;color=#5A5A5A&gt;\u25CF&lt;/color&gt; Verbose" name="verbose-toggle" value="true" />
-                    <ui:Toggle focusable="false" text="&lt;color=white&gt;\u25CF&lt;/color&gt; Information" name="information-toggle" value="true" />
-                    <ui:Toggle focusable="false" text="&lt;color=#808080&gt;\u25CF&lt;/color&gt; Debug" name="debug-toggle" value="true" />
-                    <ui:Toggle focusable="false" text="&lt;color=yellow&gt;\u25CF&lt;/color&gt; Warning" name="warning-toggle" value="true" />
-                    <ui:Toggle focusable="false" text="&lt;color=red&gt;\u25CF&lt;/color&gt; Error" name="error-toggle" value="true" />
-                    <ui:Toggle focusable="false" text="&lt;color=red&gt;\u25CF&lt;/color&gt; Fatal" name="fatal-toggle" value="true" />
-                    <ui:Toggle focusable="false" text="&lt;color=red&gt;\u25CF&lt;/color&gt; Exceptions" name="exceptions-toggle" value="true" />
-                </ui:Foldout>
-                <ui:Foldout text="Time" name="TimeFoldout" style="width: 100%;">
-                    <ui:RadioButton text="1 hour" />
-                    <ui:RadioButton text="30 minutes" />
-                    <ui:RadioButton text="10 minutes" />
-                    <ui:RadioButton text="5 minutes" value="true" />
-                    <ui:RadioButton text="1 minute" />
-                    <ui:RadioButton text="30 seconds" />
-                    <ui:RadioButton text="1 seconds" />
-                    <ui:RadioButton text="100 milliseconds" />
-                </ui:Foldout>
-                <ui:Foldout text="Signals" name="SignalsFoldout" style="width: 100%;" />
-            </ui:ScrollView>
-        </ui:VisualElement>
+        <ui:TwoPaneSplitView fixed-pane-initial-dimension="150" fixed-pane-index="1" name="right-panel-group">
+            <ui:VisualElement name="rules-panel" style="background-color: rgba(250, 6, 6, 0);">
+                <ui:Button text="Button" display-tooltip-when-elided="true" />
+            </ui:VisualElement>
+            <ui:VisualElement name="filter-panel">
+                <ui:ScrollView horizontal-scroller-visibility="Hidden">
+                    <ui:Foldout text=" Log source" name="SourceFoldout" style="width: 100%;">
+                        <ui:Toggle focusable="false" text="Serilog" value="true" name="serilog-source-toggle" />
+                        <ui:Toggle focusable="false" text="Unity" value="true" name="unity-source-toggle" />
+                    </ui:Foldout>
+                    <ui:Foldout text="Log levels" name="LogLevelFoldout" style="width: 100%;">
+                        <ui:Toggle focusable="false" text="&lt;color=#5A5A5A&gt;\u25CF&lt;/color&gt; Verbose" name="verbose-toggle" value="true" />
+                        <ui:Toggle focusable="false" text="&lt;color=white&gt;\u25CF&lt;/color&gt; Information" name="information-toggle" value="true" />
+                        <ui:Toggle focusable="false" text="&lt;color=#808080&gt;\u25CF&lt;/color&gt; Debug" name="debug-toggle" value="true" />
+                        <ui:Toggle focusable="false" text="&lt;color=yellow&gt;\u25CF&lt;/color&gt; Warning" name="warning-toggle" value="true" />
+                        <ui:Toggle focusable="false" text="&lt;color=red&gt;\u25CF&lt;/color&gt; Error" name="error-toggle" value="true" />
+                        <ui:Toggle focusable="false" text="&lt;color=red&gt;\u25CF&lt;/color&gt; Fatal" name="fatal-toggle" value="true" />
+                        <ui:Toggle focusable="false" text="&lt;color=red&gt;\u25CF&lt;/color&gt; Exceptions" name="exceptions-toggle" value="true" />
+                    </ui:Foldout>
+                    <ui:Foldout text="Time" name="TimeFoldout" style="width: 100%;">
+                        <ui:RadioButton text="1 hour" />
+                        <ui:RadioButton text="30 minutes" />
+                        <ui:RadioButton text="10 minutes" />
+                        <ui:RadioButton text="5 minutes" value="true" />
+                        <ui:RadioButton text="1 minute" />
+                        <ui:RadioButton text="30 seconds" />
+                        <ui:RadioButton text="1 seconds" />
+                        <ui:RadioButton text="100 milliseconds" />
+                    </ui:Foldout>
+                    <ui:Foldout text="Signals" name="SignalsFoldout" style="width: 100%;" />
+                </ui:ScrollView>
+            </ui:VisualElement>
+        </ui:TwoPaneSplitView>
     </ui:TwoPaneSplitView>
 </ui:UXML>

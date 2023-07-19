@@ -36,9 +36,14 @@
             var visualTree = Resources.Load<VisualTreeAsset>(nameof(ConsoleView));
             visualTree.CloneTree(this);
 
+            _rightPanelGroup = this.Q<TwoPaneSplitView>("right-panel-group");
+            
             _filterPanel = this.Q<VisualElement>("filter-panel");
             _filterButton = this.Q<Button>("filter-button");
+            
+            _rulesPanel = this.Q<VisualElement>("rules-panel");
             _rulesButton = this.Q<Button>("rules-button");
+            
             _tailButton = this.Q<Button>("tail-button");
 
             // Let's take the color of the tail button and use that to remember the toggled and not toggled colors.
@@ -70,6 +75,7 @@
         private float _previousScrollValue;
         private ConsoleViewModel _viewModel;
         private CompositeDisposable _disposable;
+        private readonly TwoPaneSplitView _rightPanelGroup;
 
         private void OnScrolledVertically(float value)
         {

@@ -6,11 +6,14 @@ namespace EtAlii.UniCon.Editor
 
     public partial class ConsoleView
     {
-        private readonly Button _filterButton;
         private readonly Button _rulesButton;
+        private readonly VisualElement _rulesPanel;
 
         private void BindRules(ConsoleViewModel viewModel, CompositeDisposable disposable)
         {
+            UpdateToggleButton(_rulesButton, _viewModel.Settings.ShowRules);
+            UpdateRulesPanel();
+
             _filterButton
                 .BindClick(viewModel.OnFilterButtonClick)
                 .AddTo(disposable);
@@ -26,10 +29,15 @@ namespace EtAlii.UniCon.Editor
             {
                 case nameof(_viewModel.Settings.ShowRules):
                     UpdateToggleButton(_rulesButton, _viewModel.Settings.ShowRules);
-                    // Configure rules panel
+                    UpdateRulesPanel();
                     break;
             }
         }
 
+        private void UpdateRulesPanel()
+        {
+            _rulesPanel.visible = _viewModel.Settings.ShowRules; 
+            //_rulesPanel.style.display = _rulesPanel.visible ? DisplayStyle.Flex : DisplayStyle.None;
+        }
     }    
 }

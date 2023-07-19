@@ -6,26 +6,14 @@ namespace EtAlii.UniCon.Editor
 
     public partial class ConsoleView
     {
+        private readonly Button _filterButton;
         private readonly VisualElement _filterPanel;
-
-        private void OnFilterChanged(string settingName)
-        {
-            switch (settingName)
-            {
-                case nameof(_viewModel.Settings.ShowFilter):
-                    UpdateToggleButton(_filterButton, _viewModel.Settings.ShowFilter);
-                    UpdateFilterPanel();
-                    break;
-            }
-        }
-
-        private void UpdateFilterPanel()
-        {
-            _filterPanel.visible = _viewModel.Settings.ShowFilter; 
-        }
 
         private void BindFilter(ConsoleViewModel viewModel, CompositeDisposable disposable)
         {
+            UpdateToggleButton(_filterButton, _viewModel.Settings.ShowFilter);
+            UpdateFilterPanel();
+
             // Log sources.
             var serilogSourceToggle = this.Q<Toggle>("serilog-source-toggle");
             serilogSourceToggle.value = viewModel.Settings.UseSerilogSource;
@@ -75,6 +63,23 @@ namespace EtAlii.UniCon.Editor
             fatalToggle
                 .BindValueChanged(viewModel.OnLogLevelFatalToggleChange)
                 .AddTo(disposable);
+        }
+        
+        private void OnFilterChanged(string settingName)
+        {
+            switch (settingName)
+            {
+                case nameof(_viewModel.Settings.ShowFilter):
+                    UpdateToggleButton(_filterButton, _viewModel.Settings.ShowFilter);
+                    UpdateFilterPanel();
+                    break;
+            }
+        }
+
+        private void UpdateFilterPanel()
+        {
+            _filterPanel.visible = _viewModel.Settings.ShowFilter;
+            //_filterPanel.style.display = _filterPanel.visible ? DisplayStyle.Flex : DisplayStyle.None;
         }
     }    
 }
