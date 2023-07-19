@@ -19,8 +19,6 @@ namespace EtAlii.UniCon.Editor
 
         private void OnEnable()
         {
-            // var icon = EditorGUIUtility.IconContent("d_UnityEditor.ConsoleWindow@2x").image;
-
             titleContent = new GUIContent("UniCon Console", logo.texture);
         }
 
