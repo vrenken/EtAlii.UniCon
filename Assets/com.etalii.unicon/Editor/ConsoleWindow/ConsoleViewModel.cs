@@ -21,6 +21,7 @@ namespace EtAlii.UniCon.Editor
         public ConsoleViewModel()
         {
             SetupSettings();
+            SetupFilters();
         }
 
         public void Init() => ConfigureStream();

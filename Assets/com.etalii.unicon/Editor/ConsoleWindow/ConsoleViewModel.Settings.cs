@@ -6,6 +6,9 @@ namespace EtAlii.UniCon.Editor
 
     public partial class ConsoleViewModel
     {
+        /// <summary>
+        /// Gets raised when any property related to the settings has changed. 
+        /// </summary>
         public event Action<string> SettingsChanged;
 
         public readonly ReactiveCommand<ClickEvent> OnTailButtonClick = new();

@@ -7,6 +7,10 @@ namespace EtAlii.UniCon.Editor
     public partial class ConsoleViewModel
     {
         public IObservable<LogEvent> Stream;
+        
+        /// <summary>
+        /// Gets raised when the stream has changed and the view needs to update itself accordingly.
+        /// </summary>
         public event Action StreamChanged;
 
         private void ConfigureStream()
