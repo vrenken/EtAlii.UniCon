@@ -8,5 +8,8 @@ namespace EtAlii.UniCon.Editor
         public bool UseUnitySource = false;
 
         public bool ScrollToTail = true;
+
+        public bool ShowFilter = true;
+        public bool ShowRules = false;
     }    
 }

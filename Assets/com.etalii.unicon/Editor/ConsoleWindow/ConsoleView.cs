@@ -14,9 +14,8 @@
 
         private readonly Font _consoleFont = Resources.Load<Font>("Fonts/FiraCode-Regular");
 
-        private readonly Button _tailButton;
-        private readonly Color _tailButtonNonTrackingColor;
-        private readonly Color _tailButtonTrackingColor;
+        private readonly Color _buttonNotToggledColor;
+        private readonly Color _buttonToggledColor;
         private readonly ScrollView _listViewScrollView;
 
         public new class UxmlFactory : UxmlFactory<ConsoleView, UxmlTraits>
@@ -37,13 +36,18 @@
             var visualTree = Resources.Load<VisualTreeAsset>(nameof(ConsoleView));
             visualTree.CloneTree(this);
 
+            _filterPanel = this.Q<VisualElement>("filter-panel");
+            _filterButton = this.Q<Button>("filter-button");
+            _rulesButton = this.Q<Button>("rules-button");
             _tailButton = this.Q<Button>("tail-button");
-            _tailButtonNonTrackingColor = _tailButton.style.backgroundColor.value;
-            _tailButtonTrackingColor = new Color(
-                0.5f - _tailButtonNonTrackingColor.r, 
-                0.5f - _tailButtonNonTrackingColor.g,
-                0.5f - _tailButtonNonTrackingColor.b, 
-                0.5f - _tailButtonNonTrackingColor.a);
+
+            // Let's take the color of the tail button and use that to remember the toggled and not toggled colors.
+            _buttonNotToggledColor = _tailButton.style.backgroundColor.value;
+            _buttonToggledColor = new Color(
+                0.5f - _buttonNotToggledColor.r, 
+                0.5f - _buttonNotToggledColor.g,
+                0.5f - _buttonNotToggledColor.b, 
+                0.5f - _buttonNotToggledColor.a);
             
             _listView = this.Q<ListView>();
             _listViewScrollView = _listView.Q<ScrollView>();
@@ -73,7 +77,7 @@
             if (_previousScrollValue <= _listViewScrollView.verticalScroller.value) return;
             
             _viewModel.Settings.ScrollToTail = false;
-            UpdateScrollToTailButton();
+            UpdateToggleButton(_tailButton, _viewModel.Settings.ScrollToTail);
         }
 
         private void Bind(Foldout foldout, LogEvent logEvent)
@@ -95,17 +99,29 @@
             if (_viewModel != null)
             {
                 _viewModel.StreamChanged -= OnStreamChanged;
-                _viewModel.SettingsChanged -= OnSettingsChanged;
+                _viewModel.ScrollingChanged -= OnScrollingChanged;
+                _viewModel.FilterChanged -= OnFilterChanged;
+                _viewModel.RulesChanged -= OnRulesChanged;
             }
             _viewModel = viewModel;
             
-            BindOtherSettings(viewModel, _disposable);
-            BindLogSourceSettings(viewModel, _disposable);
-            BindLogLevelsSettings(viewModel, _disposable);
-
-            _viewModel.SettingsChanged += OnSettingsChanged;
+            BindScrolling(viewModel, _disposable);
+            BindFilter(viewModel, _disposable);
+            BindRules(viewModel, _disposable);
+            
+            _viewModel.FilterChanged += OnFilterChanged;
+            _viewModel.RulesChanged += OnRulesChanged;
+            _viewModel.ScrollingChanged += OnScrollingChanged;
             _viewModel.StreamChanged += OnStreamChanged;
             OnStreamChanged();
         }
+        
+        private void UpdateToggleButton(Button button, bool isToggled)
+        {
+            button.style.backgroundColor = isToggled 
+                ? _buttonToggledColor 
+                : _buttonNotToggledColor;
+        }
+
     }    
 }
