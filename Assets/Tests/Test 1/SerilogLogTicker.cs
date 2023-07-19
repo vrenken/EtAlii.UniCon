@@ -31,7 +31,7 @@
             while (gameObject.activeSelf)
             {
                 yield return new WaitForSeconds(interval);
-                switch (Random.Range(0,16))
+                switch (Random.Range(0,20))
                 {
                     // ReSharper disable TemplateIsNotCompileTimeConstantProblem
                     case 0: _logger.Verbose("New verbose log entry {Property1}, and {Property2}", Environment.TickCount, "something"); break;
@@ -50,9 +50,37 @@
                     case 13: _logger.Warning(_lorem.Sentence()); break;
                     case 14: _logger.Information(_lorem.Sentence()); break;
                     case 15: _logger.Debug(_lorem.Sentence()); break;
+                    case 16:
+                        var (sentence, word) = BuildSentenceWithProperty();
+                        _logger.Verbose(sentence, word); 
+                        break;
+                    case 17:
+                        (sentence, word) = BuildSentenceWithProperty();
+                        _logger.Information(sentence, word); 
+                        break;
+                    case 18:
+                        (sentence, word) = BuildSentenceWithProperty();
+                        _logger.Debug(sentence, word); 
+                        break;
+                    case 19:
+                        (sentence, word) = BuildSentenceWithProperty();
+                        _logger.Warning(sentence, word); 
+                        break;
+                        
                     // ReSharper restore TemplateIsNotCompileTimeConstantProblem
                 }
             }
+        }
+
+        private (string sentence, string propertyValue) BuildSentenceWithProperty()
+        {
+            var sentence = _lorem.Sentence();
+            var words = sentence.Split(" ");
+            var indexToReplace=  Random.Range(0, words.Length);
+            words[indexToReplace] = $"{{{words[indexToReplace]}}}";
+            var propertyValue = _lorem.Word();
+            sentence = string.Join(" ", words);
+            return (sentence, propertyValue);
         }
     }
 }
