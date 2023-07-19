@@ -17,8 +17,8 @@
             <ui:VisualElement name="filter-panel">
                 <ui:ScrollView horizontal-scroller-visibility="Hidden">
                     <ui:Foldout text=" Log source" name="SourceFoldout" style="width: 100%;">
-                        <ui:Toggle focusable="false" text="Serilog" value="true" name="serilog-source-toggle" />
-                        <ui:Toggle focusable="false" text="Unity" value="true" name="unity-source-toggle" />
+                        <ui:Toggle focusable="false" text="Serilog" value="true" name="serilog-source-toggle" tooltip="Toggle to show all log events that are gathered by Serilog." />
+                        <ui:Toggle focusable="false" text="Unity" value="true" name="unity-source-toggle" tooltip="Toggle to show all log events that are gathered by the default Unity debug logs."/>
                     </ui:Foldout>
                     <ui:Foldout text="Log levels" name="LogLevelFoldout" style="width: 100%;">
                         <ui:Toggle focusable="false" text="&lt;color=#5A5A5A&gt;\u25CF&lt;/color&gt; Verbose" name="verbose-toggle" value="true" />
@@ -27,7 +27,7 @@
                         <ui:Toggle focusable="false" text="&lt;color=yellow&gt;\u25CF&lt;/color&gt; Warning" name="warning-toggle" value="true" />
                         <ui:Toggle focusable="false" text="&lt;color=red&gt;\u25CF&lt;/color&gt; Error" name="error-toggle" value="true" />
                         <ui:Toggle focusable="false" text="&lt;color=red&gt;\u25CF&lt;/color&gt; Fatal" name="fatal-toggle" value="true" />
-                        <ui:Toggle focusable="false" text="&lt;color=red&gt;\u25CF&lt;/color&gt; Exceptions" name="exceptions-toggle" value="true" />
+                        <ui:Toggle focusable="false" text="&lt;color=red&gt;\u25CF&lt;/color&gt; Exceptions" name="exceptions-toggle" value="true" tooltip="Toggle to show all log events that contains information about an exception. This overrules the default log levels." />
                     </ui:Foldout>
                     <ui:Foldout text="Time" name="TimeFoldout" style="width: 100%;">
                         <ui:RadioButton text="1 hour" />
