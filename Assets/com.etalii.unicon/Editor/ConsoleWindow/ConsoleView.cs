@@ -43,6 +43,7 @@
             
             _rulesPanel = this.Q<VisualElement>("rules-panel");
             _rulesButton = this.Q<Button>("rules-button");
+            _rulesList = this.Q<ScrollView>("rules-list");
             
             _tailButton = this.Q<Button>("tail-button");
 

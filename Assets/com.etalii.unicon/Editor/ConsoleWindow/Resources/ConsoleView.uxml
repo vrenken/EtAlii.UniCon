@@ -11,7 +11,8 @@
         <ui:ListView show-bound-collection-size="true" focusable="false" virtualization-method="DynamicHeight" style="width: auto;" />
         <ui:TwoPaneSplitView fixed-pane-initial-dimension="150" fixed-pane-index="1" name="right-panel-group">
             <ui:VisualElement name="rules-panel" style="background-color: rgba(250, 6, 6, 0);">
-                <ui:Button text="Button" display-tooltip-when-elided="true" />
+                <ui:ScrollView horizontal-scroller-visibility="Hidden" name="rules-list">
+                </ui:ScrollView>
             </ui:VisualElement>
             <ui:VisualElement name="filter-panel">
                 <ui:ScrollView horizontal-scroller-visibility="Hidden">
