@@ -3,7 +3,6 @@ namespace EtAlii.UniCon.Editor
     using System;
     using System.Collections.Generic;
     using UniRx;
-    using UnityEngine;
     using UnityEngine.UIElements;
 
     public partial class ConsoleViewModel
@@ -30,15 +29,23 @@ namespace EtAlii.UniCon.Editor
             
             OnAddIncludeFilterClicked.Subscribe(e =>
             {
-                Debug.Log(
-                        $"[FILTERS] Request for include filter: {e.Property.Key} = {e.Property.Value.ToString()}");
-                RulesChanged?.Invoke(string.Empty);
+                Settings.ShowRules = true;
+                RulesChanged?.Invoke(nameof(Settings.ShowRules));
+
+                var rule = new FilterRule(e.Property.Key, e.Property.Value, FilterType.Is);
+                FilterRules.Add(rule);
+                RulesChanged?.Invoke(nameof(FilterRules));
+                ConfigureStream();
             });
             OnAddExcludeFilterClicked.Subscribe(e =>
             {
-                Debug.Log(
-                        $"[FILTERS] Request for exclude filter: {e.Property.Key} = {e.Property.Value.ToString()}");
-                RulesChanged?.Invoke(string.Empty);
+                Settings.ShowRules = true;
+                RulesChanged?.Invoke(nameof(Settings.ShowRules));
+
+                var rule = new FilterRule(e.Property.Key, e.Property.Value, FilterType.IsNot);
+                FilterRules.Add(rule);
+                RulesChanged?.Invoke(nameof(FilterRules));
+                ConfigureStream();
             });
         }
     }    
