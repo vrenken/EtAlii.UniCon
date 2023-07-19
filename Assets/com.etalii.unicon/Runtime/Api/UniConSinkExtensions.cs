@@ -10,6 +10,7 @@ namespace Serilog.Sinks.UniCon
 {
     public static class UniConSinkExtensions
     {
+        // ReSharper disable once InvalidXmlDocComment
         /// <summary>
         /// Writes log events to <see cref="EtAlii.UniCon.Editor.ConsoleWindow"/>.
         /// </summary>
