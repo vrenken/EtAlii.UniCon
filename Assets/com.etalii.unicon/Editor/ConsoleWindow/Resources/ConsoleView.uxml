@@ -7,41 +7,41 @@
         <uie:ToolbarButton text="Rules" name="rules-button" display-tooltip-when-elided="true" focusable="false" class="toolbar-button-right" style="width: 75px; min-width: 75px; max-width: 75px;" />
         <uie:ToolbarButton text="Filters" name="filter-button" display-tooltip-when-elided="true" focusable="false" class="toolbar-button-right" style="width: 75px; min-width: 75px; max-width: 75px;" />
     </uie:Toolbar>
-    <ui:TwoPaneSplitView fixed-pane-initial-dimension="300" fixed-pane-index="1" style="flex-direction: row;">
-        <ui:ListView show-bound-collection-size="true" focusable="false" virtualization-method="DynamicHeight" style="width: auto;" />
-        <ui:TwoPaneSplitView fixed-pane-initial-dimension="150" fixed-pane-index="1" name="right-panel-group">
+    <ui:TwoPaneSplitView fixed-pane-initial-dimension="150" fixed-pane-index="1" style="flex-direction: row;">
+        <ui:TwoPaneSplitView fixed-pane-initial-dimension="150" fixed-pane-index="1" orientation="Vertical" name="right-panel-group">
+            <ui:ListView show-bound-collection-size="true" focusable="false" virtualization-method="DynamicHeight" style="width: auto;" />
             <ui:VisualElement name="rules-panel" style="background-color: rgba(250, 6, 6, 0);">
                 <ui:ScrollView horizontal-scroller-visibility="Hidden" name="rules-list">
                 </ui:ScrollView>
             </ui:VisualElement>
-            <ui:VisualElement name="filter-panel">
-                <ui:ScrollView horizontal-scroller-visibility="Hidden">
-                    <ui:Foldout text=" Log source" name="SourceFoldout" style="width: 100%;">
-                        <ui:Toggle focusable="false" text="Serilog" value="true" name="serilog-source-toggle" tooltip="Toggle to show all log events that are gathered by Serilog." />
-                        <ui:Toggle focusable="false" text="Unity" value="true" name="unity-source-toggle" tooltip="Toggle to show all log events that are gathered by the default Unity debug logs."/>
-                    </ui:Foldout>
-                    <ui:Foldout text="Log levels" name="LogLevelFoldout" style="width: 100%;">
-                        <ui:Toggle focusable="false" text="&lt;color=#5A5A5A&gt;\u25CF&lt;/color&gt; Verbose" name="verbose-toggle" value="true" />
-                        <ui:Toggle focusable="false" text="&lt;color=white&gt;\u25CF&lt;/color&gt; Information" name="information-toggle" value="true" />
-                        <ui:Toggle focusable="false" text="&lt;color=#808080&gt;\u25CF&lt;/color&gt; Debug" name="debug-toggle" value="true" />
-                        <ui:Toggle focusable="false" text="&lt;color=yellow&gt;\u25CF&lt;/color&gt; Warning" name="warning-toggle" value="true" />
-                        <ui:Toggle focusable="false" text="&lt;color=red&gt;\u25CF&lt;/color&gt; Error" name="error-toggle" value="true" />
-                        <ui:Toggle focusable="false" text="&lt;color=red&gt;\u25CF&lt;/color&gt; Fatal" name="fatal-toggle" value="true" />
-                        <ui:Toggle focusable="false" text="&lt;color=red&gt;\u25CF&lt;/color&gt; Exceptions" name="exceptions-toggle" value="true" tooltip="Toggle to show all log events that contains information about an exception. This overrules the default log levels." />
-                    </ui:Foldout>
-                    <ui:Foldout text="Time" name="TimeFoldout" style="width: 100%;">
-                        <ui:RadioButton text="1 hour" />
-                        <ui:RadioButton text="30 minutes" />
-                        <ui:RadioButton text="10 minutes" />
-                        <ui:RadioButton text="5 minutes" value="true" />
-                        <ui:RadioButton text="1 minute" />
-                        <ui:RadioButton text="30 seconds" />
-                        <ui:RadioButton text="1 seconds" />
-                        <ui:RadioButton text="100 milliseconds" />
-                    </ui:Foldout>
-                    <ui:Foldout text="Signals" name="SignalsFoldout" style="width: 100%;" />
-                </ui:ScrollView>
-            </ui:VisualElement>
         </ui:TwoPaneSplitView>
+        <ui:VisualElement name="filter-panel">
+            <ui:ScrollView horizontal-scroller-visibility="Hidden">
+                <ui:Foldout text=" Log source" name="SourceFoldout" style="width: 100%;">
+                    <ui:Toggle focusable="false" text="Serilog" value="true" name="serilog-source-toggle" tooltip="Toggle to show all log events that are gathered by Serilog." />
+                    <ui:Toggle focusable="false" text="Unity" value="true" name="unity-source-toggle" tooltip="Toggle to show all log events that are gathered by the default Unity debug logs."/>
+                </ui:Foldout>
+                <ui:Foldout text="Log levels" name="LogLevelFoldout" style="width: 100%;">
+                    <ui:Toggle focusable="false" text="&lt;color=#5A5A5A&gt;\u25CF&lt;/color&gt; Verbose" name="verbose-toggle" value="true" />
+                    <ui:Toggle focusable="false" text="&lt;color=white&gt;\u25CF&lt;/color&gt; Information" name="information-toggle" value="true" />
+                    <ui:Toggle focusable="false" text="&lt;color=#808080&gt;\u25CF&lt;/color&gt; Debug" name="debug-toggle" value="true" />
+                    <ui:Toggle focusable="false" text="&lt;color=yellow&gt;\u25CF&lt;/color&gt; Warning" name="warning-toggle" value="true" />
+                    <ui:Toggle focusable="false" text="&lt;color=red&gt;\u25CF&lt;/color&gt; Error" name="error-toggle" value="true" />
+                    <ui:Toggle focusable="false" text="&lt;color=red&gt;\u25CF&lt;/color&gt; Fatal" name="fatal-toggle" value="true" />
+                    <ui:Toggle focusable="false" text="&lt;color=red&gt;\u25CF&lt;/color&gt; Exceptions" name="exceptions-toggle" value="true" tooltip="Toggle to show all log events that contains information about an exception. This overrules the default log levels." />
+                </ui:Foldout>
+                <ui:Foldout text="Time" name="TimeFoldout" style="width: 100%;">
+                    <ui:RadioButton text="1 hour" />
+                    <ui:RadioButton text="30 minutes" />
+                    <ui:RadioButton text="10 minutes" />
+                    <ui:RadioButton text="5 minutes" value="true" />
+                    <ui:RadioButton text="1 minute" />
+                    <ui:RadioButton text="30 seconds" />
+                    <ui:RadioButton text="1 seconds" />
+                    <ui:RadioButton text="100 milliseconds" />
+                </ui:Foldout>
+                <ui:Foldout text="Signals" name="SignalsFoldout" style="width: 100%;" />
+            </ui:ScrollView>
+        </ui:VisualElement>
     </ui:TwoPaneSplitView>
 </ui:UXML>

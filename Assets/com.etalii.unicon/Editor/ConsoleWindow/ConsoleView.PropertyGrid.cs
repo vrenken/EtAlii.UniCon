@@ -36,12 +36,6 @@ namespace EtAlii.UniCon.Editor
                     }
                     
                 };
-                var keyLabel = new Label
-                {
-                    name = $"key-{property.Key}",
-                    text = property.Key,
-                    style = { flexGrow = 0, width = 200, unityTextAlign = TextAnchor.MiddleLeft }
-                };
 
                 var addIncludeToFilterButton = new Button
                 {
@@ -78,8 +72,26 @@ namespace EtAlii.UniCon.Editor
                 };
                 addExcludeToFilterButton.userData = new FilterMapping(addExcludeToFilterButton, property, _viewModel.OnAddExcludeFilterClicked);
                 row.contentContainer.Add(addExcludeToFilterButton);                
+                
+                var keyLabel = new Label
+                {
+                    name = $"key-{property.Key}",
+                    text = property.Key,
+                    style = { flexGrow = 0, width = 200, unityTextAlign = TextAnchor.MiddleLeft }
+                };
                 row.contentContainer.Add(keyLabel);
-                row.contentContainer.Add(new Label { name = $"value-{property.Key}", text = property.Value.ToString(), style = { flexGrow = 1, alignSelf = Align.FlexStart, unityTextAlign = TextAnchor.MiddleLeft }});
+
+                row.contentContainer.Add(new Label
+                {
+                    name = $"value-{property.Key}", 
+                    text = property.Value.ToString().Trim('"'), 
+                    style =
+                    {
+                        flexGrow = 1, 
+                        alignSelf = Align.FlexStart, 
+                        unityTextAlign = TextAnchor.MiddleLeft
+                    }
+                });
 
                 grid.contentContainer.Add(row);
             }
