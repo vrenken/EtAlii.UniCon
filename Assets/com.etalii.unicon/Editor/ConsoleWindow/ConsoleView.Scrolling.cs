@@ -62,7 +62,7 @@ namespace EtAlii.UniCon.Editor
             if (_viewModel.Settings.ScrollToTail)
             {
                 _listViewScrollView.verticalScroller.value = _listViewScrollView.verticalScroller.highValue;
-                _previousScrollValue = _listViewScrollView.verticalScroller.value;
+                _previousScrollValue = float.IsNaN(_listViewScrollView.contentRect.height) ? 0 : _listViewScrollView.verticalScroller.value;
             }
             // else if (_scrollToHead)
             // {
