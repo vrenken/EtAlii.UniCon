@@ -122,8 +122,19 @@ namespace EtAlii.UniCon.Editor
 
         private void UpdateRulesPanel()
         {
+            if (_rulesPanel.visible)
+            {
+                _viewModel.Settings.RulesPanelHeight = _rulesPanel.contentRect.height > 0f
+                    ? _rulesPanel.contentRect.height
+                    : 150f;
+            }
+
             _rulesPanel.visible = _viewModel.Settings.ShowRules; 
-            //_rulesPanel.style.display = _rulesPanel.visible ? DisplayStyle.Flex : DisplayStyle.None;
+            var height = _rulesPanel.visible
+                ? _viewModel.Settings.RulesPanelHeight
+                : 0f;
+            _verticalSplitPanel.fixedPaneInitialDimension = height;
+            _rulesPanel.style.width = height;
         }
     }    
 }

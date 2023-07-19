@@ -23,6 +23,8 @@
         private float _previousScrollValue;
         private ConsoleViewModel _viewModel;
         private CompositeDisposable _disposable;
+        private readonly TwoPaneSplitView _horizontalSplitPanel;
+        private readonly TwoPaneSplitView _verticalSplitPanel;
 
         public new class UxmlFactory : UxmlFactory<ConsoleView, UxmlTraits>
         {
@@ -42,6 +44,9 @@
             var visualTree = Resources.Load<VisualTreeAsset>(nameof(ConsoleView));
             visualTree.CloneTree(this);
 
+            _horizontalSplitPanel = this.Q<TwoPaneSplitView>("horizontal-split-panel");
+            _verticalSplitPanel = this.Q<TwoPaneSplitView>("vertical-split-panel");
+            
             _filterPanel = this.Q<VisualElement>("filter-panel");
             _filterButton = this.Q<Button>("filter-button");
             

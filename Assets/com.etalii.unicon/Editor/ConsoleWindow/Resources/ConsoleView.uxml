@@ -7,10 +7,10 @@
         <uie:ToolbarButton text="Rules" name="rules-button" display-tooltip-when-elided="true" focusable="false" class="toolbar-button-right" style="width: 75px; min-width: 75px; max-width: 75px;" />
         <uie:ToolbarButton text="Filters" name="filter-button" display-tooltip-when-elided="true" focusable="false" class="toolbar-button-right" style="width: 75px; min-width: 75px; max-width: 75px;" />
     </uie:Toolbar>
-    <ui:TwoPaneSplitView fixed-pane-initial-dimension="150" fixed-pane-index="1" style="flex-direction: row;">
-        <ui:TwoPaneSplitView fixed-pane-initial-dimension="150" fixed-pane-index="1" orientation="Vertical" name="left-panel">
+    <ui:TwoPaneSplitView fixed-pane-initial-dimension="150" fixed-pane-index="1" name="horizontal-split-panel" style="flex-direction: row;">
+        <ui:TwoPaneSplitView fixed-pane-initial-dimension="150" fixed-pane-index="1" orientation="Vertical" name="vertical-split-panel">
             <ui:ListView show-bound-collection-size="true" focusable="false" virtualization-method="DynamicHeight" style="width: auto;" />
-            <ui:VisualElement name="rules-panel" style="background-color: rgba(250, 6, 6, 0); flex-grow: 1;">
+            <ui:VisualElement name="rules-panel" style="background-color: rgba(250, 6, 6, 0); flex-grow: 1; display: flex; width: 100%; max-width: 100%; min-width: 100%;">
                 <ui:ScrollView horizontal-scroller-visibility="Hidden" name="rules-list" style="flex-grow: 1;" />
                 <uie:Toolbar style="border-top-width: 1px;">
                     <uie:ToolbarMenu text="Add" name="rules-add-button" display-tooltip-when-elided="true" focusable="false" class="toolbar-button" style="width: 75px; max-width: 75px; min-width: 75px;" />

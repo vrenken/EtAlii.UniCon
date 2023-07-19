@@ -84,8 +84,19 @@ namespace EtAlii.UniCon.Editor
 
         private void UpdateFilterPanel()
         {
+            if (_filterPanel.visible)
+            {
+                _viewModel.Settings.FilterPanelWidth = _filterPanel.contentRect.width > 0f 
+                    ? _filterPanel.contentRect.width 
+                    : 150;
+            }
+
             _filterPanel.visible = _viewModel.Settings.ShowFilter;
-            //_filterPanel.style.display = _filterPanel.visible ? DisplayStyle.Flex : DisplayStyle.None;
+            var width = _filterPanel.visible
+                ? _viewModel.Settings.FilterPanelWidth
+                : 0f;
+            _horizontalSplitPanel.fixedPaneInitialDimension = width;
+            _filterPanel.style.width = width;
         }
     }    
 }
