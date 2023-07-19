@@ -26,11 +26,11 @@ namespace EtAlii.UniCon.Editor
                 .BindClick(viewModel.OnRulesButtonClick)
                 .AddTo(disposable);
             
-            _rulesAddButtonMenu.menu.AppendAction("And", a => { }, a => DropdownMenuAction.Status.Normal);
-            _rulesAddButtonMenu.menu.AppendAction("Or", a => { }, a => DropdownMenuAction.Status.Normal);
-            _rulesAddButtonMenu.menu.AppendAction("Search", a => { }, a => DropdownMenuAction.Status.Normal);
-            _rulesAddButtonMenu.menu.AppendAction("Has", a => { }, a => DropdownMenuAction.Status.Normal);
-            _rulesAddButtonMenu.menu.AppendAction("Does not have", a => { }, a => DropdownMenuAction.Status.Normal);
+            _rulesAddButtonMenu.menu.AppendAction("And", _ => { }, _ => DropdownMenuAction.Status.Normal);
+            _rulesAddButtonMenu.menu.AppendAction("Or", _ => { }, _ => DropdownMenuAction.Status.Normal);
+            _rulesAddButtonMenu.menu.AppendAction("Search", _ => { }, _ => DropdownMenuAction.Status.Normal);
+            _rulesAddButtonMenu.menu.AppendAction("Has", _ => { }, _ => DropdownMenuAction.Status.Normal);
+            _rulesAddButtonMenu.menu.AppendAction("Does not have", _ => { }, _ => DropdownMenuAction.Status.Normal);
         }
         
         private void OnRulesChanged(string settingName)
