@@ -1,7 +1,7 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
     <Style src="project://database/Assets/com.etalii.unicon/Editor/ConsoleWindow/ConsoleWindow.uss?fileID=7433441132597879392&amp;guid=36c5b64153226674f929bea9b08e60c3&amp;type=3#ConsoleWindow" />
     <uie:Toolbar style="border-top-width: 1px;">
-        <uie:ToolbarButton text="\u221E Tail" name="tail-button" display-tooltip-when-elided="true" focusable="false" class="toolbar-button" style="width: 75px; max-width: 75px; min-width: 75px;" />
+        <uie:ToolbarButton text="\u221E Tail" name="tail-button" display-tooltip-when-elided="true" focusable="false" class="toolbar-button" style="width: 75px; max-width: 75px; min-width: 75px;" tooltip="Toggle to keep scrolling to any new log events received." />
         <uie:ToolbarSpacer style="width: 100%;" />
         <uie:ToolbarSearchField focusable="false" />
         <uie:ToolbarButton text="Rules" name="rules-button" display-tooltip-when-elided="true" focusable="false" class="toolbar-button-right" style="width: 75px; min-width: 75px; max-width: 75px;" />

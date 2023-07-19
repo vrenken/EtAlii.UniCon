@@ -92,7 +92,7 @@ namespace EtAlii.UniCon.Editor
                     style =
                     {
                         marginLeft = 0, marginRight = 0,
-                        width = 8, maxWidth = 8,
+                        width = 16, maxWidth = 16,
                         backgroundColor = Color.clear,
                         borderBottomWidth = 0,
                         borderLeftWidth = 0,
@@ -100,6 +100,7 @@ namespace EtAlii.UniCon.Editor
                         borderRightWidth = 0
                     }
                 };
+                removeButton.userData = new FilterRuleMapping(removeButton, filterRule, _viewModel.OnRemoveFilterRuleButtonClick);
                 filterRuleView.contentContainer.Add(removeButton);
 
                 _rulesList.contentContainer.Add(filterRuleView);

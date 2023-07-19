@@ -63,6 +63,12 @@ namespace EtAlii.UniCon.Editor
             fatalToggle
                 .BindValueChanged(viewModel.OnLogLevelFatalToggleChange)
                 .AddTo(disposable);
+            
+            var exceptionsToggle = this.Q<Toggle>("exceptions-toggle");
+            exceptionsToggle.value = viewModel.Settings.ShowExceptions;
+            exceptionsToggle
+                .BindValueChanged(viewModel.OnShowExceptionsToggleChange)
+                .AddTo(disposable);
         }
         
         private void OnFilterChanged(string settingName)

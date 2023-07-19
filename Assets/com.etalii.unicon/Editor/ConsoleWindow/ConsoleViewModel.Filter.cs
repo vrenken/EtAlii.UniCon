@@ -22,6 +22,7 @@ namespace EtAlii.UniCon.Editor
         public readonly ReactiveCommand<ChangeEvent<bool>> OnLogLevelWarningToggleChange = new();
         public readonly ReactiveCommand<ChangeEvent<bool>> OnLogLevelErrorToggleChange = new();
         public readonly ReactiveCommand<ChangeEvent<bool>> OnLogLevelFatalToggleChange = new();
+        public readonly ReactiveCommand<ChangeEvent<bool>> OnShowExceptionsToggleChange = new();
 
         public readonly ConsoleSettings Settings = new();
 
@@ -42,6 +43,13 @@ namespace EtAlii.UniCon.Editor
             OnLogLevelWarningToggleChange.Subscribe(e => ToggleLogLevel(nameof(Settings.LogLevel), e.newValue, LogLevel.Warning, () => Settings.LogLevel, logLevel => Settings.LogLevel = logLevel));
             OnLogLevelErrorToggleChange.Subscribe(e => ToggleLogLevel(nameof(Settings.LogLevel), e.newValue, LogLevel.Error, () => Settings.LogLevel, logLevel => Settings.LogLevel = logLevel));
             OnLogLevelFatalToggleChange.Subscribe(e => ToggleLogLevel(nameof(Settings.LogLevel), e.newValue, LogLevel.Fatal, () => Settings.LogLevel, logLevel => Settings.LogLevel = logLevel));
+            
+            OnShowExceptionsToggleChange.Subscribe(_ =>
+            {
+                Settings.ShowExceptions = !Settings.ShowExceptions;
+                FilterChanged?.Invoke(nameof(Settings.ShowExceptions));
+                ConfigureStream();
+            });
         }
 
         private void ToggleSource(string settingName, bool active, Action<bool> setSource)

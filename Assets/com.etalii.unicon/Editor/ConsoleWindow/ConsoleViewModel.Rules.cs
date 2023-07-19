@@ -19,12 +19,25 @@ namespace EtAlii.UniCon.Editor
         public readonly ReactiveCommand<FilterMapping> OnAddExcludeFilterClicked = new();
         public readonly ReactiveCommand<FilterMapping> OnAddIncludeFilterClicked = new();
 
+        public readonly ReactiveCommand<FilterRuleMapping> OnRemoveFilterRuleButtonClick = new();
+
         private void SetupRules()
         {
             OnRulesButtonClick.Subscribe(_ =>
             {
                 Settings.ShowRules = !Settings.ShowRules;
                 RulesChanged?.Invoke(nameof(Settings.ShowRules));
+            });
+
+            OnRemoveFilterRuleButtonClick.Subscribe(e =>
+            {
+                Settings.ShowRules = true;
+                RulesChanged?.Invoke(nameof(Settings.ShowRules));
+
+                FilterRules.Remove(e.FilterRule);
+
+                RulesChanged?.Invoke(nameof(FilterRules));
+                ConfigureStream();
             });
             
             OnAddIncludeFilterClicked.Subscribe(e =>

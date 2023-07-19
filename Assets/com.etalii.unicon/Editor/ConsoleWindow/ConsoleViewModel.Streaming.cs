@@ -42,6 +42,10 @@ namespace EtAlii.UniCon.Editor
                 })
                 .Where(logEvent =>
                 {
+                    if (Settings.ShowExceptions && logEvent.Exception != null)
+                    {
+                        return true;
+                    }
                     return logEvent.Level switch
                     {
                         LogEventLevel.Verbose => Settings.LogLevel.HasFlag(LogLevel.Verbose),

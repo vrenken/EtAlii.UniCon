@@ -80,7 +80,32 @@ namespace EtAlii.UniCon.Editor
                 row.contentContainer.Add(addExcludeToFilterButton);                
                 row.contentContainer.Add(keyLabel);
                 row.contentContainer.Add(new Label { name = $"value-{property.Key}", text = property.Value.ToString(), style = { flexGrow = 1, alignSelf = Align.FlexStart, unityTextAlign = TextAnchor.MiddleLeft }});
+
                 grid.contentContainer.Add(row);
+            }
+
+            if (logEvent.Exception != null)
+            {
+                var exceptionLabel = new TextElement
+                {
+                    text = $"{logEvent.Exception}\n{logEvent.Exception.StackTrace}",
+                    style =
+                    {
+                        alignContent = Align.Stretch, 
+                        alignItems = Align.FlexStart,
+                        flexGrow = 1, 
+                        flexDirection = FlexDirection.Row,
+                        backgroundColor = new Color(1f, 0.067f, 0.067f, 0.267f),
+                        color = Color.white,
+                        marginRight = 10,
+                        marginBottom = 5,
+                        paddingBottom = 3,
+                        paddingLeft = 3,
+                        paddingRight = 3,
+                        paddingTop = 3
+                    }
+                };
+                grid.contentContainer.Add(exceptionLabel);
             }
 
             return grid;
