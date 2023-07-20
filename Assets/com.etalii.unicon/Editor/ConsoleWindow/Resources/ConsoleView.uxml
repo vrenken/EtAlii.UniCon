@@ -3,7 +3,7 @@
     <uie:Toolbar style="border-top-width: 1px;">
         <uie:ToolbarButton text="\u221E Tail" name="tail-button" display-tooltip-when-elided="true" focusable="false" tooltip="Toggle to keep scrolling to any new log events received." class="toolbar-button" style="width: 75px; max-width: 75px; min-width: 75px;" />
         <uie:ToolbarSpacer style="width: 100%;" />
-        <uie:ToolbarButton text="Filtered: 0 / Total: 0" name="metrics-button" display-tooltip-when-elided="true" focusable="false" picking-mode="Ignore" class="toolbar-button-right" style="width: 300px; -unity-text-align: upper-right;" />
+        <uie:ToolbarButton text="Filtered: 0 / Total: 0" name="metrics-button" display-tooltip-when-elided="true" focusable="false" picking-mode="Ignore" class="toolbar-button-right" style="width: 300px; -unity-text-align: upper-right; border-left-width: 0;" />
         <uie:ToolbarButton text="Rules" name="rules-button" display-tooltip-when-elided="true" focusable="false" class="toolbar-button-right" style="width: 75px; min-width: 75px; max-width: 75px;" />
         <uie:ToolbarButton text="Filters" name="filter-button" display-tooltip-when-elided="true" focusable="false" class="toolbar-button-right" style="width: 75px; min-width: 75px; max-width: 75px;" />
     </uie:Toolbar>
