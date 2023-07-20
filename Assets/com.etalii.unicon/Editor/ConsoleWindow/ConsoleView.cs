@@ -19,6 +19,8 @@
         private readonly Color _buttonToggledColor;
         private readonly ScrollView _listViewScrollView;
         private readonly ToolbarMenu _rulesAddButtonMenu;
+
+        private readonly Button _metricsButton;
         
         private float _previousScrollValue;
         private ConsoleViewModel _viewModel;
@@ -46,7 +48,8 @@
 
             _horizontalSplitPanel = this.Q<TwoPaneSplitView>("horizontal-split-panel");
             _verticalSplitPanel = this.Q<TwoPaneSplitView>("vertical-split-panel");
-            
+
+            _metricsButton = this.Q<ToolbarButton>("metrics-button");
             _filterPanel = this.Q<VisualElement>("filter-panel");
             _filterButton = this.Q<Button>("filter-button");
             

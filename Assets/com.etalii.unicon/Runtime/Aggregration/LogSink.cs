@@ -12,11 +12,14 @@
         private readonly ConcurrentQueue<LogEvent> _logEvents = new();
         private readonly Subject<LogEvent> _subject = new();
 
+        public int EventCount { get; private set; }
+        
         private LogSink() { }
 
         public void Add(LogEvent logEvent)
         {
             _logEvents.Enqueue(logEvent);
+            EventCount += 1;
             _subject.OnNext(logEvent);
             do
             {
@@ -31,6 +34,7 @@
                     {
                         break;
                     }
+                    EventCount -= 1;
                 }
                 else
                 {

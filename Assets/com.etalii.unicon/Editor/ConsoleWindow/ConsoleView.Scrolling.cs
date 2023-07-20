@@ -32,6 +32,7 @@ namespace EtAlii.UniCon.Editor
                     break;
             }
         }
+        
         private void OnStreamChanged()
         {
             if (_streamSubscription != null)
@@ -39,12 +40,10 @@ namespace EtAlii.UniCon.Editor
                 _streamSubscription.Dispose();
                 _streamSubscription = null;
             }
-            
+
             _items.Clear();
             _listView.Rebuild();
 
-            // _previousScrollValue = _listViewScrollView.verticalScroller.value = 0f;
-            
             _streamSubscription = _viewModel.Stream
                 .Subscribe(onNext: Add);
         }
@@ -54,7 +53,26 @@ namespace EtAlii.UniCon.Editor
             _items.Add(logEvent);
             _listView.RefreshItems();
 
+            UpdateMetrics();
             ScrollWhenNeeded();
+        }
+
+        private void UpdateMetrics()
+        {
+            var total = LogSink.Instance.EventCount;
+            var filtered = _items.Count;
+
+            _metricsButton.text = $"Filtered: {Format(filtered)} / Total: {Format(total)}";
+        }
+
+        private string Format(int number)
+        {
+            return number switch
+            {
+                > 1000000 => $"{number / 1000000:D}M",
+                > 1000 => $"{number / 1000:D}K",
+                _ => $"{number}"
+            };
         }
 
         private void ScrollWhenNeeded()
@@ -64,12 +82,6 @@ namespace EtAlii.UniCon.Editor
                 _listViewScrollView.verticalScroller.value = _listViewScrollView.verticalScroller.highValue;
                 _previousScrollValue = float.IsNaN(_listViewScrollView.contentRect.height) ? 0 : _listViewScrollView.verticalScroller.value;
             }
-            // else if (_scrollToHead)
-            // {
-            //     _listViewScrollView.verticalScroller.value = 0;
-            //     _previousScrollValue = 0;
-            //     _scrollToHead = false;
-            // }
         }
     }    
 }
