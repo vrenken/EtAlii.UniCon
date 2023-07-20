@@ -14,7 +14,8 @@
     "includePlatforms": [ "Editor" ],
     "excludePlatforms": [],
     "precompiledReferences": [
-        "Serilog.dll"
+        "Serilog.dll",
+        "Serilog.Expressions.dll"
     ],
     "defineConstraints": [],
     "versionDefines": []
