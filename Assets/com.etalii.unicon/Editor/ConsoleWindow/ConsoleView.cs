@@ -89,10 +89,12 @@
 
         private void Bind(Foldout foldout, LogEvent logEvent)
         {
+            if (foldout.userData == logEvent) return;
             foldout.value = false;
             foldout.text = LogEventLine.GetMessage(logEvent);
             foldout.contentContainer.Clear();
             foldout.contentContainer.Add(BuildPropertyGrid(logEvent));
+            foldout.userData = logEvent;
         }
         
         public void Bind(ConsoleViewModel viewModel)
