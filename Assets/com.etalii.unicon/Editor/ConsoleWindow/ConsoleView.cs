@@ -86,15 +86,6 @@
             _listView.bindItem = (e, i) => Bind((Foldout)e, _items[i]);
         }
 
-        private void OnScrolledVertically(float value)
-        {
-            if (!_viewModel.Settings.ScrollToTail) return;
-            if (_previousScrollValue <= _listViewScrollView.verticalScroller.value) return;
-            
-            _viewModel.Settings.ScrollToTail = false;
-            UpdateToggleButton(_tailButton, _viewModel.Settings.ScrollToTail);
-        }
-
         private void Bind(Foldout foldout, LogEvent logEvent)
         {
             if (foldout.userData as LogEvent == logEvent) return;

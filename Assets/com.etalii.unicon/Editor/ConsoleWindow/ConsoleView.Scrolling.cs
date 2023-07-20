@@ -16,6 +16,15 @@ namespace EtAlii.UniCon.Editor
             UpdateToggleButton(_tailButton, _viewModel.Settings.ScrollToTail);
         }
 
+        private void OnScrolledVertically(float value)
+        {
+            if (!_viewModel.Settings.ScrollToTail) return;
+            if (_previousScrollValue <= _listViewScrollView.verticalScroller.value) return;
+            
+            _viewModel.Settings.ScrollToTail = false;
+            UpdateToggleButton(_tailButton, _viewModel.Settings.ScrollToTail);
+        }
+
         private void OnScrollingChanged(string settingName)
         {
             switch (settingName)
