@@ -60,9 +60,15 @@ namespace EtAlii.UniCon.Editor
                 {
                     foreach (var rule in FilterRules)
                     {
-                        if (logEvent.Properties.TryGetValue(rule.Property, out var propertyValue))
+                        if(rule.CompiledExpression != null)
                         {
-                            if (propertyValue.ToString() != rule.Value.ToString())
+                            var result = rule.CompiledExpression(logEvent);
+                            if (result is not ScalarValue scalarValue)
+                            {
+                                return false;
+                            }
+
+                            if (scalarValue.Value is false)
                             {
                                 return false;
                             }

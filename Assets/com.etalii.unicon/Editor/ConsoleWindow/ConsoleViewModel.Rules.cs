@@ -45,7 +45,8 @@ namespace EtAlii.UniCon.Editor
                 Settings.ShowRules = true;
                 RulesChanged?.Invoke(nameof(Settings.ShowRules));
 
-                var rule = new FilterRule(e.Property.Key, e.Property.Value, FilterType.Is);
+                var expression = e.Property.Value.ToString().Trim('"');
+                var rule = new FilterRule($"{e.Property.Key} = '{expression}'");
                 FilterRules.Add(rule);
                 RulesChanged?.Invoke(nameof(FilterRules));
                 ConfigureStream();
@@ -55,7 +56,8 @@ namespace EtAlii.UniCon.Editor
                 Settings.ShowRules = true;
                 RulesChanged?.Invoke(nameof(Settings.ShowRules));
 
-                var rule = new FilterRule(e.Property.Key, e.Property.Value, FilterType.IsNot);
+                var expression = e.Property.Value.ToString().Trim('"');
+                var rule = new FilterRule($"{e.Property.Key} != '{expression}'");
                 FilterRules.Add(rule);
                 RulesChanged?.Invoke(nameof(FilterRules));
                 ConfigureStream();

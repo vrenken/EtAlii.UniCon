@@ -1,7 +1,5 @@
 namespace EtAlii.UniCon.Editor
 {
-    using System;
-    using System.Linq;
     using RedMoon.ReactiveKit;
     using UniRx;
     using UnityEngine;
@@ -50,7 +48,7 @@ namespace EtAlii.UniCon.Editor
         private void UpdatesRulesList()
         {
             _rulesList.Clear();
-            foreach (var filterRule in _viewModel.FilterRules.OrderBy(r => r.Property))
+            foreach (var filterRule in _viewModel.FilterRules)
             {
                 var filterRuleView = new VisualElement
                 {
@@ -63,40 +61,17 @@ namespace EtAlii.UniCon.Editor
                     }
                 };
 
-                var propertyLabel = new Label
+                var expressionLabel = new TextField
                 {
-                    text = filterRule.Property,
+                    value = filterRule.Expression,
+                    multiline = true,
                     style =
                     {
-                        marginLeft = 5,
-                        flexGrow = 0, 
-                        width = 200, 
-                        unityTextAlign = TextAnchor.MiddleLeft
+                        width = new StyleLength(new Length(100, LengthUnit.Percent)),
+                        height = new StyleLength(new Length(100, LengthUnit.Percent))
                     }
                 };
-                filterRuleView.contentContainer.Add(propertyLabel);
-
-                var dropDown = new DropdownField
-                {
-                    value = filterRule.FilterType.ToString(),
-                    choices = Enum.GetNames(typeof(FilterType)).ToList(),
-                    style =
-                    {
-                        width = 100
-                    }
-                };
-                filterRuleView.contentContainer.Add(dropDown);
-
-                var valueTextField = new TextField
-                {
-                    multiline = false,
-                    value = filterRule.Value.ToString().Trim('"'),
-                    style =
-                    {
-                        flexGrow = 1
-                    }
-                };
-                filterRuleView.contentContainer.Add(valueTextField);
+                filterRuleView.contentContainer.Add(expressionLabel);
                 
                 var removeButton = new Button
                 {
