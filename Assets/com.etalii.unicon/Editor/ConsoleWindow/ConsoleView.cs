@@ -24,7 +24,7 @@
         
         private float _previousScrollValue;
         private ConsoleViewModel _viewModel;
-        private CompositeDisposable _disposable;
+        private CompositeDisposable _disposables;
         private readonly TwoPaneSplitView _horizontalSplitPanel;
         private readonly TwoPaneSplitView _verticalSplitPanel;
 
@@ -72,35 +72,32 @@
             _listViewScrollView = _listView.Q<ScrollView>();
             _listViewScrollView.verticalScroller.valueChanged += OnScrolledVertically;
             _listView.itemsSource = _items;
-            
-            _listView.makeItem = () => new Foldout 
-            { 
+
+            _listView.makeItem = () => new Foldout
+            {
                 style =
                 {
                     flexGrow = 1,
                     unityFontDefinition = StyleKeyword.Initial,
                     unityFont = new StyleFont(_consoleFont)
-                }, 
-                value = false 
+                },
+                value = false
             };
             _listView.bindItem = (e, i) => Bind((Foldout)e, _items[i]);
         }
 
         private void Bind(Foldout foldout, LogEvent logEvent)
         {
-            if (foldout.userData as LogEvent == logEvent) return;
-            
             foldout.value = false;
             foldout.text = LogEventLine.GetMessage(logEvent);
             foldout.contentContainer.Clear();
             foldout.contentContainer.Add(BuildPropertyGrid(logEvent));
-            foldout.userData = logEvent;
         }
         
         public void Bind(ConsoleViewModel viewModel)
         {
-            _disposable?.Dispose();
-            _disposable = new CompositeDisposable();
+            _disposables?.Dispose();
+            _disposables = new CompositeDisposable();
             
             if (_viewModel != null)
             {
@@ -110,10 +107,10 @@
                 _viewModel.RulesChanged -= OnRulesChanged;
             }
             _viewModel = viewModel;
-            
-            BindScrolling(viewModel, _disposable);
-            BindFilter(viewModel, _disposable);
-            BindRules(viewModel, _disposable);
+
+            BindScrolling(viewModel, _disposables);
+            BindFilter(viewModel, _disposables);
+            BindRules(viewModel, _disposables);
             
             _viewModel.FilterChanged += OnFilterChanged;
             _viewModel.RulesChanged += OnRulesChanged;
@@ -128,6 +125,5 @@
                 ? _buttonToggledColor 
                 : _buttonNotToggledColor;
         }
-
     }    
 }
