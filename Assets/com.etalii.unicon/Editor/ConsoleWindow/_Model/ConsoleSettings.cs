@@ -24,10 +24,10 @@ namespace EtAlii.UniCon.Editor
         /// </summary>
         public bool ScrollToTail = true;
 
-        public bool ShowFilter = false;
-        public bool ShowRules = false;
-
+        public bool ShowFilterPanel = false;
         public float FilterPanelWidth = 150f;
-        public float RulesPanelHeight = 150f;
+
+        public bool ShowExpressionPanel = false;
+        public float ExpressionPanelHeight = 150f;
     }    
 }

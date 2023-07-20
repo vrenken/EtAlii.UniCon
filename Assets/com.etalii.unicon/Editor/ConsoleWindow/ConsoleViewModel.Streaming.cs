@@ -58,31 +58,38 @@ namespace EtAlii.UniCon.Editor
                     };
                 }).Where(logEvent =>
                 {
-                    foreach (var rule in FilterRules)
+                    foreach (var rule in SelectedFilterRules)
                     {
-                        if(rule.CompiledExpression != null)
-                        {
-                            var result = rule.CompiledExpression(logEvent);
-                            if (result is not ScalarValue scalarValue)
-                            {
-                                return false;
-                            }
-
-                            if (scalarValue.Value is false)
-                            {
-                                return false;
-                            }
-                        }
-                        else
+                        if (!RuleIsValid(rule, logEvent))
                         {
                             return false;
                         }
                     }
+
+                    if (ActiveFilterRule.CompiledExpression != null)
+                    {
+                        if (!RuleIsValid(ActiveFilterRule, logEvent))
+                        {
+                            return false;
+                        }
+                    }
+                    
                     return true;
                 });
             
             Stream = stream;
             StreamChanged?.Invoke();            
+        }
+
+        private bool RuleIsValid(FilterRule rule, LogEvent logEvent)
+        {
+            var result = rule.CompiledExpression?.Invoke(logEvent);
+            if (result is not ScalarValue scalarValue)
+            {
+                return false;
+            }
+
+            return scalarValue.Value is not false;
         }
     }    
 }

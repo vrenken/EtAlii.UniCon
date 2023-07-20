@@ -11,7 +11,7 @@ namespace EtAlii.UniCon.Editor
 
         private void BindFilter(ConsoleViewModel viewModel, CompositeDisposable disposable)
         {
-            UpdateToggleButton(_filterButton, _viewModel.Settings.ShowFilter);
+            UpdateToggleButton(_filterButton, _viewModel.Settings.ShowFilterPanel);
             UpdateFilterPanel();
 
             // Log sources.
@@ -75,8 +75,8 @@ namespace EtAlii.UniCon.Editor
         {
             switch (settingName)
             {
-                case nameof(_viewModel.Settings.ShowFilter):
-                    UpdateToggleButton(_filterButton, _viewModel.Settings.ShowFilter);
+                case nameof(_viewModel.Settings.ShowFilterPanel):
+                    UpdateToggleButton(_filterButton, _viewModel.Settings.ShowFilterPanel);
                     UpdateFilterPanel();
                     break;
             }
@@ -91,7 +91,7 @@ namespace EtAlii.UniCon.Editor
                     : 150;
             }
 
-            _filterPanel.visible = _viewModel.Settings.ShowFilter;
+            _filterPanel.visible = _viewModel.Settings.ShowFilterPanel;
             var width = _filterPanel.visible
                 ? _viewModel.Settings.FilterPanelWidth
                 : 0f;

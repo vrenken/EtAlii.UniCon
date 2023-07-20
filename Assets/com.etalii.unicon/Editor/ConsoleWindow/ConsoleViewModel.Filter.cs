@@ -23,15 +23,15 @@ namespace EtAlii.UniCon.Editor
         public readonly ReactiveCommand<ChangeEvent<bool>> OnLogLevelErrorToggleChange = new();
         public readonly ReactiveCommand<ChangeEvent<bool>> OnLogLevelFatalToggleChange = new();
         public readonly ReactiveCommand<ChangeEvent<bool>> OnShowExceptionsToggleChange = new();
-
+        
         public readonly ConsoleSettings Settings = new();
 
         private void SetupFilter()
         {
             OnFilterButtonClick.Subscribe(_ =>
             {
-                Settings.ShowFilter = !Settings.ShowFilter;
-                FilterChanged?.Invoke(nameof(Settings.ShowFilter));
+                Settings.ShowFilterPanel = !Settings.ShowFilterPanel;
+                FilterChanged?.Invoke(nameof(Settings.ShowFilterPanel));
             });
 
             OnLogLevelSerilogToggleChange.Subscribe(e => ToggleSource(nameof(Settings.UseSerilogSource), e.newValue, value => Settings.UseSerilogSource = value));

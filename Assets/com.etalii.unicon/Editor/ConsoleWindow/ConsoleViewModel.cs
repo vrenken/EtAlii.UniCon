@@ -22,7 +22,7 @@ namespace EtAlii.UniCon.Editor
         {
             SetupScrolling();
             SetupFilter();
-            SetupRules();
+            SetupExpression();
         }
 
         public void Init() => ConfigureStream();

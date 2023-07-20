@@ -18,7 +18,7 @@
         private readonly Color _buttonNotToggledColor;
         private readonly Color _buttonToggledColor;
         private readonly ScrollView _listViewScrollView;
-        private readonly ToolbarMenu _rulesAddButtonMenu;
+        private readonly ToolbarMenu _expressionAddButtonMenu;
 
         private readonly Button _metricsButton;
         
@@ -53,10 +53,11 @@
             _filterPanel = this.Q<VisualElement>("filter-panel");
             _filterButton = this.Q<Button>("filter-button");
             
-            _rulesPanel = this.Q<VisualElement>("rules-panel");
-            _rulesButton = this.Q<Button>("rules-button");
-            _rulesList = this.Q<ScrollView>("rules-list");
-            _rulesAddButtonMenu = this.Q<ToolbarMenu>("rules-add-button");
+            _expressionPanel = this.Q<VisualElement>("expression-panel");
+            _expressionButton = this.Q<Button>("expression-button");
+            _expressionTextField = this.Q<TextField>("expression-textfield");
+            _expressionErrorButton = this.Q<Button>("expression-error-button");
+            _expressionSaveButton = this.Q<Button>("expression-save-button");
             
             _tailButton = this.Q<Button>("tail-button");
 
@@ -104,16 +105,16 @@
                 _viewModel.StreamChanged -= OnStreamChanged;
                 _viewModel.ScrollingChanged -= OnScrollingChanged;
                 _viewModel.FilterChanged -= OnFilterChanged;
-                _viewModel.RulesChanged -= OnRulesChanged;
+                _viewModel.ExpressionChanged -= OnExpressionChanged;
             }
             _viewModel = viewModel;
 
             BindScrolling(viewModel, _disposables);
             BindFilter(viewModel, _disposables);
-            BindRules(viewModel, _disposables);
+            BindExpression(viewModel, _disposables);
             
             _viewModel.FilterChanged += OnFilterChanged;
-            _viewModel.RulesChanged += OnRulesChanged;
+            _viewModel.ExpressionChanged += OnExpressionChanged;
             _viewModel.ScrollingChanged += OnScrollingChanged;
             _viewModel.StreamChanged += OnStreamChanged;
             OnStreamChanged();

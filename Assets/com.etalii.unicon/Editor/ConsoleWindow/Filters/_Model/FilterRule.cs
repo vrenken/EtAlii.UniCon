@@ -4,33 +4,37 @@ namespace EtAlii.UniCon.Editor
 
     public class FilterRule
     {
-        public string Expression { get; }
-        public CompiledExpression CompiledExpression { get; }
-        public string Error { get; }
-        
-        public FilterRule(string expression)
-        {
-            Expression = expression;
-            
-            if (SerilogExpression.TryCompile(expression, out var compiledExpression, out var error))
+        public string Expression 
+        { 
+            get => _expression; 
+            set 
             {
-                // `compiled` is a function that can be executed against `LogEvent`s:
-                // var result = compiled(someEvent);
+                if(!string.Equals(value, _expression))
+                {
+                    _expression = value;
+                    Update();
+                }
+            } 
+        }
+        private string _expression;
 
+        public CompiledExpression CompiledExpression { get; private set; }
+        public string Error { get; private set; }
+        
+        private void Update()
+        {
+            if (SerilogExpression.TryCompile(Expression, out var compiledExpression, out var error))
+            {
+                // `compiledExpression` is a function that can be executed against `LogEvent`s:
                 // `result` will contain a `LogEventPropertyValue`, or `null` if the result of evaluating the
                 // expression is undefined (for example if the event has no `RequestPath` property).
-                // if (result is ScalarValue { Value: true })
-                // {
-                    CompiledExpression = compiledExpression;
-
-                    // Console.WriteLine("The event matched.");
-                // }
+                CompiledExpression = compiledExpression;
             }
             else
             {
-                Error = error;
                 // `error` describes a syntax error.
-                //Console.WriteLine($"Couldn't compile the expression; {error}.");
+                Error = error;
+                CompiledExpression = null;
             }
         }
     }
