@@ -48,10 +48,12 @@ namespace EtAlii.UniCon
 
         private Serilog.ILogger ExpandLoggerForUnity(Serilog.ILogger logger, Object context)
         {
+            logger = logger
+                .ForContext(WellKnownProperties.IsUnityLogEvent, true);
+
             if (context != null)
             {
                 logger = logger
-                    .ForContext(WellKnownProperties.IsUnityLogEvent, true)
                     .ForContext("Context", context.name)
                     .ForContext("SourceContext", context.GetType().FullName);
             }
