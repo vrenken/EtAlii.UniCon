@@ -2,6 +2,7 @@ namespace EtAlii.UniCon.Editor
 {
     using System;
     using System.Collections.Generic;
+    using Serilog.Events;
     using UniRx;
     using UnityEngine.UIElements;
 
@@ -16,9 +17,24 @@ namespace EtAlii.UniCon.Editor
 
         public readonly ReactiveCommand<ClickEvent> OnExpressionButtonClick = new();
 
-        public readonly ReactiveCommand<FilterMapping> OnAddExcludeFilterClicked = new();
-        public readonly ReactiveCommand<FilterMapping> OnAddIncludeFilterClicked = new();
+        // log level
+        public readonly ReactiveCommand<LogEventLevel> AddFindByLogLevelToExpression = new();
+        public readonly ReactiveCommand<LogEventLevel> AddExcludeByLogLevelToExpression = new();
+        
+            
+        public readonly ReactiveCommand<KeyValuePair<string, LogEventPropertyValue>> AddFindByPropertyToExpression = new();
+        public readonly ReactiveCommand<string> AddFindWithAnyPropertyValueToExpression = new();
+        public readonly ReactiveCommand<string> AddExcludeWithAnyPropertyValueToExpression = new();
+        
+        
+        public readonly ReactiveCommand<KeyValuePair<string, LogEventPropertyValue>> AddExcludeByPropertyToExpression = new();
 
+        
+        public readonly ReactiveCommand<uint> AddFindByEventTypeToExpression = new();
+        public readonly ReactiveCommand<uint> AddExcludeByEventTypeToExpression = new();
+
+        public readonly ReactiveCommand<(DateTimeOffset, TimeSpan)> AddSeekToTimeSpanToExpression = new();
+            
         public readonly ReactiveProperty<string> ExpressionText = new();
         
         public readonly FilterRule ActiveFilterRule = new();
@@ -34,28 +50,38 @@ namespace EtAlii.UniCon.Editor
                 ConfigureStream();
             });
             
-            OnAddIncludeFilterClicked.Subscribe(e =>
+            // Log level.
+            AddFindByLogLevelToExpression.Subscribe(logLevel => AddExpressionPart($"@l = '{logLevel}'"));
+            AddExcludeByLogLevelToExpression.Subscribe(logLevel => AddExpressionPart($"@l <> '{logLevel}'"));
+            
+            // Event type.
+            
+            // Properties.
+            AddFindByEventTypeToExpression.Subscribe(eventIdHash => AddExpressionPart($"@i = 0x{eventIdHash:X8}"));
+            AddExcludeByEventTypeToExpression.Subscribe(eventIdHash => AddExpressionPart($"@i <> 0x{eventIdHash:X8}"));
+            AddFindByPropertyToExpression.Subscribe(property => AddExpressionPart($"{property.Key} = '{property.Value.ToString().Trim('"')}'"));
+            AddFindWithAnyPropertyValueToExpression.Subscribe(propertyName => AddExpressionPart($"IsDefined({propertyName})"));
+            AddExcludeWithAnyPropertyValueToExpression.Subscribe(propertyName => AddExpressionPart($"IsDefined({propertyName}) = false"));
+            AddExcludeByPropertyToExpression.Subscribe(property => AddExpressionPart($"{property.Key} != '{property.Value.ToString().Trim('"')}'"));
+            AddSeekToTimeSpanToExpression.Subscribe(tuple => 
             {
-                Settings.ShowExpressionPanel.Value = true;
-
-                var expression = $"{e.Property.Key} = '{e.Property.Value.ToString().Trim('"')}'";
-                ActiveFilterRule.Expression = string.IsNullOrWhiteSpace(ActiveFilterRule.Expression) 
-                    ? $"{expression}" 
-                    : $"{ActiveFilterRule.Expression.TrimEnd()} and {expression}";
-                ExpressionChanged?.Invoke(nameof(ActiveFilterRule));
-                ConfigureStream();
+                var moment = tuple.Item1;
+                var timeSpan = tuple.Item2;
+                var low = tuple.Item1 - timeSpan;
+                var high = moment + timeSpan;
+                AddExpressionPart($"'{low}' < @t < '{high}'");
             });
-            OnAddExcludeFilterClicked.Subscribe(e =>
-            {
-                Settings.ShowExpressionPanel.Value = true;
+        }
 
-                var expression = $"{e.Property.Key} != '{e.Property.Value.ToString().Trim('"')}'";
-                ActiveFilterRule.Expression = string.IsNullOrWhiteSpace(ActiveFilterRule.Expression) 
-                    ? $"{expression}" 
-                    : $"{ActiveFilterRule.Expression.TrimEnd()} and {expression}";
-                ExpressionChanged?.Invoke(nameof(ActiveFilterRule));
-                ConfigureStream();
-            });
+        private void AddExpressionPart(string expression)
+        {
+            Settings.ShowExpressionPanel.Value = true;
+
+            ActiveFilterRule.Expression = string.IsNullOrWhiteSpace(ActiveFilterRule.Expression) 
+                ? $"{expression}" 
+                : $"{ActiveFilterRule.Expression.TrimEnd()} and {expression}";
+            ExpressionChanged?.Invoke(nameof(ActiveFilterRule));
+            ConfigureStream();
         }
     }    
 }

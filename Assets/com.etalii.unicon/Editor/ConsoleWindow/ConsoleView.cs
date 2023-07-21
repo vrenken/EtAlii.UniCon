@@ -43,8 +43,8 @@
 
         public ConsoleView()
         {
-            ColorUtility.TryParseHtmlString("#11ff1122", out var propertyGridHeaderColor);
-            _propertyGridHeaderColor = propertyGridHeaderColor;
+            //ColorUtility.TryParseHtmlString("#11ff1122", out var propertyGridHeaderColor);
+            _propertyGridActionColor = Color.green * 0.85f;// propertyGridHeaderColor;
 
             var visualTree = Resources.Load<VisualTreeAsset>(nameof(ConsoleView));
             visualTree.CloneTree(this);
