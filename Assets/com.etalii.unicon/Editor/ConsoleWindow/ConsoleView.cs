@@ -43,6 +43,9 @@
 
         public ConsoleView()
         {
+            ColorUtility.TryParseHtmlString("#11ff1122", out var propertyGridHeaderColor);
+            _propertyGridHeaderColor = propertyGridHeaderColor;
+
             var visualTree = Resources.Load<VisualTreeAsset>(nameof(ConsoleView));
             visualTree.CloneTree(this);
 
@@ -106,7 +109,6 @@
             {
                 _viewModel.StreamChanged -= OnStreamChanged;
                 _viewModel.ScrollingChanged -= OnScrollingChanged;
-                _viewModel.FilterChanged -= OnFilterChanged;
                 _viewModel.ExpressionChanged -= OnExpressionChanged;
             }
             _viewModel = viewModel;
@@ -115,7 +117,6 @@
             BindFilter(viewModel, _disposables);
             BindExpression(viewModel, _disposables);
             
-            _viewModel.FilterChanged += OnFilterChanged;
             _viewModel.ExpressionChanged += OnExpressionChanged;
             _viewModel.ScrollingChanged += OnScrollingChanged;
             _viewModel.StreamChanged += OnStreamChanged;

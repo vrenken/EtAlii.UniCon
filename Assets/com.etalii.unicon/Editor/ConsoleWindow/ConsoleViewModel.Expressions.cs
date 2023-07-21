@@ -25,11 +25,7 @@ namespace EtAlii.UniCon.Editor
         
         private void SetupExpression()
         {
-            OnExpressionButtonClick.Subscribe(_ =>
-            {
-                Settings.ShowExpressionPanel = !Settings.ShowExpressionPanel;
-                ExpressionChanged?.Invoke(nameof(Settings.ShowExpressionPanel));
-            });
+            OnExpressionButtonClick.Subscribe(_ => Settings.ShowExpressionPanel.Value = !Settings.ShowExpressionPanel.Value);
 
             ExpressionText.Subscribe(s =>
             {
@@ -40,8 +36,7 @@ namespace EtAlii.UniCon.Editor
             
             OnAddIncludeFilterClicked.Subscribe(e =>
             {
-                Settings.ShowExpressionPanel = true;
-                ExpressionChanged?.Invoke(nameof(Settings.ShowExpressionPanel));
+                Settings.ShowExpressionPanel.Value = true;
 
                 var expression = $"{e.Property.Key} = '{e.Property.Value.ToString().Trim('"')}'";
                 ActiveFilterRule.Expression = string.IsNullOrWhiteSpace(ActiveFilterRule.Expression) 
@@ -52,8 +47,7 @@ namespace EtAlii.UniCon.Editor
             });
             OnAddExcludeFilterClicked.Subscribe(e =>
             {
-                Settings.ShowExpressionPanel = true;
-                ExpressionChanged?.Invoke(nameof(Settings.ShowExpressionPanel));
+                Settings.ShowExpressionPanel.Value = true;
 
                 var expression = $"{e.Property.Key} != '{e.Property.Value.ToString().Trim('"')}'";
                 ActiveFilterRule.Expression = string.IsNullOrWhiteSpace(ActiveFilterRule.Expression) 

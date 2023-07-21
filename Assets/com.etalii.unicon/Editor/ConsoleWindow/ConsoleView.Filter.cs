@@ -11,77 +11,68 @@ namespace EtAlii.UniCon.Editor
 
         private void BindFilter(ConsoleViewModel viewModel, CompositeDisposable disposable)
         {
-            UpdateToggleButton(_filterButton, _viewModel.Settings.ShowFilterPanel);
-            UpdateFilterPanel();
-
+            _filterButton
+                .BindClick(viewModel.OnFilterButtonClick)
+                .AddTo(disposable);
+            _viewModel.Settings.ShowFilterPanel
+                .Subscribe(onNext: _ =>
+                {
+                    UpdateFilterPanel();
+                    UpdateToggleButton(_filterButton, _viewModel.Settings.ShowFilterPanel.Value);
+                })
+                .AddTo(disposable);
+            
             // Log sources.
             var serilogSourceToggle = this.Q<Toggle>("serilog-source-toggle");
-            serilogSourceToggle.value = viewModel.Settings.UseSerilogSource;
             serilogSourceToggle
-                .BindValueChanged(viewModel.OnLogLevelSerilogToggleChange)
-                .AddTo(disposable); 
+                .BindTwoWayValueChanged(viewModel.Settings.UseSerilogSource)
+                .AddTo(disposable);
             
             var unitySourceToggle = this.Q<Toggle>("unity-source-toggle");
-            unitySourceToggle.value = viewModel.Settings.UseUnitySource;
             unitySourceToggle
-                .BindValueChanged(viewModel.OnLogLevelUnityToggleChange)
+                .BindTwoWayValueChanged(viewModel.Settings.UseUnitySource)
                 .AddTo(disposable);
 
             // Log levels.
             var verboseToggle = this.Q<Toggle>("verbose-toggle");
-            verboseToggle.value = viewModel.Settings.LogLevel.HasFlag(LogLevel.Verbose);
             verboseToggle
-                .BindValueChanged(viewModel.OnLogLevelVerboseToggleChange)
-                .AddTo(disposable); 
-            
+                .BindTwoWayValueChanged(viewModel.Settings.LogLevel, LogLevel.Verbose)
+                .AddTo(disposable);
+
             var informationToggle = this.Q<Toggle>("information-toggle");
-            informationToggle.value = viewModel.Settings.LogLevel.HasFlag(LogLevel.Information);
             informationToggle
-                .BindValueChanged(viewModel.OnLogLevelInformationToggleChange)
-                .AddTo(disposable); 
+                .BindTwoWayValueChanged(viewModel.Settings.LogLevel, LogLevel.Information)
+                .AddTo(disposable);
 
             var debugToggle = this.Q<Toggle>("debug-toggle");
-            debugToggle.value = viewModel.Settings.LogLevel.HasFlag(LogLevel.Debug);
             debugToggle
-                .BindValueChanged(viewModel.OnLogLevelDebugToggleChange)
-                .AddTo(disposable); 
+                .BindTwoWayValueChanged(viewModel.Settings.LogLevel, LogLevel.Debug)
+                .AddTo(disposable);
+
             
             var warningToggle = this.Q<Toggle>("warning-toggle");
-            warningToggle.value = viewModel.Settings.LogLevel.HasFlag(LogLevel.Warning);
             warningToggle
-                .BindValueChanged(viewModel.OnLogLevelWarningToggleChange)
-                .AddTo(disposable); 
-            
-            var errorToggle = this.Q<Toggle>("error-toggle");
-            errorToggle.value = viewModel.Settings.LogLevel.HasFlag(LogLevel.Error);
-            errorToggle
-                .BindValueChanged(viewModel.OnLogLevelErrorToggleChange)
-                .AddTo(disposable); 
-            
-            var fatalToggle = this.Q<Toggle>("fatal-toggle");
-            fatalToggle.value = viewModel.Settings.LogLevel.HasFlag(LogLevel.Fatal);
-            fatalToggle
-                .BindValueChanged(viewModel.OnLogLevelFatalToggleChange)
+                .BindTwoWayValueChanged(viewModel.Settings.LogLevel, LogLevel.Error)
                 .AddTo(disposable);
             
+            var errorToggle = this.Q<Toggle>("error-toggle");
+            errorToggle
+                .BindTwoWayValueChanged(viewModel.Settings.LogLevel, LogLevel.Warning)
+                .AddTo(disposable);
+ 
+            
+            var fatalToggle = this.Q<Toggle>("fatal-toggle");
+            fatalToggle
+                .BindTwoWayValueChanged(viewModel.Settings.LogLevel, LogLevel.Fatal)
+                .AddTo(disposable);
+
+            
             var exceptionsToggle = this.Q<Toggle>("exceptions-toggle");
-            exceptionsToggle.value = viewModel.Settings.ShowExceptions;
             exceptionsToggle
-                .BindValueChanged(viewModel.OnShowExceptionsToggleChange)
+                .BindTwoWayValueChanged(viewModel.Settings.ShowExceptions)
                 .AddTo(disposable);
         }
         
-        private void OnFilterChanged(string settingName)
-        {
-            switch (settingName)
-            {
-                case nameof(_viewModel.Settings.ShowFilterPanel):
-                    UpdateToggleButton(_filterButton, _viewModel.Settings.ShowFilterPanel);
-                    UpdateFilterPanel();
-                    break;
-            }
-        }
-
         private void UpdateFilterPanel()
         {
             if (_filterPanel.visible)
@@ -91,7 +82,7 @@ namespace EtAlii.UniCon.Editor
                     : 150;
             }
 
-            _filterPanel.visible = _viewModel.Settings.ShowFilterPanel;
+            _filterPanel.visible = _viewModel.Settings.ShowFilterPanel.Value;
             var width = _filterPanel.visible
                 ? _viewModel.Settings.FilterPanelWidth
                 : 0f;

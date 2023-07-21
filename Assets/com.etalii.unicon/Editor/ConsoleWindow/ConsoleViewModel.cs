@@ -14,6 +14,8 @@ namespace EtAlii.UniCon.Editor
             }
         }
         
+        public readonly ConsoleSettings Settings = new();
+
         private static ConsoleViewModel _instance;
         
         private IDisposable _logEventsSource;

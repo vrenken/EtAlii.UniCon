@@ -6,6 +6,7 @@ namespace EtAlii.UniCon.Editor
 
     public partial class ConsoleView
     {
+        // private readonly MessageTemplateParser _messageTemplateParser = new();
         private readonly Button _expressionButton;
         private readonly VisualElement _expressionPanel;
         private readonly TextField _expressionTextField;
@@ -14,18 +15,19 @@ namespace EtAlii.UniCon.Editor
 
         private void BindExpression(ConsoleViewModel viewModel, CompositeDisposable disposable)
         {
-            UpdateToggleButton(_expressionButton, _viewModel.Settings.ShowExpressionPanel);
-            UpdateExpressionPanel();
-
-            _filterButton
-                .BindClick(viewModel.OnFilterButtonClick)
-                .AddTo(disposable);
-
             _expressionButton
                 .BindClick(viewModel.OnExpressionButtonClick)
                 .AddTo(disposable);
-
+            _viewModel.Settings.ShowExpressionPanel
+                .Subscribe(onNext: _ =>
+                {
+                    UpdateExpressionPanel();
+                    UpdateToggleButton(_expressionButton, _viewModel.Settings.ShowExpressionPanel.Value);
+                })
+                .AddTo(disposable);
+            
             _expressionTextField
+                //.BindTwoWayValueChanged(viewModel.ExpressionText) // TODO: Try to apply two-way binding here. 
                 .BindValueChanged(viewModel.ExpressionText)
                 .AddTo(disposable);
         }
@@ -34,10 +36,6 @@ namespace EtAlii.UniCon.Editor
         {
             switch (settingName)
             {
-                case nameof(_viewModel.Settings.ShowExpressionPanel):
-                    UpdateToggleButton(_expressionButton, _viewModel.Settings.ShowExpressionPanel);
-                    UpdateExpressionPanel();
-                    break;
                 case nameof(_viewModel.ActiveFilterRule):
                     UpdateActiveExpression(_viewModel.ActiveFilterRule);
                     break;
@@ -46,7 +44,29 @@ namespace EtAlii.UniCon.Editor
 
         private void UpdateActiveExpression(FilterRule filterRule)
         {
-            _expressionTextField.value = filterRule.Expression;
+            // Serilog.Expressions.Compilation.Linq.EventIdHash.Compute(messageTemplate)
+            // Serilog.Expressions.Compilation.Linq.EventIdHash.Compute
+            // if(ExpressionTemplate.TryParse(
+            //     filterRule.Expression,
+            //     formatProvider: null,
+            //     nameResolver: null,
+            //     theme: TemplateTheme.Code,
+            //     applyThemeWhenOutputIsRedirected: true,
+            //     out var result,
+            //     out var error))
+            // {
+            //     using var sw = new StringWriter();
+            //
+            //
+            //     var messageTemplate = _messageTemplateParser.Parse(filterRule.Expression);
+            //     var logEvent = new LogEvent( DateTimeOffset.MinValue, LogEventLevel.Information, null, messageTemplate, Array.Empty<LogEventProperty>());
+            //     result.Format(logEvent, sw);
+            //     _expressionTextField.value = sw.ToString();
+            // }
+            // else
+            // {
+                _expressionTextField.value = filterRule.Expression;
+            // }
             _expressionErrorButton.text = filterRule.CompiledExpression != null ? "Ok" : filterRule.Error;
             _expressionSaveButton.SetEnabled(filterRule.CompiledExpression != null);
         }
@@ -60,7 +80,7 @@ namespace EtAlii.UniCon.Editor
                     : 150f;
             }
 
-            _expressionPanel.visible = _viewModel.Settings.ShowExpressionPanel; 
+            _expressionPanel.visible = _viewModel.Settings.ShowExpressionPanel.Value; 
             var height = _expressionPanel.visible
                 ? _viewModel.Settings.ExpressionPanelHeight
                 : 0f;

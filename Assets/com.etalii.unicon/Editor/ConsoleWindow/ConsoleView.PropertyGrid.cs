@@ -6,6 +6,8 @@ namespace EtAlii.UniCon.Editor
 
     public partial class ConsoleView
     {
+        private readonly Color _propertyGridHeaderColor;
+        
         private VisualElement BuildPropertyGrid(LogEvent logEvent)
         {
             var grid = new VisualElement
@@ -18,6 +20,45 @@ namespace EtAlii.UniCon.Editor
                 }
             };
 
+            var eventIdHash = Serilog.Expressions.Compilation.Linq.EventIdHash.Compute(logEvent.MessageTemplate.Text);
+                
+            var headerRow = new VisualElement
+            {
+                name = $"header-row",
+                style =
+                {
+                    color = _propertyGridHeaderColor,
+                    alignContent = Align.Stretch, 
+                    alignItems = Align.FlexStart,
+                    flexGrow = 1, 
+                    flexDirection = FlexDirection.Row
+                }
+            };
+            
+            var eventDropDownButton = new Button
+            {
+                name = $"{eventIdHash:X8}-event-dropdown",
+                text = "Event ⌄",
+            };
+            headerRow.contentContainer.Add(eventDropDownButton);
+
+            var levelDropDownButton = new Button
+            {
+                name = $"{eventIdHash:X8}-level-dropdown",
+                text = "Level (Information) ⌄",
+            };
+            headerRow.contentContainer.Add(levelDropDownButton);
+
+            var typeDropDownButton = new Button
+            {
+                name = $"{eventIdHash:X8}-type-dropdown",
+                text = $"Type (0x{eventIdHash:X8}) ⌄",
+            };
+            headerRow.contentContainer.Add(typeDropDownButton);
+
+            grid.contentContainer.Add(headerRow); 
+
+            
             //foreach (var property in logEvent.Properties.OrderBy(p => p.Key))
             foreach (var property in logEvent.Properties)
             {
@@ -34,7 +75,6 @@ namespace EtAlii.UniCon.Editor
                         flexGrow = 1, 
                         flexDirection = FlexDirection.Row
                     }
-                    
                 };
 
                 var addIncludeToFilterButton = new Button
