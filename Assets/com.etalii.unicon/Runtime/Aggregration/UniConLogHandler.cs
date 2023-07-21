@@ -53,9 +53,7 @@ namespace EtAlii.UniCon
 
             if (context != null)
             {
-                logger = logger
-                    .ForContext("Context", context.name)
-                    .ForContext("SourceContext", context.GetType().FullName);
+                logger = logger.ForContext("SourceContext", context.GetType().FullName);
             }
             return logger;
         }
