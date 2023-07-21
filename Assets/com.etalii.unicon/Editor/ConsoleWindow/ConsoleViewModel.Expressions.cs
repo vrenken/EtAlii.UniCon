@@ -79,7 +79,7 @@ namespace EtAlii.UniCon.Editor
 
             ActiveFilterRule.Expression = string.IsNullOrWhiteSpace(ActiveFilterRule.Expression) 
                 ? $"{expression}" 
-                : $"{ActiveFilterRule.Expression.TrimEnd()} and {expression}";
+                : $"{ActiveFilterRule.Expression.TrimEnd()}\n and {expression}";
             ExpressionChanged?.Invoke(nameof(ActiveFilterRule));
             ConfigureStream();
         }
