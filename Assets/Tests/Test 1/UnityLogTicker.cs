@@ -34,14 +34,14 @@
                     case 2: Debug.LogError("New error log entry", this); break;
                     case 3: Debug.LogWarning("New warning log entry", this); break;
                     case 4: Debug.LogAssertion("New assertion log entry", this); break;
-                    case 5: Debug.Log(_lorem.Sentence()); break;
-                    case 6: Debug.Log(_lorem.Sentence()); break;
-                    case 7: Debug.Log(_lorem.Sentence()); break;
-                    case 8: Debug.Log(_lorem.Sentence()); break;
-                    case 9: Debug.LogWarning(_lorem.Sentence()); break;
-                    case 10: Debug.Log(_lorem.Sentence()); break;
+                    case 5: Debug.Log(_lorem.Sentence(), this); break;
+                    case 6: Debug.Log(_lorem.Sentence(), this); break;
+                    case 7: Debug.Log(_lorem.Sentence(), this); break;
+                    case 8: Debug.Log(_lorem.Sentence(), this); break;
+                    case 9: Debug.LogWarning(_lorem.Sentence(), this); break;
+                    case 10: Debug.Log(_lorem.Sentence(), this); break;
                     case 11: Debug.LogWarning(_lorem.Sentence()); break;
-                    case 12: Debug.Log(_lorem.Sentence()); break;
+                    case 12: Debug.Log(_lorem.Sentence(), this); break;
                     // ReSharper restore TemplateIsNotCompileTimeConstantProblem
 
                 }
