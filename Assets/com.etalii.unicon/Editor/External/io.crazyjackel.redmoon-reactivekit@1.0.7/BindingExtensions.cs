@@ -124,6 +124,7 @@ namespace RedMoon.ReactiveKit
         {
             return observable.ObserveOnMainThread().DistinctUntilChanged().Subscribe((ev) => element.SetValueWithoutNotify(ev));
         }
+
         [MustUseReturnValue]
         public static IDisposable BindTwoWayValueChanged<T>(this INotifyValueChanged<T> element, IReactiveProperty<T> property)
         {
@@ -131,7 +132,39 @@ namespace RedMoon.ReactiveKit
             IDisposable d2 = BindToValueChanged(element, property);
             return StableCompositeDisposable.Create(d1, d2);
         }
-        #endregion
 
+        [MustUseReturnValue]
+        public static IDisposable BindTwoWayValueChanged<T>(this INotifyValueChanged<bool> element, IReactiveProperty<T> property, T value)
+            where T: Enum
+        {
+            return BindTwoWayValueChanged<bool, T>(element, property, ll => ll.HasFlag(value), (v, u) =>
+            {
+                var uv = Convert.ToInt32(u);
+                var valuev = Convert.ToInt32(value);
+                var newValue = v
+                        ? uv | valuev
+                        : uv & ~valuev;
+                return (T)Enum.ToObject(typeof(T), newValue);
+            });
+        }
+
+        [MustUseReturnValue]
+        public static IDisposable BindTwoWayValueChanged<T, U>(this INotifyValueChanged<T> element, IReactiveProperty<U> property, Func<U, T> selector1, Func<T, U, U> selector2)
+        {
+            EventCallback<ChangeEvent<T>> callback = new EventCallback<ChangeEvent<T>>((ev) =>
+            {
+                property.Value = selector2(ev.newValue, property.Value);
+            });
+            element.RegisterValueChangedCallback(callback);
+            var d1 = Disposable.Create(() => { element.UnregisterValueChangedCallback(callback); });
+            var d2 = property
+                .DistinctUntilChanged()
+                .Select(selector1)
+                .ObserveOnMainThread()
+                .Subscribe((ev) => element.SetValueWithoutNotify(ev));
+            return StableCompositeDisposable.Create(d1, d2);
+        }
+        
+        #endregion
     }
 }
