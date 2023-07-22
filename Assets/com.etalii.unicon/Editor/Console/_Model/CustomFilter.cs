@@ -1,14 +1,20 @@
 namespace EtAlii.UniCon.Editor
 {
     using Serilog.Expressions;
+    using UniRx;
 
-    public class FilterRule
+    public class CustomFilter
     {
         /// <summary>
         /// The name with which the custom filter should be shown in the Filter panel. 
         /// </summary>
         public string Name { get; set; }
 
+        /// <summary>
+        /// Set this property to true to apply the custom filter to the stream of LogEvents.
+        /// </summary>
+        public readonly ReactiveProperty<bool> IsActive = new(true);
+        
         /// <summary>
         /// The expression that should be run on the stream of event signals.
         /// This gets compiled into the <see cref="CompiledExpression"/>.
