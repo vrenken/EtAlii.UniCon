@@ -62,12 +62,12 @@ namespace EtAlii.UniCon.Editor
             
             var warningToggle = this.Q<Toggle>("warning-toggle");
             warningToggle
-                .BindTwoWayValueChanged(viewModel.Settings.LogLevel, LogLevel.Error)
+                .BindTwoWayValueChanged(viewModel.Settings.LogLevel, LogLevel.Warning)
                 .AddTo(disposable);
             
             var errorToggle = this.Q<Toggle>("error-toggle");
             errorToggle
-                .BindTwoWayValueChanged(viewModel.Settings.LogLevel, LogLevel.Warning)
+                .BindTwoWayValueChanged(viewModel.Settings.LogLevel, LogLevel.Error)
                 .AddTo(disposable);
  
             
