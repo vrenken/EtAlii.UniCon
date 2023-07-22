@@ -55,6 +55,7 @@
             _metricsButton = this.Q<ToolbarButton>("metrics-button");
             _filterPanel = this.Q<VisualElement>("filter-panel");
             _filterButton = this.Q<Button>("filter-button");
+            _customFiltersFoldout = this.Q<Foldout>("custom-filters-foldout");
             
             _expressionPanel = this.Q<VisualElement>("expression-panel");
             _expressionButton = this.Q<Button>("expression-button");
