@@ -4,7 +4,7 @@ namespace EtAlii.UniCon.Editor
     using UnityEngine;
     using UnityEngine.UIElements;
 
-    public class ConsoleWindow : EditorWindow
+    public class ConsoleWindow : EditorWindow, IHasCustomMenu
     {
         private ConsoleView _view;
         private ConsoleViewModel _viewModel;
@@ -36,6 +36,17 @@ namespace EtAlii.UniCon.Editor
         private void OnDidOpenScene()
         {
             _view.StretchToParentSize();
+        }
+
+        public void AddItemsToMenu(GenericMenu menu)
+        {
+            var settingsMenuButton = new GUIContent("Settings");
+            menu.AddItem(settingsMenuButton, false, OnShowSettingsMenu);           
+        }
+
+        private void OnShowSettingsMenu()
+        {
+            GetWindow<SettingsWindow>();
         }
     }    
 }

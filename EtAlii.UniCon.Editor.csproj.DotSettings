@@ -21,5 +21,6 @@
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Ccom_002Eetalii_002Eunicon_005Ceditor_005Cinternal_005Ccom_002Eneuecc_002Eunirx_00407_002E1_002E0/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Ccom_002Eetalii_002Eunicon_005Ceditor_005Clogentryline/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Ccom_002Eetalii_002Eunicon_005Ceditor_005Cmvvm/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Ccom_002Eetalii_002Eunicon_005Ceditor_005Csettings/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Ccom_002Eetalii_002Eunicon_005Ceditor_005Ctest/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Ccom_002Eetalii_002Eunicon_005Ceditor_005Cwindow/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>
