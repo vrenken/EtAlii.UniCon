@@ -14,8 +14,21 @@
 
         private bool _shouldClose;
 
+        private EditorWindow _parentWindow;
+
+        private bool _initialized;
+
         private void OnGUI()
         {
+            if (!_initialized)
+            {
+                var target = _parentWindow != null 
+                    ? _parentWindow.position.center 
+                    : EditorGUIUtility.GetMainWindowPosition().center;
+                position = new Rect(target - position.size / 2, position.size);
+                _initialized = true;
+            }
+
             // Check if Esc/Return have been pressed
             var e = Event.current;
             if (e.type == EventType.KeyDown)
@@ -82,14 +95,6 @@
             {
                 minSize = maxSize = rect.size;
             }
-
-            // Set dialog position next to mouse position
-            if (!_initializedPosition)
-            {
-                var mousePos = GUIUtility.GUIToScreenPoint(Event.current.mousePosition);
-                position = new Rect(mousePos.x + 32, mousePos.y, position.width, position.height);
-                _initializedPosition = true;
-            }
         }
 
         /// <summary>
@@ -98,6 +103,7 @@
         /// <param name="title"></param>
         /// <param name="description"></param>
         /// <param name="inputText"></param>
+        /// <param name="parentWindow"></param>
         /// <param name="okButton"></param>
         /// <param name="cancelButton"></param>
         /// <param name="textValidation"></param>
@@ -106,13 +112,15 @@
             string title, 
             string description, 
             string inputText, 
+            EditorWindow parentWindow,
             string okButton = "OK",
             string cancelButton = "Cancel",
             Func<string, bool> textValidation = null)
         {
             string result = null;
-            //var window = EditorWindow.GetWindow<InputDialog>();
             var window = CreateInstance<EditorInputDialog>();
+
+            window._parentWindow = parentWindow;
             window.titleContent = new GUIContent(title);
             window._description = description;
             window._inputText = inputText;
