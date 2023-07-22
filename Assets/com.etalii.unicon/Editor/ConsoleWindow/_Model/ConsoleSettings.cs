@@ -25,13 +25,13 @@ namespace EtAlii.UniCon.Editor
         /// <summary>
         /// Set this property to true to keep scrolling to any new log events received.
         /// </summary>
-        public bool ScrollToTail = true;
+        public readonly ReactiveProperty<bool> ScrollToTail = new(true);
 
         public readonly ReactiveProperty<bool> ShowFilterPanel = new(false);
         
         public float FilterPanelWidth = 150f;
 
-        public ReactiveProperty<bool> ShowExpressionPanel = new(false);
+        public readonly ReactiveProperty<bool> ShowExpressionPanel = new(false);
         public float ExpressionPanelHeight = 150f;
     }    
 }

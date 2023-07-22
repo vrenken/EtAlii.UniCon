@@ -13,6 +13,10 @@ namespace EtAlii.UniCon.Editor
         /// </summary>
         public event Action StreamChanged;
 
+        /// <summary>
+        /// Reconfigure the stream with the right filtering rules applied.
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         private void ConfigureStream()
         {
             var stream = LogSink.Instance

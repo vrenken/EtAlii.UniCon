@@ -108,7 +108,6 @@
             if (_viewModel != null)
             {
                 _viewModel.StreamChanged -= OnStreamChanged;
-                _viewModel.ScrollingChanged -= OnScrollingChanged;
                 _viewModel.ExpressionChanged -= OnExpressionChanged;
             }
             _viewModel = viewModel;
@@ -118,7 +117,6 @@
             BindExpression(viewModel, _disposables);
             
             _viewModel.ExpressionChanged += OnExpressionChanged;
-            _viewModel.ScrollingChanged += OnScrollingChanged;
             _viewModel.StreamChanged += OnStreamChanged;
             OnStreamChanged();
         }
