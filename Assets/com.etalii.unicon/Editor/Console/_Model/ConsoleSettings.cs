@@ -4,13 +4,18 @@ namespace EtAlii.UniCon.Editor
 
     public class ConsoleSettings
     {
-        private const LogLevel DefaultLogLevel = EtAlii.UniCon.Editor.LogLevel.Information | EtAlii.UniCon.Editor.LogLevel.Debug | EtAlii.UniCon.Editor.LogLevel.Warning | EtAlii.UniCon.Editor.LogLevel.Error | EtAlii.UniCon.Editor.LogLevel.Fatal;
+        private const LogLevel DefaultLogLevel = EtAlii.UniCon.Editor.LogLevel.None;
+        // private const LogLevel DefaultLogLevel = EtAlii.UniCon.Editor.LogLevel.Information | EtAlii.UniCon.Editor.LogLevel.Debug | EtAlii.UniCon.Editor.LogLevel.Warning | EtAlii.UniCon.Editor.LogLevel.Error | EtAlii.UniCon.Editor.LogLevel.Fatal;
+        
+        /// <summary>
+        /// The log level(s) that should be visualized. if no log levels are specified no filtering on log levels will happen.  
+        /// </summary>
         public readonly ReactiveProperty<LogLevel> LogLevel = new(DefaultLogLevel);
 
         /// <summary>
         /// Set this value to true to show any log event that contains information about an exception. This overrules the default log levels.
         /// </summary>
-        public readonly ReactiveProperty<bool> ShowExceptions = new(true);
+        public readonly ReactiveProperty<bool> ShowExceptions = new(false);
         
         /// <summary>
         /// Set this value to true to show all log events that are gathered by Serilog. 
