@@ -1,0 +1,14 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <ui:VisualElement name="root" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+        <ui:VisualElement name="left-panel" style="flex-grow: 0.2; background-color: rgba(0, 0, 0, 0);">
+            <ui:Button text="Settings" display-tooltip-when-elided="true" />
+            <ui:Button text="About" display-tooltip-when-elided="true" />
+        </ui:VisualElement>
+        <ui:VisualElement name="right-panel" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+            <ui:TextField picking-mode="Ignore" label="Message header format" value="filler text" />
+            <ui:Toggle label="Show filter panel at startup" />
+            <ui:Toggle label="Show expression panel at startup" />
+            <ui:Toggle label="Activate log trailing at startup" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
