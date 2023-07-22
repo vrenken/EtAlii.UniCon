@@ -4,21 +4,33 @@ namespace EtAlii.UniCon.Editor
 
     public class FilterRule
     {
+        /// <summary>
+        /// The name with which the custom filter should be shown in the Filter panel. 
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// The expression that should be run on the stream of event signals.
+        /// This gets compiled into the <see cref="CompiledExpression"/>.
+        /// </summary>
         public string Expression 
         { 
             get => _expression; 
-            set 
+            set
             {
-                if(!string.Equals(value, _expression))
-                {
-                    _expression = value;
-                    Update();
-                }
+                if (string.Equals(value, _expression)) return;
+                _expression = value;
+                Update();
             } 
         }
         private string _expression;
 
         public CompiledExpression CompiledExpression { get; private set; }
+        
+        /// <summary>
+        /// Any error that occurred when compiling the <see cref="Expression"/> into the <see cref="CompiledExpression"/>.
+        /// Null indicates no error and that the CompiledExpression can be used.
+        /// </summary>
         public string Error { get; private set; }
         
         private void Update()
