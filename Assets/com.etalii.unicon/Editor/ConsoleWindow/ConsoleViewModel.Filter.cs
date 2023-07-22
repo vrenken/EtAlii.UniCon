@@ -9,7 +9,12 @@ namespace EtAlii.UniCon.Editor
 
         private void SetupFilter()
         {
-            OnFilterButtonClick.Subscribe(_ => Settings.ShowFilterPanel.Value = !Settings.ShowFilterPanel.Value);
+            OnFilterButtonClick
+                .Subscribe(_ =>
+                {
+                    Settings.ShowFilterPanel.Value = !Settings.ShowFilterPanel.Value;
+                    Settings.FilterPanelWidth.SetValueAndForceNotify(Settings.FilterPanelWidth.Value);
+                });
 
             Settings.UseSerilogSource.Subscribe(_ => ConfigureStream());
             Settings.UseUnitySource.Subscribe(_ => ConfigureStream());

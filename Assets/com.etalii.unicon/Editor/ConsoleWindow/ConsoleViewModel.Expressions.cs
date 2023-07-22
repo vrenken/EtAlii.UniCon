@@ -41,7 +41,12 @@ namespace EtAlii.UniCon.Editor
         
         private void SetupExpression()
         {
-            OnExpressionButtonClick.Subscribe(_ => Settings.ShowExpressionPanel.Value = !Settings.ShowExpressionPanel.Value);
+            OnExpressionButtonClick
+                .Subscribe(_ =>
+                {
+                    Settings.ShowExpressionPanel.Value = !Settings.ShowExpressionPanel.Value;
+                    Settings.ExpressionPanelHeight.SetValueAndForceNotify(Settings.ExpressionPanelHeight.Value);
+                });
 
             ExpressionText.Subscribe(s =>
             {
