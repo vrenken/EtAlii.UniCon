@@ -29,9 +29,9 @@ namespace EtAlii.UniCon.Editor
 
         public readonly ReactiveProperty<bool> ShowFilterPanel = new(false);
         
-        public float FilterPanelWidth = 150f;
+        public readonly ReactiveProperty<float> FilterPanelWidth = new(150f);
 
         public readonly ReactiveProperty<bool> ShowExpressionPanel = new(false);
-        public float ExpressionPanelHeight = 150f;
+        public readonly ReactiveProperty<float> ExpressionPanelHeight = new(150f);
     }    
 }

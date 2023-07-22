@@ -15,10 +15,20 @@ namespace EtAlii.UniCon.Editor
                 .BindClick(viewModel.OnFilterButtonClick)
                 .AddTo(disposable);
             _viewModel.Settings.ShowFilterPanel
-                .Subscribe(onNext: _ =>
+                .Subscribe(onNext: showFilterPanel =>
                 {
                     UpdateFilterPanel();
-                    UpdateToggleButton(_filterButton, _viewModel.Settings.ShowFilterPanel.Value);
+                    UpdateToggleButton(_filterButton, showFilterPanel);
+                })
+                .AddTo(disposable);
+            _viewModel.Settings.FilterPanelWidth
+                .Subscribe(filterPanelWidth =>
+                {
+                    var width = _filterPanel.visible
+                        ? filterPanelWidth
+                        : 0f;
+                    _horizontalSplitPanel.fixedPaneInitialDimension = width;
+                    _filterPanel.style.width = width;
                 })
                 .AddTo(disposable);
             
@@ -77,17 +87,11 @@ namespace EtAlii.UniCon.Editor
         {
             if (_filterPanel.visible)
             {
-                _viewModel.Settings.FilterPanelWidth = _filterPanel.contentRect.width > 0f 
+                _viewModel.Settings.FilterPanelWidth.Value = _filterPanel.contentRect.width > 0f 
                     ? _filterPanel.contentRect.width 
                     : 150;
             }
-
             _filterPanel.visible = _viewModel.Settings.ShowFilterPanel.Value;
-            var width = _filterPanel.visible
-                ? _viewModel.Settings.FilterPanelWidth
-                : 0f;
-            _horizontalSplitPanel.fixedPaneInitialDimension = width;
-            _filterPanel.style.width = width;
         }
     }    
 }
