@@ -33,7 +33,7 @@
             {
                 var logger = PrepareLogger();
                 yield return new WaitForSeconds(interval);
-                switch (Random.Range(0,24))
+                switch (Random.Range(0,28))
                 {
                     // ReSharper disable TemplateIsNotCompileTimeConstantProblem
                     case 0: logger.Verbose("New verbose log entry {Property1}, and {Property2}", Environment.TickCount, "something"); break;
@@ -88,7 +88,11 @@
                         (sentence, word) = BuildSentenceWithProperty();
                         logger.Warning(exception, sentence, word); 
                         break;
-                        
+                    case 24: logger.Fatal("New fatal log entry {FatalError}", "Some other crash"); break;
+                    case 25: logger.Fatal("New fatal log entry {FatalError}", "Some really weird crash"); break;
+                    case 26: logger.Verbose("New verbose log entry {Property1}, and {Property2}", Environment.TickCount, "something else"); break;
+                    case 27: logger.Verbose("New verbose log entry {Property1}, and {Property2}", Environment.TickCount, "something completely different"); break;
+
                     // ReSharper restore TemplateIsNotCompileTimeConstantProblem
                 }
             }
