@@ -6,7 +6,7 @@
 
     public class SettingsView : VisualElement
     {
-        public Sprite logo;
+        private Sprite _logo;
         private SettingsViewModel _viewModel;
         private CompositeDisposable _disposables;
 
