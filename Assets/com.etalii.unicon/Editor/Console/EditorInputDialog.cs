@@ -10,6 +10,7 @@
         private string _okButton, _cancelButton;
         private bool _initializedPosition;
         private Action _onOkButton;
+        private Func<string, bool> _textValidation;
 
         private bool _shouldClose;
 
@@ -57,11 +58,14 @@
             // Draw OK / Cancel buttons
             var r = EditorGUILayout.GetControlRect();
             r.width /= 2;
+            GUI.enabled = _textValidation(_inputText);
             if (GUI.Button(r, _okButton))
             {
                 _onOkButton?.Invoke();
                 _shouldClose = true;
             }
+
+            GUI.enabled = true;
 
             r.x += r.width;
             if (GUI.Button(r, _cancelButton))
@@ -96,13 +100,15 @@
         /// <param name="inputText"></param>
         /// <param name="okButton"></param>
         /// <param name="cancelButton"></param>
+        /// <param name="textValidation"></param>
         /// <returns></returns>
         public static string Show(
             string title, 
             string description, 
             string inputText, 
             string okButton = "OK",
-            string cancelButton = "Cancel")
+            string cancelButton = "Cancel",
+            Func<string, bool> textValidation = null)
         {
             string result = null;
             //var window = EditorWindow.GetWindow<InputDialog>();
@@ -113,6 +119,7 @@
             window._okButton = okButton;
             window._cancelButton = cancelButton;
             window._onOkButton += () => result = window._inputText;
+            window._textValidation = textValidation ?? (_ => true);
             window.ShowModal();
 
             return result;
