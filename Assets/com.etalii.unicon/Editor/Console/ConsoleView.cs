@@ -103,14 +103,8 @@
         
         public void Bind(ConsoleViewModel viewModel)
         {
-            _disposables?.Dispose();
-            _disposables = new CompositeDisposable();
-            
-            if (_viewModel != null)
-            {
-                _viewModel.StreamChanged -= OnStreamChanged;
-                _viewModel.ExpressionChanged -= OnExpressionChanged;
-            }
+            Unbind();
+
             _viewModel = viewModel;
 
             BindScrolling(viewModel, _disposables);
@@ -121,7 +115,17 @@
             _viewModel.StreamChanged += OnStreamChanged;
             OnStreamChanged();
         }
-        
+
+        public void Unbind()
+        {
+            _disposables?.Dispose();
+            _disposables = new CompositeDisposable();
+
+            if (_viewModel == null) return;
+            _viewModel.StreamChanged -= OnStreamChanged;
+            _viewModel.ExpressionChanged -= OnExpressionChanged;
+        }
+
         private void UpdateToggleButton(Button button, bool isToggled)
         {
             button.style.backgroundColor = isToggled 

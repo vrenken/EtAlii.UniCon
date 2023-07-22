@@ -22,6 +22,11 @@ namespace EtAlii.UniCon.Editor
             titleContent = new GUIContent("UniCon Console", logo.texture);
         }
 
+        private void OnDestroy()
+        {
+            _view.Unbind();
+        }
+
         public void CreateGUI()
         {
             // Import UXML
