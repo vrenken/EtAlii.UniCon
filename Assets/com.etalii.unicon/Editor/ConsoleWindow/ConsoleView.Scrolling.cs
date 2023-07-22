@@ -23,6 +23,11 @@ namespace EtAlii.UniCon.Editor
 
         }
 
+        /// <summary>
+        /// When tail tracking is active We need to check if the user scrolled upwards.
+        /// In that case we stop the tail tracking.  
+        /// </summary>
+        /// <param name="value"></param>
         private void OnScrolledVertically(float value)
         {
             if (!_viewModel.Settings.ScrollToTail.Value) return;

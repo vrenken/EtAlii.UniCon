@@ -2,6 +2,9 @@ namespace EtAlii.UniCon.Editor
 {
     using System;
 
+    /// <summary>
+    /// The Serilog <see cref="Serilog.Events.LogEventLevel"/> is not a flagged enumeration, hence we need to introduce our own.
+    /// </summary>
     [Flags]
     public enum LogLevel
     {
