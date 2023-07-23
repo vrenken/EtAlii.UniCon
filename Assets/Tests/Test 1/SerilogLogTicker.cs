@@ -4,13 +4,13 @@
     using UnityEngine;
     using Serilog;
     using System.Collections;
-    using Bogus.DataSets;
+    using Serilog.Correlation;
     using ILogger = Serilog.ILogger;
     using Random = UnityEngine.Random;
 
     public class SerilogLogTicker : MonoBehaviour
     {
-        private readonly Lorem _lorem = new();
+        private AvatarSystem _avatarSystem;
         
         private ILogger _logger;
 
@@ -18,6 +18,7 @@
         private void OnEnable()
         {
             _logger = Log.ForContext<SerilogLogTicker>().ForContext("UniConSource", "Serilog");
+            _avatarSystem = new(); // TODO: It should be possible to make this a readonly field but in the current case it'll result in a SilentLogger.
             Debug.Log($"Starting SerilogLogTicker", this);
             StartCoroutine(WriteLogEntries());
         }
@@ -31,82 +32,26 @@
         {
             while (gameObject.activeSelf)
             {
-                var logger = PrepareLogger();
                 yield return new WaitForSeconds(interval);
-                switch (Random.Range(0,28))
-                {
-                    // ReSharper disable TemplateIsNotCompileTimeConstantProblem
-                    case 0: logger.Verbose("New verbose log entry {Property1}, and {Property2}", Environment.TickCount, "something"); break;
-                    case 1: logger.Information("New information log entry"); break;
-                    case 2: logger.Debug("New debug log entry"); break;
-                    case 3: logger.Error("New error log entry"); break;
-                    case 4: logger.Warning("New warning log entry"); break;
-                    case 5: logger.Fatal("New fatal log entry {FatalError}", "Some weird crash"); break;
-                    case 6: logger.Information("Another log entry with some new {Information} from a specific {Time}", "Well known information", DateTimeOffset.Now); break;
-                    case 7: logger.Debug("Starting some more debugging"); break;
-                    case 8: logger.Verbose(_lorem.Sentence()); break;
-                    case 9: logger.Verbose(_lorem.Sentence()); break;
-                    case 10: logger.Verbose(_lorem.Sentence()); break;
-                    case 11: logger.Debug(_lorem.Sentence()); break;
-                    case 12: logger.Information(_lorem.Sentence()); break;
-                    case 13: logger.Warning(_lorem.Sentence()); break;
-                    case 14: logger.Information(_lorem.Sentence()); break;
-                    case 15: logger.Debug(_lorem.Sentence()); break;
-                    case 16:
-                        var (sentence, word) = BuildSentenceWithProperty();
-                        logger.Verbose(sentence, word); 
-                        break;
-                    case 17:
-                        (sentence, word) = BuildSentenceWithProperty();
-                        logger.Information(sentence, word); 
-                        break;
-                    case 18:
-                        (sentence, word) = BuildSentenceWithProperty();
-                        logger.Debug(sentence, word); 
-                        break;
-                    case 19:
-                        (sentence, word) = BuildSentenceWithProperty();
-                        logger.Warning(sentence, word); 
-                        break;
-                    case 20:
-                        var exception = new TestException(_lorem.Sentence(), Environment.StackTrace);
-                        (sentence, word) = BuildSentenceWithProperty();
-                        logger.Verbose(exception, sentence, word); 
-                        break;
-                    case 21:
-                        exception = new TestException(_lorem.Sentence(), Environment.StackTrace);
-                        (sentence, word) = BuildSentenceWithProperty();
-                        logger.Information(exception, sentence, word); 
-                        break;
-                    case 22:
-                        exception = new TestException(_lorem.Sentence(), Environment.StackTrace);
-                        (sentence, word) = BuildSentenceWithProperty();
-                        logger.Debug(exception, sentence, word); 
-                        break;
-                    case 23:
-                        exception = new TestException(_lorem.Sentence(), Environment.StackTrace);
-                        (sentence, word) = BuildSentenceWithProperty();
-                        logger.Warning(exception, sentence, word); 
-                        break;
-                    case 24: logger.Fatal("New fatal log entry {FatalError}", "Some other crash"); break;
-                    case 25: logger.Fatal("New fatal log entry {FatalError}", "Some really weird crash"); break;
-                    case 26: logger.Verbose("New verbose log entry {Property1}, and {Property2}", Environment.TickCount, "something else"); break;
-                    case 27: logger.Verbose("New verbose log entry {Property1}, and {Property2}", Environment.TickCount, "something completely different"); break;
+                var logger = PrepareLogger();
 
-                    // ReSharper restore TemplateIsNotCompileTimeConstantProblem
+                var doCorrelate = Random.Range(0, 10) == 1;
+                if (doCorrelate)
+                {
+                    // We want to be able to track method calls throughout the whole application stack.
+                    // Including across network and process boundaries.
+                    // For this we create a unique correlationId and pass it through all involved systems.
+                    using (_logger.BeginCorrelationScope("CorrelationId", Environment.TickCount.ToString(), false))
+                    {
+                        LogEntryWriter.WriteEntry(logger);
+                        _avatarSystem.DoLogEntry();
+                    }
+                }
+                else
+                {
+                    LogEntryWriter.WriteEntry(logger);
                 }
             }
-        }
-
-        private (string sentence, string propertyValue) BuildSentenceWithProperty()
-        {
-            var sentence = _lorem.Sentence();
-            var words = sentence.Split(" ");
-            var indexToReplace=  Random.Range(0, words.Length);
-            words[indexToReplace] = $"{{{words[indexToReplace].TrimEnd('.')}}}";
-            var propertyValue = _lorem.Word();
-            sentence = string.Join(" ", words);
-            return (sentence, propertyValue);
         }
 
         private ILogger PrepareLogger()
@@ -123,15 +68,5 @@
             };
         }
         
-        private class TestException : Exception
-        {
-            public override string StackTrace { get; }
-
-            public TestException(string message, string stackTrace) 
-                : base(message)
-            {
-                StackTrace = stackTrace;
-            }
-        }
     }
 }

@@ -1,19 +1,22 @@
 {
     "name": "EtAlii.UniCon.Runtime",
     "rootNamespace": "EtAlii.UniCon",
-    "autoReferenced": true,
-    "noEngineReferences": false,
-    "allowUnsafeCode": false,
-    "overrideReferences": true,
     "references": [
         "Serilog.Sinks.Unity3D",
-        "EtAlii.UniCon.External.UniRx"
+        "EtAlii.UniCon.External.UniRx",
+        "EtAlii.UniCon.External.System.Collections.Immutable"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
     "precompiledReferences": [
-        "Serilog.dll"
+        "Serilog.dll",
+        "Serilog.Enrichers.Thread.dll",
+        "Serilog.Enrichers.Memory.dll"
     ],
+    "autoReferenced": true,
     "defineConstraints": [],
-    "versionDefines": []
+    "versionDefines": [],
+    "noEngineReferences": false
 }
