@@ -4,7 +4,6 @@
     using UnityEngine;
     using Serilog;
     using System.Collections;
-    using Serilog.Correlation;
     using ILogger = Serilog.ILogger;
     using Random = UnityEngine.Random;
 
@@ -35,21 +34,31 @@
                 yield return new WaitForSeconds(interval);
                 var logger = PrepareLogger();
 
-                var doCorrelate = Random.Range(0, 10) == 1;
-                if (doCorrelate)
+                switch (Random.Range(0, 10))
                 {
-                    // We want to be able to track method calls throughout the whole application stack.
-                    // Including across network and process boundaries.
-                    // For this we create a unique correlationId and pass it through all involved systems.
-                    using (_logger.BeginCorrelationScope("CorrelationId", Environment.TickCount.ToString(), false))
-                    {
+                    case 0:
+                        // We want to be able to track method calls throughout the whole application stack.
+                        // Including across network and process boundaries.
+                        // For this we create a unique correlationId and pass it through all involved systems.
+                        using (_logger.BeginCorrelationScope("CorrelationId", Environment.TickCount.ToString(), false))
+                        {
+                            LogEntryWriter.WriteEntry(logger);
+                            _avatarSystem.DoLogEntry();
+                        }
+                        break;
+                    case 1:
+                        // We want to be able to track method calls throughout the whole application stack.
+                        // Including across network and process boundaries.
+                        // For this we create a unique correlationId and pass it through all involved systems.
+                        using (_logger.BeginCorrelationScope("ShortGuidCorrelationId", false))
+                        {
+                            LogEntryWriter.WriteEntry(logger);
+                            _avatarSystem.DoLogEntry();
+                        }
+                        break;
+                    default:
                         LogEntryWriter.WriteEntry(logger);
-                        _avatarSystem.DoLogEntry();
-                    }
-                }
-                else
-                {
-                    LogEntryWriter.WriteEntry(logger);
+                        break;
                 }
             }
         }

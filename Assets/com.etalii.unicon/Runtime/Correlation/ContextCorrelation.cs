@@ -1,7 +1,7 @@
 // Copyright (c) Peter Vrenken. All rights reserved. See the license on https://github.com/vrenken/EtAlii.Ubigia
 
 // ReSharper disable once CheckNamespace
-namespace Serilog.Correlation
+namespace EtAlii.UniCon
 {
 
     using System;
@@ -10,7 +10,7 @@ namespace Serilog.Correlation
 
 
     /// <summary>
-    /// The ContextCorrelator facilitates the parameterless transfer of objects across a call-stack.
+    /// The ContextCorrelation facilitates the parameterless transfer of objects across a call-stack.
     /// The current implementation is not directly bound to logging, but one of the most important use cases is to
     /// transfer logging correlation ID's over long distances easily.
     /// </summary>
