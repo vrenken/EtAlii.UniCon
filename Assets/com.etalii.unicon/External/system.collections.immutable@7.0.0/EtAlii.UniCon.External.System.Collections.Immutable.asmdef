@@ -1,0 +1,13 @@
+{
+    "name": "EtAlii.UniCon.External.System.Collections.Immutable",
+    "rootNamespace": "System.Collections.Immutable",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": []
+}

@@ -9,7 +9,8 @@
         "UnityEditor.UI",
         "Serilog.Sinks.Unity3D",
         "EtAlii.UniCon.Runtime",
-        "EtAlii.UniCon.External.UniRx"
+        "EtAlii.UniCon.External.UniRx",
+        "RedMoon.ReactiveKit"
     ],
     "includePlatforms": [ "Editor" ],
     "excludePlatforms": [],
