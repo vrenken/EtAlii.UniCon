@@ -62,7 +62,8 @@
             _expressionTextField = this.Q<TextField>("expression-textfield");
             _expressionErrorButton = this.Q<Button>("expression-error-button");
             _expressionSaveButton = this.Q<Button>("expression-save-button");
-            
+            _expressionCancelButton = this.Q<Button>("expression-cancel-button");
+                
             _tailButton = this.Q<Button>("tail-button");
 
             // Let's take the color of the tail button and use that to remember the toggled and not toggled colors.
