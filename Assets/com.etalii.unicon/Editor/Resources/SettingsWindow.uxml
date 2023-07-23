@@ -10,6 +10,8 @@
             <ui:Toggle label="Show filter panel at startup" />
             <ui:Toggle label="Show expression panel at startup" />
             <ui:Toggle label="Activate log trailing at startup" />
+            <ui:Toggle label="Add thread id property" />
+            <ui:Toggle label="Add memory usage property" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>
