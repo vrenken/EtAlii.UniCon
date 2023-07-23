@@ -18,10 +18,16 @@ public static partial class UniConStartup
             var loggerConfiguration = new LoggerConfiguration()
                 .MinimumLevel.Verbose();
 
+            loggerConfiguration = loggerConfiguration
+                .Enrich.FromLogContext()
+                .Enrich.WithThreadId()
+                //.Enrich.WithThreadName()
+                .Enrich.WithMemoryUsage();
+
             // ReSharper disable once InvocationIsSkipped
             // This method is used as it provides a way to fine-tune the UniCon Serilog configuration. 
             ConfigureLogging(loggerConfiguration);
-            
+
             Log.Logger = loggerConfiguration
                 .WriteTo.UniCon()
                 .CreateLogger();
