@@ -1,5 +1,6 @@
 namespace EtAlii.UniCon.Editor
 {
+    using System;
     using Serilog.Expressions;
     using UniRx;
 
@@ -41,17 +42,26 @@ namespace EtAlii.UniCon.Editor
         
         private void Update()
         {
-            if (SerilogExpression.TryCompile(Expression, out var compiledExpression, out var error))
+            try
             {
-                // `compiledExpression` is a function that can be executed against `LogEvent`s:
-                // `result` will contain a `LogEventPropertyValue`, or `null` if the result of evaluating the
-                // expression is undefined (for example if the event has no `RequestPath` property).
-                CompiledExpression = compiledExpression;
+                if (SerilogExpression.TryCompile(Expression, out var compiledExpression, out var error))
+                {
+                    // `compiledExpression` is a function that can be executed against `LogEvent`s:
+                    // `result` will contain a `LogEventPropertyValue`, or `null` if the result of evaluating the
+                    // expression is undefined (for example if the event has no `RequestPath` property).
+                    CompiledExpression = compiledExpression;
+                }
+                else
+                {
+                    // `error` describes a syntax error.
+                    Error = error;
+                    CompiledExpression = null;
+                }
+                
             }
-            else
+            catch (Exception e)
             {
-                // `error` describes a syntax error.
-                Error = error;
+                Error = e.Message;
                 CompiledExpression = null;
             }
         }
