@@ -1,6 +1,7 @@
 namespace EtAlii.UniCon.Editor
 {
     using System;
+    using System.Linq;
     using Serilog.Events;
     using UniRx;
 
@@ -46,10 +47,16 @@ namespace EtAlii.UniCon.Editor
                 })
                 .Where(logEvent =>
                 {
+                    if (Settings.LogLevel.Value == LogLevel.None && !Settings.ShowExceptions.Value)
+                    {
+                        return true;
+                    }
+
                     if (Settings.ShowExceptions.Value && logEvent.Exception != null)
                     {
                         return true;
                     }
+
                     return logEvent.Level switch
                     {
                         LogEventLevel.Verbose => Settings.LogLevel.Value.HasFlag(LogLevel.Verbose),
@@ -62,22 +69,25 @@ namespace EtAlii.UniCon.Editor
                     };
                 }).Where(logEvent =>
                 {
-                    foreach (var rule in SelectedFilterRules)
+                    if (CustomFilters.Any(f => f.IsActive.Value))
                     {
-                        if (!RuleIsValid(rule, logEvent))
+                        var hasValidFilter = CustomFilters
+                            .Where(f => f.IsActive.Value)
+                            .Select(f => CustomFilterIsValid(f, logEvent))
+                            .Any(r => r);
+                        if (!hasValidFilter)
                         {
                             return false;
                         }
                     }
 
-                    if (ActiveFilterRule.CompiledExpression != null)
+                    if (SelectedCustomFilter.CompiledExpression != null)
                     {
-                        if (!RuleIsValid(ActiveFilterRule, logEvent))
+                        if (!CustomFilterIsValid(SelectedCustomFilter, logEvent))
                         {
                             return false;
                         }
                     }
-                    
                     return true;
                 });
             
@@ -85,7 +95,7 @@ namespace EtAlii.UniCon.Editor
             StreamChanged?.Invoke();            
         }
 
-        private bool RuleIsValid(FilterRule rule, LogEvent logEvent)
+        private bool CustomFilterIsValid(CustomFilter rule, LogEvent logEvent)
         {
             var result = rule.CompiledExpression?.Invoke(logEvent);
             if (result is not ScalarValue scalarValue)
