@@ -18,7 +18,7 @@
         private void OnEnable()
         {
             _logger = Log.ForContext<SerilogLogTicker>().ForContext("UniConSource", "Serilog");
-            Debug.Log($"Starting SerilogLogTicker");
+            Debug.Log($"Starting SerilogLogTicker", this);
             StartCoroutine(WriteLogEntries());
         }
 

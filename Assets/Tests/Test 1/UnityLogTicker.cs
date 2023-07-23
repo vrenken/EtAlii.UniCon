@@ -13,7 +13,7 @@
         public float interval = 1;
         private void OnEnable()
         {
-            Debug.Log("Starting UnityLogTicker");
+            Debug.Log("Starting UnityLogTicker", this);
             StartCoroutine(WriteLogEntries());
         }
 
