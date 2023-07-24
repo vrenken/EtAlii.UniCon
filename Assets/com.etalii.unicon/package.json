@@ -1,6 +1,6 @@
 {
   "name": "com.etalii.unicon",
-  "version": "0.0.2-preview",
+  "version": "0.0.3-preview",
   "license": "MIT",
   "displayName": "UniCon",
   "description": "Replacement of the Unity Console that is fully compatible with structured logging using Serilog. Also heavily influenced by the Seq Centralized Logging solution.",
