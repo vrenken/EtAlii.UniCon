@@ -44,7 +44,12 @@ namespace EtAlii.UniCon.Editor
         {
             try
             {
-                if (SerilogExpression.TryCompile(Expression, out var compiledExpression, out var error))
+                // Let's not start complaining if there is no expression to compile.
+                var expressionToCompile = string.IsNullOrWhiteSpace(Expression)
+                    ? "true"
+                    : Expression;
+
+                if (SerilogExpression.TryCompile(expressionToCompile, out var compiledExpression, out var error))
                 {
                     // `compiledExpression` is a function that can be executed against `LogEvent`s:
                     // `result` will contain a `LogEventPropertyValue`, or `null` if the result of evaluating the
