@@ -12,7 +12,7 @@
         private string _objectName = "BuyMeACoffee";
         private string _url = "https://www.buymeacoffee.com/vrenken";
         
-        // In case of MonoBehaviors you need to (for now) assign the logger in the awake method. 
+        // In case of MonoBehaviours you need to (for now) assign the logger in the awake method. 
         // public void Awake()
         // {
         //    _logger = Log.ForContext<MySubSystem>();
