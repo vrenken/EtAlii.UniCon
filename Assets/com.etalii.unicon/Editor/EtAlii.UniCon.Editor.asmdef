@@ -7,10 +7,10 @@
     "overrideReferences": true,
     "references": [
         "UnityEditor.UI",
-        "Serilog.Sinks.Unity3D",
         "EtAlii.UniCon.Runtime",
+        "EtAlii.UniCon.External.Serilog.Sinks.Unity3D",
         "EtAlii.UniCon.External.UniRx",
-        "RedMoon.ReactiveKit"
+        "EtAlii.UniCon.External.RedMoon.ReactiveKit"
     ],
     "includePlatforms": [ "Editor" ],
     "excludePlatforms": [],

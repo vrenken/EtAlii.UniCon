@@ -15,8 +15,5 @@
     "seq",
     "structured logging",
     "logging"
-  ],
-  "dependencies": {
-    "com.serilog.sinks.unity3d": "3.0.0"
-  }
+  ]
 }

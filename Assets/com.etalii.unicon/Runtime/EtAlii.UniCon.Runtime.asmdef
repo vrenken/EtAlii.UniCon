@@ -2,7 +2,7 @@
     "name": "EtAlii.UniCon.Runtime",
     "rootNamespace": "EtAlii.UniCon",
     "references": [
-        "Serilog.Sinks.Unity3D",
+        "EtAlii.UniCon.External.Serilog.Sinks.Unity3D",
         "EtAlii.UniCon.External.UniRx",
         "EtAlii.UniCon.External.System.Collections.Immutable"
     ],
