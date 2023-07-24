@@ -6,17 +6,17 @@ namespace EtAlii.UniCon.Editor
 
     public partial class ConsoleView
     {
-        // private readonly MessageTemplateParser _messageTemplateParser = new();
         private readonly Button _expressionButton;
         private readonly VisualElement _expressionPanel;
         private readonly TextField _expressionTextField;
         private readonly Button _expressionErrorButton;
         private readonly Button _expressionSaveButton;
+        private readonly Button _expressionCancelButton;
 
         private void BindExpression(ConsoleViewModel viewModel, CompositeDisposable disposable)
         {
             _expressionButton
-                .BindClick(viewModel.OnExpressionButtonClick)
+                .BindClick(viewModel.ToggleExpressionPanel)
                 .AddTo(disposable);
             _viewModel.Settings.ShowExpressionPanel
                 .Subscribe(onNext: showExpressionPanel =>
@@ -40,45 +40,32 @@ namespace EtAlii.UniCon.Editor
                 //.BindTwoWayValueChanged(viewModel.ExpressionText) // TODO: Try to apply two-way binding here. 
                 .BindValueChanged(viewModel.ExpressionText)
                 .AddTo(disposable);
+
+            _expressionSaveButton
+                .BindClick(viewModel.SaveFilter)
+                .AddTo(disposable);
+
+            _expressionCancelButton
+                .BindClick(viewModel.CancelFilter)
+                .AddTo(disposable);
+
         }
         
         private void OnExpressionChanged(string settingName)
         {
             switch (settingName)
             {
-                case nameof(_viewModel.ActiveFilterRule):
-                    UpdateActiveExpression(_viewModel.ActiveFilterRule);
+                case nameof(_viewModel.SelectedCustomFilter):
+                    UpdateActiveExpression(_viewModel.SelectedCustomFilter);
                     break;
             }
         }
 
-        private void UpdateActiveExpression(FilterRule filterRule)
+        private void UpdateActiveExpression(CustomFilter customFilter)
         {
-            // Serilog.Expressions.Compilation.Linq.EventIdHash.Compute(messageTemplate)
-            // Serilog.Expressions.Compilation.Linq.EventIdHash.Compute
-            // if(ExpressionTemplate.TryParse(
-            //     filterRule.Expression,
-            //     formatProvider: null,
-            //     nameResolver: null,
-            //     theme: TemplateTheme.Code,
-            //     applyThemeWhenOutputIsRedirected: true,
-            //     out var result,
-            //     out var error))
-            // {
-            //     using var sw = new StringWriter();
-            //
-            //
-            //     var messageTemplate = _messageTemplateParser.Parse(filterRule.Expression);
-            //     var logEvent = new LogEvent( DateTimeOffset.MinValue, LogEventLevel.Information, null, messageTemplate, Array.Empty<LogEventProperty>());
-            //     result.Format(logEvent, sw);
-            //     _expressionTextField.value = sw.ToString();
-            // }
-            // else
-            // {
-                _expressionTextField.value = filterRule.Expression;
-            // }
-            _expressionErrorButton.text = filterRule.CompiledExpression != null ? "Ok" : filterRule.Error;
-            _expressionSaveButton.SetEnabled(filterRule.CompiledExpression != null);
+            _expressionTextField.value = customFilter.Expression;
+            _expressionErrorButton.text = customFilter.CompiledExpression != null ? "Ok" : customFilter.Error;
+            _expressionSaveButton.SetEnabled(customFilter.CompiledExpression != null);
         }
 
         private void UpdateExpressionPanel()

@@ -13,35 +13,29 @@ namespace EtAlii.UniCon.Editor
         /// </summary>
         public event Action<string> ExpressionChanged;
 
-        public readonly List<FilterRule> SelectedFilterRules = new ();
+        public readonly ReactiveCommand<ClickEvent> ToggleExpressionPanel = new();
+        public readonly ReactiveProperty<string> ExpressionText = new();
 
-        public readonly ReactiveCommand<ClickEvent> OnExpressionButtonClick = new();
-
-        // log level
+        // Log level.
         public readonly ReactiveCommand<LogEventLevel> AddFindByLogLevelToExpression = new();
         public readonly ReactiveCommand<LogEventLevel> AddExcludeByLogLevelToExpression = new();
         
-            
+        // Properties.
         public readonly ReactiveCommand<KeyValuePair<string, LogEventPropertyValue>> AddFindByPropertyToExpression = new();
         public readonly ReactiveCommand<string> AddFindWithAnyPropertyValueToExpression = new();
         public readonly ReactiveCommand<string> AddExcludeWithAnyPropertyValueToExpression = new();
-        
-        
         public readonly ReactiveCommand<KeyValuePair<string, LogEventPropertyValue>> AddExcludeByPropertyToExpression = new();
 
-        
+        // Event type.
         public readonly ReactiveCommand<uint> AddFindByEventTypeToExpression = new();
         public readonly ReactiveCommand<uint> AddExcludeByEventTypeToExpression = new();
 
+        // Time
         public readonly ReactiveCommand<(DateTimeOffset, TimeSpan)> AddSeekToTimeSpanToExpression = new();
-            
-        public readonly ReactiveProperty<string> ExpressionText = new();
-        
-        public readonly FilterRule ActiveFilterRule = new();
         
         private void SetupExpression()
         {
-            OnExpressionButtonClick
+            ToggleExpressionPanel
                 .Subscribe(_ =>
                 {
                     Settings.ShowExpressionPanel.Value = !Settings.ShowExpressionPanel.Value;
@@ -50,8 +44,8 @@ namespace EtAlii.UniCon.Editor
 
             ExpressionText.Subscribe(s =>
             {
-                ActiveFilterRule.Expression = s;
-                ExpressionChanged?.Invoke(nameof(ActiveFilterRule));
+                SelectedCustomFilter.Expression = s;
+                ExpressionChanged?.Invoke(nameof(SelectedCustomFilter));
                 ConfigureStream();
             });
             
@@ -80,12 +74,15 @@ namespace EtAlii.UniCon.Editor
 
         private void AddExpressionPart(string expression)
         {
-            Settings.ShowExpressionPanel.Value = true;
+            if (Settings.ShowExpressionPanel.Value == false)
+            {
+                ToggleExpressionPanel.Execute(new ClickEvent());
+            }
 
-            ActiveFilterRule.Expression = string.IsNullOrWhiteSpace(ActiveFilterRule.Expression) 
+            SelectedCustomFilter.Expression = string.IsNullOrWhiteSpace(SelectedCustomFilter.Expression) 
                 ? $"{expression}" 
-                : $"{ActiveFilterRule.Expression.TrimEnd()}\n and {expression}";
-            ExpressionChanged?.Invoke(nameof(ActiveFilterRule));
+                : $"{SelectedCustomFilter.Expression.TrimEnd()}\n and {expression}";
+            ExpressionChanged?.Invoke(nameof(SelectedCustomFilter));
             ConfigureStream();
         }
     }    

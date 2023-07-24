@@ -1,5 +1,7 @@
 namespace EtAlii.UniCon.Editor
 {
+    using System;
+    using System.Linq;
     using RedMoon.ReactiveKit;
     using UniRx;
     using UnityEngine.UIElements;
@@ -8,11 +10,12 @@ namespace EtAlii.UniCon.Editor
     {
         private readonly Button _filterButton;
         private readonly VisualElement _filterPanel;
+        private readonly Foldout _customFiltersFoldout;
 
         private void BindFilter(ConsoleViewModel viewModel, CompositeDisposable disposable)
         {
             _filterButton
-                .BindClick(viewModel.OnFilterButtonClick)
+                .BindClick(viewModel.ToggleFilterPanel)
                 .AddTo(disposable);
             _viewModel.Settings.ShowFilterPanel
                 .Subscribe(onNext: showFilterPanel =>
@@ -59,7 +62,6 @@ namespace EtAlii.UniCon.Editor
                 .BindTwoWayValueChanged(viewModel.Settings.LogLevel, LogLevel.Debug)
                 .AddTo(disposable);
 
-            
             var warningToggle = this.Q<Toggle>("warning-toggle");
             warningToggle
                 .BindTwoWayValueChanged(viewModel.Settings.LogLevel, LogLevel.Warning)
@@ -76,13 +78,76 @@ namespace EtAlii.UniCon.Editor
                 .BindTwoWayValueChanged(viewModel.Settings.LogLevel, LogLevel.Fatal)
                 .AddTo(disposable);
 
-            
             var exceptionsToggle = this.Q<Toggle>("exceptions-toggle");
             exceptionsToggle
                 .BindTwoWayValueChanged(viewModel.Settings.ShowExceptions)
                 .AddTo(disposable);
+
+            _viewModel.CustomFilters
+                .ObserveAdd()
+                .Subscribe(AddCustomFilter)
+                .AddTo(disposable);
+            _viewModel.CustomFilters
+                .ObserveRemove()
+                .Subscribe(RemoveCustomFilter)
+                .AddTo(disposable);
+            _viewModel.CustomFilters
+                .ObserveReset()
+                .Subscribe(ResetAllCustomFilters)
+                .AddTo(disposable);
         }
-        
+
+        private void AddCustomFilter(CollectionAddEvent<CustomFilter> evt)
+        {
+            var disposables = new CompositeDisposable();
+            var customFilter = evt.Value;
+            var customFilterView = new Toggle
+            {
+                text = customFilter.Name,
+                name = customFilter.Name,
+                focusable = false,
+                userData = new Tuple<CustomFilter, CompositeDisposable>(customFilter, disposables)
+            };
+            customFilterView
+                .BindTwoWayValueChanged(customFilter.IsActive)
+                .AddTo(disposables);
+                
+            _customFiltersFoldout.contentContainer.Add(customFilterView);
+        }
+
+        private void RemoveCustomFilter(CollectionRemoveEvent<CustomFilter> evt)
+        {
+            var customFilter = evt.Value;
+            var (view, _, disposables) = _customFiltersFoldout.contentContainer
+                .Children()
+                .Select(v =>
+                {
+                    var (cf, disposables) = (Tuple<CustomFilter, CompositeDisposable>)v.userData ;
+                    return (v, cf, disposables);
+                })
+                .Single(c => c.cf == customFilter);
+            _customFiltersFoldout.contentContainer.Remove(view);
+            disposables.Dispose();
+        }
+
+        private void ResetAllCustomFilters(Unit _)
+        {
+            var visibleCustomFilters = _customFiltersFoldout.contentContainer
+                .Children()
+                .Select(c => c.userData)
+                .Cast<CustomFilter>()
+                .ToArray();
+            foreach (var customFilter in visibleCustomFilters)
+            {
+                RemoveCustomFilter(new CollectionRemoveEvent<CustomFilter>(-1, customFilter));
+            }
+
+            for (var i = 0; i < _viewModel.CustomFilters.Count; i++)
+            {
+                AddCustomFilter(new CollectionAddEvent<CustomFilter>(i, _viewModel.CustomFilters[i]));
+            }
+        }
+
         private void UpdateFilterPanel()
         {
             if (_filterPanel.visible)
