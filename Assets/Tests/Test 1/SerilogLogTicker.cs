@@ -14,9 +14,17 @@
         private ILogger _logger;
 
         public float interval = 1;
+
+        private void Awake()
+        {
+            // In MonoBehaviours the Logger needs to be configured in the Awake method.
+            _logger = Log
+                .ForContext<SerilogLogTicker>()
+                .ForContext("UniConSource", "Serilog");
+        }
+
         private void OnEnable()
         {
-            _logger = Log.ForContext<SerilogLogTicker>().ForContext("UniConSource", "Serilog");
             _avatarSystem = new(); // TODO: It should be possible to make this a readonly field but in the current case it'll result in a SilentLogger.
             Debug.Log($"Starting SerilogLogTicker", this);
             StartCoroutine(WriteLogEntries());

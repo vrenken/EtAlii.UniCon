@@ -40,13 +40,24 @@ Usage is simple:
     
    public class MySubSystem
    {
-      private ILogger _logger = Log.ForContext<MySubSystem>();
+      private readonly ILogger _logger = Log.ForContext<MySubSystem>();
+   }    
+   ```
+
+   or in case of a MonoBehaviour:
+   ```csharp
+   using Unity;
+   using Serilog;
+    
+   public class MySubSystem : MonoBehaviour
+   {
+      private readonly ILogger _logger;
    
-      // In case of MonoBehaviours you need to (for now) assign the logger in the awake method.  
-      // public void Awake()
-      // {
-      //    _logger = Log.ForContext<MySubSystem>();
-      // }
+      private void Awake()
+      {
+         // In MonoBehaviours the Logger needs to be configured in the Awake method.
+         _logger = Log.ForContext<MySubSystem>();
+      }
    }    
    ```
 
@@ -92,13 +103,13 @@ Usage is simple:
 9. These are just simple examples. The method of using structured log messages and filtering them on the fly provides you with amazing debugging super skills. But the true power comes from the custom filters that you and your team can come up with and share to make inspecting log entries a true 'engineered' activity.
 
 ## Known issues
-- In case of MonoBehaviours you need to for now assign the logger in the awake method.
-- Not all expression building options are implemented - the primary ones are though.
-- Time based filters are not yet implemented.
-- The UI Toolkit Listview is at some times flaky - especially when visual elements change their heights. 
+- [ ] In case of MonoBehaviours you need to for now assign the logger in the awake method.
+- [ ] Not all expression building options are implemented - the primary ones are though.
+- [ ] Time based filters are not yet implemented.
+- [ ] The UI Toolkit Listview is at some times flaky - especially when visual elements change their heights. 
   This can occasionally result in some weird looking log entries or no visual log entries at all.
   Just toggle the trail on/off to get the items to show up correctly.
-- Custom filters and settings are not persisted yet. 
+- [ ] Custom filters and settings are not persisted yet. 
 
 ## Thanks & issue reporting 
 If this package help you in your everyday work please let me know (or buy me a [coffee/beer](https://www.buymeacoffee.com/vrenken)). Same also goes for the splendid folks behind [Serilog](https://github.com/serilog/serilog), [Seq](https://datalust.co/seq), [UniRx](https://github.com/neuecc/UniRx) and all other devs that spend their heart in making our work easier.

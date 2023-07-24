@@ -6,11 +6,11 @@ using Serilog.Sinks.UniCon;
 public static partial class UniConStartup
 {
     // Debug initialization should happen as early as possible, before any other system is started.
-#if DEBUG
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-#else 
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSplashScreen]     
-#endif
+    // This seems to be the earliest possible:
+    // https://uninomicon.com/runtimeinitializeonload
+    // https://gist.github.com/hybridherbst/36ae70b6520981c8edc7b478423fae5e
+    
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     private static void Load()
     {
         if (Log.Logger == Serilog.Core.Logger.None)
