@@ -4,14 +4,14 @@ namespace Tests
 
     public class HolographicMenu
     {
-        private readonly GrpcNetworking _grpcNetworking = new ();
-        
+        private readonly Networking _networking = new ();
+
         private readonly ILogger _logger = Log.ForContext<HolographicMenu>();
 
         public void DoLogEntry()
         {
             LogEntryWriter.WriteEntry(_logger);
-            _grpcNetworking.DoLogEntry();
+            _networking.DoLogEntry();
         }
     }
 }

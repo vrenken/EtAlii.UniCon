@@ -17,7 +17,6 @@
     "logging"
   ],
   "dependencies": {
-    "com.serilog.sinks.unity3d": "3.0.0",
-    "com.neuecc.unirx": "7.1.0"
+    "com.serilog.sinks.unity3d": "3.0.0"
   }
 }
