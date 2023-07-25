@@ -4,6 +4,7 @@ namespace EtAlii.UniCon.Editor
     using System.Linq;
     using System.Reflection;
     using Serilog.Events;
+    using Serilog.Expressions.Compilation.Linq;
     using UnityEditor;
     using UnityEngine;
     using UnityEngine.UIElements;
@@ -25,7 +26,7 @@ namespace EtAlii.UniCon.Editor
                 }
             };
 
-            var eventIdHash = Serilog.Expressions.Compilation.Linq.EventIdHash.Compute(logEvent.MessageTemplate.Text);
+            var eventIdHash = EventIdHash.Compute(logEvent.MessageTemplate.Text);
                 
             var headerRow = new VisualElement
             {
