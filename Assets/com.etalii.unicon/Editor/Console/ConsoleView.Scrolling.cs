@@ -11,12 +11,12 @@ namespace EtAlii.UniCon.Editor
         private void BindScrolling(ConsoleViewModel viewModel, CompositeDisposable disposable)
         {
             _tailButton
-                .BindClick(viewModel.OnTailButtonClick)
+                .BindClick(viewModel.ToggleScrollToTail)
                 .AddTo(disposable);
             _viewModel.UserSettings.ScrollToTail
-                .Subscribe(onNext: _ =>
+                .Subscribe(onNext: scrollToTail =>
                 {
-                    UpdateToggleButton(_tailButton, _viewModel.UserSettings.ScrollToTail.Value);
+                    UpdateToggleButton(_tailButton, scrollToTail);
                     ScrollWhenNeeded();
                 })
                 .AddTo(disposable);

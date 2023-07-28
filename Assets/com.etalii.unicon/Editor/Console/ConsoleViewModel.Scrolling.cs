@@ -5,11 +5,11 @@ namespace EtAlii.UniCon.Editor
 
     public partial class ConsoleViewModel
     {
-        public readonly ReactiveCommand<ClickEvent> OnTailButtonClick = new();
+        public readonly ReactiveCommand<ClickEvent> ToggleScrollToTail = new();
 
         private void SetupScrolling()
         {
-            OnTailButtonClick.Subscribe(_ =>
+            ToggleScrollToTail.Subscribe(_ =>
             {
                 UserSettings.ScrollToTail.Value = !UserSettings.ScrollToTail.Value;
             });
