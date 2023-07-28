@@ -14,7 +14,8 @@ namespace EtAlii.UniCon.Editor
             }
         }
         
-        public readonly ConsoleSettings Settings = new();
+        internal UserSettings UserSettings => UserSettings.instance;
+        internal ProjectSettings ProjectSettings => ProjectSettings.instance;
 
         private static ConsoleViewModel _instance;
         

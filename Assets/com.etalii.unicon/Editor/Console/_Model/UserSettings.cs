@@ -1,8 +1,10 @@
 namespace EtAlii.UniCon.Editor
 {
     using UniRx;
+    using UnityEditor;
 
-    public class ConsoleSettings
+    [FilePath("UserSettings/UniConSettings.asset", FilePathAttribute.Location.ProjectFolder)]
+    internal class UserSettings : ScriptableSingleton<UserSettings>
     {
         private const LogLevel DefaultLogLevel = EtAlii.UniCon.Editor.LogLevel.None;
         // private const LogLevel DefaultLogLevel = EtAlii.UniCon.Editor.LogLevel.Information | EtAlii.UniCon.Editor.LogLevel.Debug | EtAlii.UniCon.Editor.LogLevel.Warning | EtAlii.UniCon.Editor.LogLevel.Error | EtAlii.UniCon.Editor.LogLevel.Fatal;

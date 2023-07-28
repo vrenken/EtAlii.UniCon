@@ -38,8 +38,8 @@ namespace EtAlii.UniCon.Editor
             ToggleExpressionPanel
                 .Subscribe(_ =>
                 {
-                    Settings.ShowExpressionPanel.Value = !Settings.ShowExpressionPanel.Value;
-                    Settings.ExpressionPanelHeight.SetValueAndForceNotify(Settings.ExpressionPanelHeight.Value);
+                    UserSettings.ShowExpressionPanel.Value = !UserSettings.ShowExpressionPanel.Value;
+                    UserSettings.ExpressionPanelHeight.SetValueAndForceNotify(UserSettings.ExpressionPanelHeight.Value);
                 });
 
             ExpressionText.Subscribe(s =>
@@ -74,7 +74,7 @@ namespace EtAlii.UniCon.Editor
 
         private void AddExpressionPart(string expression)
         {
-            if (Settings.ShowExpressionPanel.Value == false)
+            if (UserSettings.ShowExpressionPanel.Value == false)
             {
                 ToggleExpressionPanel.Execute(new ClickEvent());
             }

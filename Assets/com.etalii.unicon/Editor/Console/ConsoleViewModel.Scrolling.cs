@@ -11,7 +11,7 @@ namespace EtAlii.UniCon.Editor
         {
             OnTailButtonClick.Subscribe(_ =>
             {
-                Settings.ScrollToTail.Value = !Settings.ScrollToTail.Value;
+                UserSettings.ScrollToTail.Value = !UserSettings.ScrollToTail.Value;
             });
         }
     }    

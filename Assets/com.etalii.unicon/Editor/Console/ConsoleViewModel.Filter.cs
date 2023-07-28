@@ -20,14 +20,14 @@ namespace EtAlii.UniCon.Editor
             ToggleFilterPanel
                 .Subscribe(_ =>
                 {
-                    Settings.ShowFilterPanel.Value = !Settings.ShowFilterPanel.Value;
-                    Settings.FilterPanelWidth.SetValueAndForceNotify(Settings.FilterPanelWidth.Value);
+                    UserSettings.ShowFilterPanel.Value = !UserSettings.ShowFilterPanel.Value;
+                    UserSettings.FilterPanelWidth.SetValueAndForceNotify(UserSettings.FilterPanelWidth.Value);
                 });
 
-            Settings.UseSerilogSource.Subscribe(_ => ConfigureStream());
-            Settings.UseUnitySource.Subscribe(_ => ConfigureStream());
-            Settings.LogLevel.Subscribe(_ => ConfigureStream());
-            Settings.ShowExceptions.Subscribe(_ => ConfigureStream());
+            UserSettings.UseSerilogSource.Subscribe(_ => ConfigureStream());
+            UserSettings.UseUnitySource.Subscribe(_ => ConfigureStream());
+            UserSettings.LogLevel.Subscribe(_ => ConfigureStream());
+            UserSettings.ShowExceptions.Subscribe(_ => ConfigureStream());
 
             SaveFilter
                 .Subscribe(_ =>
@@ -49,12 +49,12 @@ namespace EtAlii.UniCon.Editor
                     SelectedCustomFilter = new CustomFilter();
                     ExpressionText.Value = string.Empty;
                     
-                    if (Settings.ShowExpressionPanel.Value)
+                    if (UserSettings.ShowExpressionPanel.Value)
                     {
                         ToggleExpressionPanel.Execute(new ClickEvent());
                     }
 
-                    if (Settings.ShowFilterPanel.Value == false)
+                    if (UserSettings.ShowFilterPanel.Value == false)
                     {
                         ToggleFilterPanel.Execute(new ClickEvent());
                     }
@@ -66,12 +66,12 @@ namespace EtAlii.UniCon.Editor
                     SelectedCustomFilter = new CustomFilter();
                     ExpressionText.Value = string.Empty;
                     
-                    if (Settings.ShowExpressionPanel.Value)
+                    if (UserSettings.ShowExpressionPanel.Value)
                     {
                         ToggleExpressionPanel.Execute(new ClickEvent());
                     }
 
-                    if (Settings.ShowFilterPanel.Value == false)
+                    if (UserSettings.ShowFilterPanel.Value == false)
                     {
                         ToggleFilterPanel.Execute(new ClickEvent());
                     }

@@ -13,10 +13,10 @@ namespace EtAlii.UniCon.Editor
             _tailButton
                 .BindClick(viewModel.OnTailButtonClick)
                 .AddTo(disposable);
-            _viewModel.Settings.ScrollToTail
+            _viewModel.UserSettings.ScrollToTail
                 .Subscribe(onNext: _ =>
                 {
-                    UpdateToggleButton(_tailButton, _viewModel.Settings.ScrollToTail.Value);
+                    UpdateToggleButton(_tailButton, _viewModel.UserSettings.ScrollToTail.Value);
                     ScrollWhenNeeded();
                 })
                 .AddTo(disposable);
@@ -30,17 +30,18 @@ namespace EtAlii.UniCon.Editor
         /// <param name="value"></param>
         private void OnScrolledVertically(float value)
         {
-            if (!_viewModel.Settings.ScrollToTail.Value) return;
+            if (!_viewModel.UserSettings.ScrollToTail.Value) return;
             if (_previousScrollValue <= _listViewScrollView.verticalScroller.value) return;
             
-            _viewModel.Settings.ScrollToTail.Value = false;
-            UpdateToggleButton(_tailButton, _viewModel.Settings.ScrollToTail.Value);
+            _viewModel.UserSettings.ScrollToTail.Value = false;
+            UpdateToggleButton(_tailButton, _viewModel.UserSettings.ScrollToTail.Value);
         }
 
         private void ScrollWhenNeeded()
         {
-            if (_viewModel.Settings.ScrollToTail.Value)
+            if (_viewModel.UserSettings.ScrollToTail.Value)
             {
+                _listView.ScrollToItem(-1);
                 _listViewScrollView.verticalScroller.value = _listViewScrollView.verticalScroller.highValue;
                 _previousScrollValue = float.IsNaN(_listViewScrollView.contentRect.height) ? 0 : _listViewScrollView.verticalScroller.value;
             }

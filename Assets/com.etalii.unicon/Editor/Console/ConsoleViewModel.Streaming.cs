@@ -26,7 +26,7 @@ namespace EtAlii.UniCon.Editor
             stream = stream
                 .Where(logEvent =>
                 {
-                    if (Settings.UseSerilogSource.Value)
+                    if (UserSettings.UseSerilogSource.Value)
                     {
                         // Only the availability of the property is already sufficient.
                         if(!logEvent.Properties.TryGetValue(WellKnownProperties.IsUnityLogEvent, out _))
@@ -34,7 +34,7 @@ namespace EtAlii.UniCon.Editor
                             return true;
                         }
                     }
-                    if (Settings.UseUnitySource.Value)
+                    if (UserSettings.UseUnitySource.Value)
                     {
                         // Only the absence of the property is already sufficient.
                         if(logEvent.Properties.TryGetValue(WellKnownProperties.IsUnityLogEvent, out _))
@@ -47,24 +47,24 @@ namespace EtAlii.UniCon.Editor
                 })
                 .Where(logEvent =>
                 {
-                    if (Settings.LogLevel.Value == LogLevel.None && !Settings.ShowExceptions.Value)
+                    if (UserSettings.LogLevel.Value == LogLevel.None && !UserSettings.ShowExceptions.Value)
                     {
                         return true;
                     }
 
-                    if (Settings.ShowExceptions.Value && logEvent.Exception != null)
+                    if (UserSettings.ShowExceptions.Value && logEvent.Exception != null)
                     {
                         return true;
                     }
 
                     return logEvent.Level switch
                     {
-                        LogEventLevel.Verbose => Settings.LogLevel.Value.HasFlag(LogLevel.Verbose),
-                        LogEventLevel.Information => Settings.LogLevel.Value.HasFlag(LogLevel.Information),
-                        LogEventLevel.Debug => Settings.LogLevel.Value.HasFlag(LogLevel.Debug),
-                        LogEventLevel.Warning => Settings.LogLevel.Value.HasFlag(LogLevel.Warning),
-                        LogEventLevel.Error => Settings.LogLevel.Value.HasFlag(LogLevel.Error),
-                        LogEventLevel.Fatal => Settings.LogLevel.Value.HasFlag(LogLevel.Fatal),
+                        LogEventLevel.Verbose => UserSettings.LogLevel.Value.HasFlag(LogLevel.Verbose),
+                        LogEventLevel.Information => UserSettings.LogLevel.Value.HasFlag(LogLevel.Information),
+                        LogEventLevel.Debug => UserSettings.LogLevel.Value.HasFlag(LogLevel.Debug),
+                        LogEventLevel.Warning => UserSettings.LogLevel.Value.HasFlag(LogLevel.Warning),
+                        LogEventLevel.Error => UserSettings.LogLevel.Value.HasFlag(LogLevel.Error),
+                        LogEventLevel.Fatal => UserSettings.LogLevel.Value.HasFlag(LogLevel.Fatal),
                         _ => throw new ArgumentOutOfRangeException(nameof(logEvent.Level))
                     };
                 }).Where(logEvent =>

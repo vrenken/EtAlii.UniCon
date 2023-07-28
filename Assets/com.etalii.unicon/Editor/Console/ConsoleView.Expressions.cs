@@ -18,14 +18,14 @@ namespace EtAlii.UniCon.Editor
             _expressionButton
                 .BindClick(viewModel.ToggleExpressionPanel)
                 .AddTo(disposable);
-            _viewModel.Settings.ShowExpressionPanel
+            _viewModel.UserSettings.ShowExpressionPanel
                 .Subscribe(onNext: showExpressionPanel =>
                 {
                     UpdateExpressionPanel();
                     UpdateToggleButton(_expressionButton, showExpressionPanel);
                 })
                 .AddTo(disposable);
-            _viewModel.Settings.ExpressionPanelHeight
+            _viewModel.UserSettings.ExpressionPanelHeight
                 .Subscribe(expressionPanelHeight =>
                 {
                     var height = _expressionPanel.visible
@@ -72,12 +72,12 @@ namespace EtAlii.UniCon.Editor
         {
             if (_expressionPanel.visible)
             {
-                _viewModel.Settings.ExpressionPanelHeight.Value = _expressionPanel.contentRect.height > 0f
+                _viewModel.UserSettings.ExpressionPanelHeight.Value = _expressionPanel.contentRect.height > 0f
                     ? _expressionPanel.contentRect.height
                     : 150f;
             }
 
-            _expressionPanel.visible = _viewModel.Settings.ShowExpressionPanel.Value; 
+            _expressionPanel.visible = _viewModel.UserSettings.ShowExpressionPanel.Value; 
         }
     }    
 }

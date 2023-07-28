@@ -17,14 +17,14 @@ namespace EtAlii.UniCon.Editor
             _filterButton
                 .BindClick(viewModel.ToggleFilterPanel)
                 .AddTo(disposable);
-            _viewModel.Settings.ShowFilterPanel
+            _viewModel.UserSettings.ShowFilterPanel
                 .Subscribe(onNext: showFilterPanel =>
                 {
                     UpdateFilterPanel();
                     UpdateToggleButton(_filterButton, showFilterPanel);
                 })
                 .AddTo(disposable);
-            _viewModel.Settings.FilterPanelWidth
+            _viewModel.UserSettings.FilterPanelWidth
                 .Subscribe(filterPanelWidth =>
                 {
                     var width = _filterPanel.visible
@@ -38,49 +38,49 @@ namespace EtAlii.UniCon.Editor
             // Log sources.
             var serilogSourceToggle = this.Q<Toggle>("serilog-source-toggle");
             serilogSourceToggle
-                .BindTwoWayValueChanged(viewModel.Settings.UseSerilogSource)
+                .BindTwoWayValueChanged(viewModel.UserSettings.UseSerilogSource)
                 .AddTo(disposable);
             
             var unitySourceToggle = this.Q<Toggle>("unity-source-toggle");
             unitySourceToggle
-                .BindTwoWayValueChanged(viewModel.Settings.UseUnitySource)
+                .BindTwoWayValueChanged(viewModel.UserSettings.UseUnitySource)
                 .AddTo(disposable);
 
             // Log levels.
             var verboseToggle = this.Q<Toggle>("verbose-toggle");
             verboseToggle
-                .BindTwoWayValueChanged(viewModel.Settings.LogLevel, LogLevel.Verbose)
+                .BindTwoWayValueChanged(viewModel.UserSettings.LogLevel, LogLevel.Verbose)
                 .AddTo(disposable);
 
             var informationToggle = this.Q<Toggle>("information-toggle");
             informationToggle
-                .BindTwoWayValueChanged(viewModel.Settings.LogLevel, LogLevel.Information)
+                .BindTwoWayValueChanged(viewModel.UserSettings.LogLevel, LogLevel.Information)
                 .AddTo(disposable);
 
             var debugToggle = this.Q<Toggle>("debug-toggle");
             debugToggle
-                .BindTwoWayValueChanged(viewModel.Settings.LogLevel, LogLevel.Debug)
+                .BindTwoWayValueChanged(viewModel.UserSettings.LogLevel, LogLevel.Debug)
                 .AddTo(disposable);
 
             var warningToggle = this.Q<Toggle>("warning-toggle");
             warningToggle
-                .BindTwoWayValueChanged(viewModel.Settings.LogLevel, LogLevel.Warning)
+                .BindTwoWayValueChanged(viewModel.UserSettings.LogLevel, LogLevel.Warning)
                 .AddTo(disposable);
             
             var errorToggle = this.Q<Toggle>("error-toggle");
             errorToggle
-                .BindTwoWayValueChanged(viewModel.Settings.LogLevel, LogLevel.Error)
+                .BindTwoWayValueChanged(viewModel.UserSettings.LogLevel, LogLevel.Error)
                 .AddTo(disposable);
  
             
             var fatalToggle = this.Q<Toggle>("fatal-toggle");
             fatalToggle
-                .BindTwoWayValueChanged(viewModel.Settings.LogLevel, LogLevel.Fatal)
+                .BindTwoWayValueChanged(viewModel.UserSettings.LogLevel, LogLevel.Fatal)
                 .AddTo(disposable);
 
             var exceptionsToggle = this.Q<Toggle>("exceptions-toggle");
             exceptionsToggle
-                .BindTwoWayValueChanged(viewModel.Settings.ShowExceptions)
+                .BindTwoWayValueChanged(viewModel.UserSettings.ShowExceptions)
                 .AddTo(disposable);
 
             _viewModel.CustomFilters
@@ -152,11 +152,11 @@ namespace EtAlii.UniCon.Editor
         {
             if (_filterPanel.visible)
             {
-                _viewModel.Settings.FilterPanelWidth.Value = _filterPanel.contentRect.width > 0f 
+                _viewModel.UserSettings.FilterPanelWidth.Value = _filterPanel.contentRect.width > 0f 
                     ? _filterPanel.contentRect.width 
                     : 150;
             }
-            _filterPanel.visible = _viewModel.Settings.ShowFilterPanel.Value;
+            _filterPanel.visible = _viewModel.UserSettings.ShowFilterPanel.Value;
         }
     }    
 }
