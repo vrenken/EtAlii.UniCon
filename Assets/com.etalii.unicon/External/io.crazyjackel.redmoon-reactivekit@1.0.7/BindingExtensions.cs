@@ -31,6 +31,22 @@ namespace RedMoon.ReactiveKit
         {
             return observable.ObserveOnMainThread().DistinctUntilChanged().Subscribe(value => element.style.visibility = value);
         }
+        
+        /// <summary>
+        /// Binds Element's Visibility State to Visibility Observable
+        /// </summary>
+        /// <param name="element">Element to Bind</param>
+        /// <param name="observable">Observable Stream to Subscribe to</param>
+        /// <returns>Disposable for Disposing Subscription</returns>
+        [MustUseReturnValue]
+        public static IDisposable BindVisibility(this VisualElement element, IObservable<bool> observable)
+        {
+            return observable
+                .ObserveOnMainThread()
+                .DistinctUntilChanged()
+                .Subscribe(value => element.style.visibility = value ? Visibility.Visible : Visibility.Hidden);
+        }
+        
         /// <summary>
         /// Bind Element's Click Callback to Command
         /// </summary>

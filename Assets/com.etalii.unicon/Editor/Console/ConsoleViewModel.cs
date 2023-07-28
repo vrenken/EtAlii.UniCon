@@ -21,7 +21,7 @@ namespace EtAlii.UniCon.Editor
         
         private IDisposable _logEventsSource;
 
-        public ConsoleViewModel()
+        private void Awake()
         {
             SetupScrolling();
             SetupFilter();

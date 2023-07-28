@@ -1,5 +1,6 @@
 namespace EtAlii.UniCon.Editor
 {
+    using System;
     using RedMoon.ReactiveKit;
     using UniRx;
     using UnityEngine.UIElements;
@@ -25,15 +26,18 @@ namespace EtAlii.UniCon.Editor
                     UpdateToggleButton(_expressionButton, showExpressionPanel);
                 })
                 .AddTo(disposable);
-            _viewModel.UserSettings.ExpressionPanelHeight
-                .Subscribe(expressionPanelHeight =>
+            _expressionPanel
+                .BindCallback<GeometryChangedEvent>(_ =>
                 {
-                    var height = _expressionPanel.visible
-                        ? expressionPanelHeight
-                        : 0f;
-                    _verticalSplitPanel.fixedPaneInitialDimension = height;
-                    _expressionPanel.style.width = height;
+                    if (_expressionPanel.visible && _expressionPanel.contentRect.height > 0)
+                    {
+                        _viewModel.UserSettings.ExpressionPanelHeight.Value = _expressionPanel.contentRect.height;
+                    }
                 })
+                .AddTo(disposable);
+            _viewModel.UserSettings.ExpressionPanelHeight
+                .Throttle(TimeSpan.FromMilliseconds(300))
+                .Subscribe(_ => UpdateExpressionPanel())
                 .AddTo(disposable);
             
             _expressionTextField
@@ -48,7 +52,6 @@ namespace EtAlii.UniCon.Editor
             _expressionCancelButton
                 .BindClick(viewModel.CancelFilter)
                 .AddTo(disposable);
-
         }
         
         private void OnExpressionChanged(string settingName)
@@ -61,23 +64,22 @@ namespace EtAlii.UniCon.Editor
             }
         }
 
+        private void UpdateExpressionPanel()
+        {
+            _expressionPanel.visible = _viewModel.UserSettings.ShowExpressionPanel.Value; 
+            
+            var height = _expressionPanel.visible
+                ? _viewModel.UserSettings.ExpressionPanelHeight.Value
+                : 0f;
+            _verticalSplitPanel.fixedPaneInitialDimension = height;
+            _expressionPanel.style.height = height;
+        }
+
         private void UpdateActiveExpression(CustomFilter customFilter)
         {
             _expressionTextField.value = customFilter.Expression;
             _expressionErrorButton.text = customFilter.CompiledExpression != null ? "Ok" : customFilter.Error;
             _expressionSaveButton.SetEnabled(customFilter.CompiledExpression != null);
-        }
-
-        private void UpdateExpressionPanel()
-        {
-            if (_expressionPanel.visible)
-            {
-                _viewModel.UserSettings.ExpressionPanelHeight.Value = _expressionPanel.contentRect.height > 0f
-                    ? _expressionPanel.contentRect.height
-                    : 150f;
-            }
-
-            _expressionPanel.visible = _viewModel.UserSettings.ShowExpressionPanel.Value; 
         }
     }    
 }

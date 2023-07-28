@@ -20,7 +20,7 @@ namespace EtAlii.UniCon.Editor
             ToggleFilterPanel
                 .Subscribe(_ =>
                 {
-                    UserSettings.ShowFilterPanel.Value = !UserSettings.ShowFilterPanel.Value;
+                    UserSettings.ShowFilterPanel.SetValueAndForceNotify(!UserSettings.ShowFilterPanel.Value);
                     UserSettings.FilterPanelWidth.SetValueAndForceNotify(UserSettings.FilterPanelWidth.Value);
                 });
 

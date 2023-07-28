@@ -24,15 +24,18 @@ namespace EtAlii.UniCon.Editor
                     UpdateToggleButton(_filterButton, showFilterPanel);
                 })
                 .AddTo(disposable);
-            _viewModel.UserSettings.FilterPanelWidth
-                .Subscribe(filterPanelWidth =>
+            _filterPanel
+                .BindCallback<GeometryChangedEvent>(_ =>
                 {
-                    var width = _filterPanel.visible
-                        ? filterPanelWidth
-                        : 0f;
-                    _horizontalSplitPanel.fixedPaneInitialDimension = width;
-                    _filterPanel.style.width = width;
+                    if (_filterPanel.visible && _filterPanel.contentRect.width > 0)
+                    {
+                        _viewModel.UserSettings.FilterPanelWidth.Value = _expressionPanel.contentRect.width;
+                    }
                 })
+                .AddTo(disposable);
+            _viewModel.UserSettings.FilterPanelWidth
+                .Throttle(TimeSpan.FromMilliseconds(300))
+                .Subscribe(_ => UpdateExpressionPanel())
                 .AddTo(disposable);
             
             // Log sources.
@@ -150,13 +153,13 @@ namespace EtAlii.UniCon.Editor
 
         private void UpdateFilterPanel()
         {
-            if (_filterPanel.visible)
-            {
-                _viewModel.UserSettings.FilterPanelWidth.Value = _filterPanel.contentRect.width > 0f 
-                    ? _filterPanel.contentRect.width 
-                    : 150;
-            }
             _filterPanel.visible = _viewModel.UserSettings.ShowFilterPanel.Value;
+            
+            var width = _filterPanel.visible
+                ? _viewModel.UserSettings.FilterPanelWidth.Value
+                : 0f;
+            _horizontalSplitPanel.fixedPaneInitialDimension = width;
+            _filterPanel.style.width = width;
         }
     }    
 }

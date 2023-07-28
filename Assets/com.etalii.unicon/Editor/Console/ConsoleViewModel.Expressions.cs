@@ -38,7 +38,7 @@ namespace EtAlii.UniCon.Editor
             ToggleExpressionPanel
                 .Subscribe(_ =>
                 {
-                    UserSettings.ShowExpressionPanel.Value = !UserSettings.ShowExpressionPanel.Value;
+                    UserSettings.ShowExpressionPanel.SetValueAndForceNotify(!UserSettings.ShowExpressionPanel.Value);
                     UserSettings.ExpressionPanelHeight.SetValueAndForceNotify(UserSettings.ExpressionPanelHeight.Value);
                 });
 
