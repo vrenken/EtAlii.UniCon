@@ -31,6 +31,7 @@ namespace EtAlii.UniCon.Editor
         private void OnScrolledVertically(float value)
         {
             if (!_viewModel.UserSettings.ScrollToTail.Value) return;
+            if(_previousScrollValue == 0) return;
             if (_previousScrollValue <= _listViewScrollView.verticalScroller.value) return;
             
             _viewModel.UserSettings.ScrollToTail.Value = false;
