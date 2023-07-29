@@ -20,8 +20,8 @@ namespace EtAlii.UniCon.Editor
             ToggleFilterPanel
                 .Subscribe(_ =>
                 {
-                    UserSettings.ShowFilterPanel.SetValueAndForceNotify(!UserSettings.ShowFilterPanel.Value);
-                    UserSettings.FilterPanelWidth.SetValueAndForceNotify(UserSettings.FilterPanelWidth.Value);
+                    UserSettings.ShowFilterPanel.Value = !UserSettings.ShowFilterPanel.Value;
+                    UserSettings.FilterPanelWidth.Value = UserSettings.FilterPanelWidth.Value;
                 });
 
             UserSettings.UseSerilogSource.Subscribe(_ => ConfigureStream());

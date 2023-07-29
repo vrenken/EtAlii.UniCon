@@ -82,18 +82,18 @@ namespace EtAlii.UniCon.Editor
             ClearOnBuild.Throttle(_throttle).Subscribe(value => { clearOnBuild = value; SaveWhenNeeded(); }).AddTo(_disposable);
             ClearOnRecompile.Throttle(_throttle).Subscribe(value => { clearOnRecompile = value; SaveWhenNeeded(); }).AddTo(_disposable);
 
-            LogLevel.SetValueAndForceNotify(logLevel);
-            ShowExceptions.SetValueAndForceNotify(showExceptions);
-            UseSerilogSource.SetValueAndForceNotify(useSerilogSource);
-            UseUnitySource.SetValueAndForceNotify(useUnitySource);
-            ScrollToTail.SetValueAndForceNotify(scrollToTail);
-            ShowFilterPanel.SetValueAndForceNotify(showFilterPanel);
-            FilterPanelWidth.SetValueAndForceNotify(filterPanelWidth);
-            ShowExpressionPanel.SetValueAndForceNotify(showExpressionPanel);
-            ExpressionPanelHeight.SetValueAndForceNotify(expressionPanelHeight);
-            ClearOnPlay.SetValueAndForceNotify(clearOnPlay);
-            ClearOnBuild.SetValueAndForceNotify(clearOnBuild);
-            ClearOnRecompile.SetValueAndForceNotify(clearOnRecompile);
+            LogLevel.Value = logLevel;
+            ShowExceptions.Value = showExceptions;
+            UseSerilogSource.Value = useSerilogSource;
+            UseUnitySource.Value = useUnitySource;
+            ScrollToTail.Value = scrollToTail;
+            ShowFilterPanel.Value = showFilterPanel;
+            FilterPanelWidth.Value = filterPanelWidth;
+            ShowExpressionPanel.Value = showExpressionPanel;
+            ExpressionPanelHeight.Value = expressionPanelHeight;
+            ClearOnPlay.Value = clearOnPlay;
+            ClearOnBuild.Value = clearOnBuild;
+            ClearOnRecompile.Value = clearOnRecompile;
         }
 
         private void SaveWhenNeeded()
