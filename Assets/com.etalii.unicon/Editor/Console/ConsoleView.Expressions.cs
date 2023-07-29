@@ -20,7 +20,7 @@ namespace EtAlii.UniCon.Editor
                 .BindClick(viewModel.ToggleExpressionPanel)
                 .AddTo(disposable);
             _viewModel.UserSettings.ShowExpressionPanel
-                .Subscribe(onNext: showExpressionPanel =>
+                .Subscribe(showExpressionPanel =>
                 {
                     UpdateExpressionPanel();
                     UpdateToggleButton(_expressionButton, showExpressionPanel);

@@ -18,7 +18,7 @@ namespace EtAlii.UniCon.Editor
                 .BindClick(viewModel.ToggleFilterPanel)
                 .AddTo(disposable);
             _viewModel.UserSettings.ShowFilterPanel
-                .Subscribe(onNext: showFilterPanel =>
+                .Subscribe(showFilterPanel =>
                 {
                     UpdateFilterPanel();
                     UpdateToggleButton(_filterButton, showFilterPanel);
@@ -29,13 +29,13 @@ namespace EtAlii.UniCon.Editor
                 {
                     if (_filterPanel.visible && _filterPanel.contentRect.width > 0)
                     {
-                        _viewModel.UserSettings.FilterPanelWidth.Value = _expressionPanel.contentRect.width;
+                        _viewModel.UserSettings.FilterPanelWidth.Value = _filterPanel.contentRect.width;
                     }
                 })
                 .AddTo(disposable);
             _viewModel.UserSettings.FilterPanelWidth
                 .Throttle(TimeSpan.FromMilliseconds(300))
-                .Subscribe(_ => UpdateExpressionPanel())
+                .Subscribe(_ => UpdateFilterPanel())
                 .AddTo(disposable);
             
             // Log sources.

@@ -62,26 +62,13 @@ namespace EtAlii.UniCon.Editor
         // ReSharper disable once NotAccessedField.Local
         private readonly CompositeDisposable _disposable = new ();
 
-        private readonly TimeSpan _throttle = TimeSpan.FromMilliseconds(100); 
-        
-        private void Awake()
+        private readonly TimeSpan _throttle = TimeSpan.FromMilliseconds(100);
+
+        public void Bind()
         {
 #if UNICON_LIFETIME_DEBUG            
-            Debug.Log("STARTUP: UserSettings.Awake()");
+            Debug.Log($"STARTUP: {GetType().Name}.{nameof(Bind)}()");
 #endif
-            LogLevel.SetValueAndForceNotify(logLevel);
-            ShowExceptions.SetValueAndForceNotify(showExceptions);
-            UseSerilogSource.SetValueAndForceNotify(useSerilogSource);
-            UseUnitySource.SetValueAndForceNotify(useUnitySource);
-            ScrollToTail.SetValueAndForceNotify(scrollToTail);
-            ShowFilterPanel.SetValueAndForceNotify(showFilterPanel);
-            FilterPanelWidth.SetValueAndForceNotify(filterPanelWidth);
-            ShowExpressionPanel.SetValueAndForceNotify(showExpressionPanel);
-            ExpressionPanelHeight.SetValueAndForceNotify(expressionPanelHeight);
-            ClearOnPlay.SetValueAndForceNotify(clearOnPlay);
-            ClearOnBuild.SetValueAndForceNotify(clearOnBuild);
-            ClearOnRecompile.SetValueAndForceNotify(clearOnRecompile);
-
             LogLevel.Throttle(_throttle).Subscribe(value => { logLevel = value; SaveWhenNeeded(); }).AddTo(_disposable);
             ShowExceptions.Throttle(_throttle).Subscribe(value => { showExceptions = value; SaveWhenNeeded(); }).AddTo(_disposable);
             UseSerilogSource.Throttle(_throttle).Subscribe(value => { useSerilogSource = value; SaveWhenNeeded(); }).AddTo(_disposable);
@@ -94,6 +81,19 @@ namespace EtAlii.UniCon.Editor
             ClearOnPlay.Throttle(_throttle).Subscribe(value => { clearOnPlay = value; SaveWhenNeeded(); }).AddTo(_disposable);
             ClearOnBuild.Throttle(_throttle).Subscribe(value => { clearOnBuild = value; SaveWhenNeeded(); }).AddTo(_disposable);
             ClearOnRecompile.Throttle(_throttle).Subscribe(value => { clearOnRecompile = value; SaveWhenNeeded(); }).AddTo(_disposable);
+
+            LogLevel.SetValueAndForceNotify(logLevel);
+            ShowExceptions.SetValueAndForceNotify(showExceptions);
+            UseSerilogSource.SetValueAndForceNotify(useSerilogSource);
+            UseUnitySource.SetValueAndForceNotify(useUnitySource);
+            ScrollToTail.SetValueAndForceNotify(scrollToTail);
+            ShowFilterPanel.SetValueAndForceNotify(showFilterPanel);
+            FilterPanelWidth.SetValueAndForceNotify(filterPanelWidth);
+            ShowExpressionPanel.SetValueAndForceNotify(showExpressionPanel);
+            ExpressionPanelHeight.SetValueAndForceNotify(expressionPanelHeight);
+            ClearOnPlay.SetValueAndForceNotify(clearOnPlay);
+            ClearOnBuild.SetValueAndForceNotify(clearOnBuild);
+            ClearOnRecompile.SetValueAndForceNotify(clearOnRecompile);
         }
 
         private void SaveWhenNeeded()

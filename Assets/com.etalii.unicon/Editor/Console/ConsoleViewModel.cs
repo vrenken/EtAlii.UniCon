@@ -32,6 +32,9 @@ namespace EtAlii.UniCon.Editor
 #if UNICON_LIFETIME_DEBUG            
             Debug.Log($"[UNICON] {GetType().Name}.{nameof(Awake)}()");
 #endif
+            UserSettings.Bind();
+            ProjectSettings.Bind();
+
             SetupScrolling();
             SetupFilter();
             SetupExpression();

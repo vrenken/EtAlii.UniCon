@@ -21,6 +21,9 @@
         // }
         //
         // public int ChangeCount => _changeCount;
- 
+
+        public void Bind()
+        {
+        }
     }
 }
