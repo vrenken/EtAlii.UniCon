@@ -9,7 +9,13 @@ namespace EtAlii.UniCon.Editor
         {
             get
             {
-                if(_instance == null) _instance = CreateInstance<ConsoleViewModel>();
+                if (_instance == null)
+                {
+#if UNICON_LIFETIME_DEBUG            
+                    Debug.Log($"[UNICON] {nameof(ConsoleViewModel)}.{nameof(Instance)}");
+#endif
+                    _instance = CreateInstance<ConsoleViewModel>();
+                }
                 return _instance;
             }
         }
@@ -23,6 +29,9 @@ namespace EtAlii.UniCon.Editor
 
         private void Awake()
         {
+#if UNICON_LIFETIME_DEBUG            
+            Debug.Log($"[UNICON] {GetType().Name}.{nameof(Awake)}()");
+#endif
             SetupScrolling();
             SetupFilter();
             SetupExpression();

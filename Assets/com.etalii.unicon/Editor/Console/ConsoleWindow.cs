@@ -19,6 +19,9 @@ namespace EtAlii.UniCon.Editor
 
         private void OnEnable()
         {
+#if UNICON_LIFETIME_DEBUG            
+            Debug.Log($"[UNICON] {GetType().Name}.{nameof(OnEnable)}()");
+#endif
             titleContent = new GUIContent("UniCon Console", logo.texture);
         }
 
@@ -29,6 +32,9 @@ namespace EtAlii.UniCon.Editor
 
         public void CreateGUI()
         {
+#if UNICON_LIFETIME_DEBUG            
+            Debug.Log($"[UNICON] {GetType().Name}.{nameof(CreateGUI)}()");
+#endif            
             // Import UXML
             _view = new ConsoleView();
             _viewModel = ConsoleViewModel.Instance;
@@ -40,6 +46,9 @@ namespace EtAlii.UniCon.Editor
 
         private void OnDidOpenScene()
         {
+#if UNICON_LIFETIME_DEBUG            
+            Debug.Log($"[UNICON] {GetType().Name}.{nameof(OnDidOpenScene)}()");
+#endif
             _view.StretchToParentSize();
         }
 

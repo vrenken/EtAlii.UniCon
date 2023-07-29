@@ -10,4 +10,5 @@
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=B85D1FEE_002D1944_002DB579_002D9FD7_002D9CB292B16554_002Fd_003AAssets/@EntryIndexedValue">ExplicitlyExcluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=C0A60056_002D89B4_002D8027_002D2011_002D05836B5ED3D7_002Fd_003AAssets/@EntryIndexedValue">ExplicitlyExcluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=D506BF76_002D941B_002DB8F7_002D6F4C_002DFCC7D495708D_002Fd_003AAssets/@EntryIndexedValue">ExplicitlyExcluded</s:String>
-	<s:Boolean x:Key="/Default/CodeStyle/CSharpUsing/AddImportsToDeepestScope/@EntryValue">True</s:Boolean></wpf:ResourceDictionary>
+	<s:Boolean x:Key="/Default/CodeStyle/CSharpUsing/AddImportsToDeepestScope/@EntryValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=Fira/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>

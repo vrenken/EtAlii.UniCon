@@ -90,6 +90,10 @@
                 value = false
             };
             _listView.bindItem = (e, i) => Bind((Foldout)e, _items[i]);
+            
+#if UNICON_LIFETIME_DEBUG            
+            Debug.Log($"[UNICON] {GetType().Name}.ctor()");
+#endif
         }
 
         private void Bind(Foldout foldout, LogEvent logEvent)
@@ -104,6 +108,9 @@
         
         public void Bind(ConsoleViewModel viewModel)
         {
+#if UNICON_LIFETIME_DEBUG            
+            Debug.Log($"[UNICON] {GetType().Name}.{nameof(Bind)}()");
+#endif
             Unbind();
 
             _viewModel = viewModel;
@@ -119,6 +126,9 @@
 
         public void Unbind()
         {
+#if UNICON_LIFETIME_DEBUG            
+            Debug.Log($"[UNICON] {GetType().Name}.{nameof(Unbind)}()");
+#endif
             _disposables?.Dispose();
             _disposables = new CompositeDisposable();
 

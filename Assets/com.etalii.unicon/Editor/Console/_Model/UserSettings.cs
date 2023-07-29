@@ -54,8 +54,12 @@ namespace EtAlii.UniCon.Editor
         private readonly CompositeDisposable _disposable = new ();
 
         private readonly TimeSpan _throttle = TimeSpan.FromMilliseconds(100); 
+        
         private void Awake()
         {
+#if UNICON_LIFETIME_DEBUG            
+            Debug.Log("STARTUP: UserSettings.Awake()");
+#endif
             LogLevel.SetValueAndForceNotify(logLevel);
             ShowExceptions.SetValueAndForceNotify(showExceptions);
             UseSerilogSource.SetValueAndForceNotify(useSerilogSource);
