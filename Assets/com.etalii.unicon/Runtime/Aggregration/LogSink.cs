@@ -16,6 +16,12 @@
         
         private LogSink() { }
 
+        public void Clear()
+        {
+            _logEvents.Clear();
+            EventCount = 0;
+        }
+        
         public void Add(LogEvent logEvent)
         {
             _logEvents.Enqueue(logEvent);

@@ -1,11 +1,12 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
     <Style src="project://database/Assets/com.etalii.unicon/Editor/ConsoleWindow/ConsoleWindow.uss?fileID=7433441132597879392&amp;guid=36c5b64153226674f929bea9b08e60c3&amp;type=3#ConsoleWindow" />
     <uie:Toolbar style="border-top-width: 1px;">
-        <uie:ToolbarButton text="\u221E Tail" name="tail-button" display-tooltip-when-elided="true" focusable="false" tooltip="Toggle to keep scrolling to any new log events received." class="toolbar-button" style="width: 75px; max-width: 75px; min-width: 75px;" />
+        <uie:ToolbarButton text="\u221E Tail" name="tail-button" display-tooltip-when-elided="true" focusable="false" tooltip="Toggle to keep scrolling to any new log events received." class="toolbar-button" style="width: 55px; max-width: 55px; min-width: 55px;" />
+        <uie:ToolbarMenu text="Clear" name="clear-button" class="toolbar-button" style="width: 55px; max-width: 55px; min-width: 55px;" />
         <uie:ToolbarSpacer style="width: 100%;" />
         <uie:ToolbarButton text="Filtered: 0 / Total: 0" name="metrics-button" display-tooltip-when-elided="true" focusable="false" picking-mode="Ignore" class="toolbar-button-right" style="width: 300px; -unity-text-align: upper-right; border-left-width: 0;" />
         <uie:ToolbarButton text="Expression" name="expression-button" display-tooltip-when-elided="true" focusable="false" class="toolbar-button-right" style="width: 75px; min-width: 75px; max-width: 75px;" />
-        <uie:ToolbarButton text="Filters" name="filter-button" display-tooltip-when-elided="true" focusable="false" class="toolbar-button-right" style="width: 75px; min-width: 75px; max-width: 75px;" />
+        <uie:ToolbarButton text="Filters" name="filter-button" display-tooltip-when-elided="true" focusable="false" class="toolbar-button-right" style="width: 55px; min-width: 55px; max-width: 55px;" />
     </uie:Toolbar>
     <ui:TwoPaneSplitView fixed-pane-initial-dimension="150" fixed-pane-index="1" name="horizontal-split-panel" style="flex-direction: row;">
         <ui:TwoPaneSplitView fixed-pane-initial-dimension="150" fixed-pane-index="1" orientation="Vertical" name="vertical-split-panel">

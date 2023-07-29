@@ -27,6 +27,7 @@
         private CompositeDisposable _disposables;
         private readonly TwoPaneSplitView _horizontalSplitPanel;
         private readonly TwoPaneSplitView _verticalSplitPanel;
+        private readonly ToolbarMenu _clearButtonMenu;
 
         public new class UxmlFactory : UxmlFactory<ConsoleView, UxmlTraits>
         {
@@ -63,7 +64,13 @@
             _expressionErrorButton = this.Q<Button>("expression-error-button");
             _expressionSaveButton = this.Q<Button>("expression-save-button");
             _expressionCancelButton = this.Q<Button>("expression-cancel-button");
-                
+
+            _clearButtonMenu = this.Q<ToolbarMenu>("clear-button");
+            _clearButtonMenu.menu.AppendAction("Clear", OnClearAction, OnClearActionCallBack);
+            _clearButtonMenu.menu.AppendAction("Clear on Play", OnClearOnPlayAction, OnClearOnPlayActionCallBack);
+            _clearButtonMenu.menu.AppendAction("Clear on Build", OnClearOnBuildAction, OnClearOnBuildActionCallBack);
+            _clearButtonMenu.menu.AppendAction("Clear on Recompile", OnClearOnRecompileAction, OnClearOnRecompileActionCallBack);
+            
             _tailButton = this.Q<Button>("tail-button");
 
             // Let's take the color of the tail button and use that to remember the toggled and not toggled colors.
@@ -118,6 +125,7 @@
             BindScrolling(viewModel, _disposables);
             BindFilter(viewModel, _disposables);
             BindExpression(viewModel, _disposables);
+            //BindClear(viewModel, _disposables);
             
             _viewModel.ExpressionChanged += OnExpressionChanged;
             _viewModel.StreamChanged += OnStreamChanged;

@@ -49,7 +49,16 @@ namespace EtAlii.UniCon.Editor
 
         public readonly ReactiveProperty<float> ExpressionPanelHeight = new();
         [SerializeField] private float expressionPanelHeight = 150f;
-        
+
+        public readonly ReactiveProperty<bool> ClearOnPlay = new();
+        [SerializeField] private bool clearOnPlay = true;
+
+        public readonly ReactiveProperty<bool> ClearOnBuild = new();
+        [SerializeField] private bool clearOnBuild = true;
+
+        public readonly ReactiveProperty<bool> ClearOnRecompile = new();
+        [SerializeField] private bool clearOnRecompile = true;
+
         // ReSharper disable once NotAccessedField.Local
         private readonly CompositeDisposable _disposable = new ();
 
@@ -69,6 +78,9 @@ namespace EtAlii.UniCon.Editor
             FilterPanelWidth.SetValueAndForceNotify(filterPanelWidth);
             ShowExpressionPanel.SetValueAndForceNotify(showExpressionPanel);
             ExpressionPanelHeight.SetValueAndForceNotify(expressionPanelHeight);
+            ClearOnPlay.SetValueAndForceNotify(clearOnPlay);
+            ClearOnBuild.SetValueAndForceNotify(clearOnBuild);
+            ClearOnRecompile.SetValueAndForceNotify(clearOnRecompile);
 
             LogLevel.Throttle(_throttle).Subscribe(value => { logLevel = value; SaveWhenNeeded(); }).AddTo(_disposable);
             ShowExceptions.Throttle(_throttle).Subscribe(value => { showExceptions = value; SaveWhenNeeded(); }).AddTo(_disposable);
@@ -79,6 +91,9 @@ namespace EtAlii.UniCon.Editor
             FilterPanelWidth.Throttle(_throttle).Subscribe(value => { filterPanelWidth = value; SaveWhenNeeded(); }).AddTo(_disposable);
             ShowExpressionPanel.Throttle(_throttle).Subscribe(value => { showExpressionPanel = value; SaveWhenNeeded(); }).AddTo(_disposable);
             ExpressionPanelHeight.Throttle(_throttle).Subscribe(value => { expressionPanelHeight = value; SaveWhenNeeded(); }).AddTo(_disposable);
+            ClearOnPlay.Throttle(_throttle).Subscribe(value => { clearOnPlay = value; SaveWhenNeeded(); }).AddTo(_disposable);
+            ClearOnBuild.Throttle(_throttle).Subscribe(value => { clearOnBuild = value; SaveWhenNeeded(); }).AddTo(_disposable);
+            ClearOnRecompile.Throttle(_throttle).Subscribe(value => { clearOnRecompile = value; SaveWhenNeeded(); }).AddTo(_disposable);
         }
 
         private void SaveWhenNeeded()
