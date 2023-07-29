@@ -20,8 +20,8 @@ namespace EtAlii.UniCon.Editor
         private DropdownMenuAction.Status OnClearOnPlayActionCallBack(DropdownMenuAction arg)
         {
             return _viewModel.UserSettings.ClearOnPlay.Value
-                ? DropdownMenuAction.Status.Checked
-                : DropdownMenuAction.Status.Normal;
+                ? DropdownMenuAction.Status.Checked | DropdownMenuAction.Status.Disabled
+                : DropdownMenuAction.Status.Normal | DropdownMenuAction.Status.Disabled;
         }
 
         private void OnClearOnBuildAction(DropdownMenuAction action)
@@ -33,8 +33,8 @@ namespace EtAlii.UniCon.Editor
         private DropdownMenuAction.Status OnClearOnBuildActionCallBack(DropdownMenuAction arg)
         {
             return _viewModel.UserSettings.ClearOnBuild.Value
-                ? DropdownMenuAction.Status.Checked
-                : DropdownMenuAction.Status.Normal;
+                ? DropdownMenuAction.Status.Checked | DropdownMenuAction.Status.Disabled
+                : DropdownMenuAction.Status.Normal | DropdownMenuAction.Status.Disabled;
         }
 
         private void OnClearOnRecompileAction(DropdownMenuAction action)
@@ -46,8 +46,8 @@ namespace EtAlii.UniCon.Editor
         private DropdownMenuAction.Status OnClearOnRecompileActionCallBack(DropdownMenuAction arg)
         {
             return _viewModel.UserSettings.ClearOnRecompile.Value
-                ? DropdownMenuAction.Status.Checked
-                : DropdownMenuAction.Status.Normal;
+                ? DropdownMenuAction.Status.Checked | DropdownMenuAction.Status.Disabled
+                : DropdownMenuAction.Status.Normal | DropdownMenuAction.Status.Disabled;
         }
     }    
 }
