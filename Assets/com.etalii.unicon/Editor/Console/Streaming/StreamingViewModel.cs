@@ -88,9 +88,11 @@ namespace EtAlii.UniCon.Editor
                     };
                 }).Where(logEvent =>
                 {
-                    if(_filtersViewModel.CustomFilters.Count == 0) return true;
-                    var isMatchedByFilter = _filtersViewModel.CustomFilters
+                    var filters = _filtersViewModel.CustomFilters
                         .Where(f => f.IsActive.Value && !f.IsEditing.Value)
+                        .ToArray();
+                    if(!filters.Any()) return true;
+                    var isMatchedByFilter = filters
                         .Select(f => CustomFilterIsValid(f, logEvent))
                         .Any(r => r);
                     return isMatchedByFilter;
