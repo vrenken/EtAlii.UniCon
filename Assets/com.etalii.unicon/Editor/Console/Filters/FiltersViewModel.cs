@@ -10,7 +10,6 @@ namespace EtAlii.UniCon.Editor
         internal UserSettings UserSettings => UserSettings.instance;
         internal ProjectSettings ProjectSettings => ProjectSettings.instance;
 
-        public readonly CustomFilter SelectedCustomFilter = new();
         public readonly ReactiveCollection<CustomFilter> CustomFilters = new();
 
         public readonly ReactiveCommand<ClickEvent> ToggleFilterPanel = new();
@@ -20,12 +19,6 @@ namespace EtAlii.UniCon.Editor
 
         public void Bind(ExpressionViewModel expressionViewModel, StreamingViewModel streamingViewModel)
         {
-            SelectedCustomFilter.Expression
-                .Subscribe(_ =>
-                {
-                    streamingViewModel.ConfigureStream();
-                });
-
             ToggleFilterPanel
                 .Subscribe(_ =>
                 {
@@ -41,28 +34,46 @@ namespace EtAlii.UniCon.Editor
             SaveFilter
                 .Subscribe(_ =>
                 {
-                    SelectedCustomFilter.Name = EditorInputDialog
+                    var filter = CustomFilters.SingleOrDefault(f => f.IsEditing.Value);
+                    var filterToMatch = filter;
+                    var filterName = EditorInputDialog
                         .Show(
                             "Filter name", 
                             string.Empty, 
-                            SelectedCustomFilter.Name ?? "New filter",
+                            filter?.Name ?? "New filter",
                             parentWindow: EditorWindow.GetWindow<ConsoleWindow>(),
-                            textValidation: text => NameIsValid(text, SelectedCustomFilter));
+                            textValidation: text => NameIsValid(text, filterToMatch));
 
-                    SelectedCustomFilter.IsActive.Value = true;
-                    if (!CustomFilters.Contains(SelectedCustomFilter))
+                    if (filterName == null)
                     {
-                        CustomFilters.Add(SelectedCustomFilter);
+                        // If the dialog is cancelled no filter name will be specified.
+                        // In that case we cancel the whole save.
+                        return;
                     }
 
-                    SelectedCustomFilter.Expression.Value = string.Empty;
+                    var isNew = filter == null;
+                    filter = new CustomFilter
+                    {
+                        Name = filterName,
+                        Expression = { Value = expressionViewModel.ExpressionText.Value },
+                        IsActive = { Value = true },
+                        IsEditing = { Value = false }
+                    };
+                    if (isNew)
+                    {
+                        CustomFilters.Add(filter);
+                    }
+
+                    SaveCustomFilters();
+
+                    expressionViewModel.ExpressionText.Value = string.Empty;
                     
-                    if (UserSettings.ShowExpressionPanel.Value)
-                    {
-                        expressionViewModel.ToggleExpressionPanel.Execute(new ClickEvent());
-                    }
+                    // if (UserSettings.ShowExpressionPanel.Value)
+                    // {
+                    //     expressionViewModel.ToggleExpressionPanel.Execute(new ClickEvent());
+                    // }
 
-                    if (UserSettings.ShowFilterPanel.Value == false)
+                    if (!UserSettings.ShowFilterPanel.Value)
                     {
                         ToggleFilterPanel.Execute(new ClickEvent());
                     }
@@ -71,14 +82,14 @@ namespace EtAlii.UniCon.Editor
             CancelFilter
                 .Subscribe(_ =>
                 {
-                    SelectedCustomFilter.Expression.Value = string.Empty;
+                    expressionViewModel.ExpressionText.Value = string.Empty;
                     
-                    if (UserSettings.ShowExpressionPanel.Value)
-                    {
-                        expressionViewModel.ToggleExpressionPanel.Execute(new ClickEvent());
-                    }
+                    // if (UserSettings.ShowExpressionPanel.Value)
+                    // {
+                    //     expressionViewModel.ToggleExpressionPanel.Execute(new ClickEvent());
+                    // }
 
-                    if (UserSettings.ShowFilterPanel.Value == false)
+                    if (!UserSettings.ShowFilterPanel.Value)
                     {
                         ToggleFilterPanel.Execute(new ClickEvent());
                     }
@@ -86,15 +97,27 @@ namespace EtAlii.UniCon.Editor
 
             CustomFilters
                 .ObserveAdd()
-                .Subscribe(evt => evt.Value.IsActive.Subscribe(_ => streamingViewModel.ConfigureStream()));
+                .Subscribe(evt =>
+                {
+                    evt.Value.IsActive.Subscribe(_ =>
+                    {
+                        SaveCustomFilters();
+                        streamingViewModel.ConfigureStream();
+                    });
+                });
         }
 
-        private bool NameIsValid(string text, CustomFilter rule)
+        private bool NameIsValid(string text, CustomFilter customFilter)
         {
             if (string.IsNullOrWhiteSpace(text)) return false;
 
             var matchingRule = CustomFilters.SingleOrDefault(r => r.Name == text);
-            return matchingRule == null || matchingRule == rule;
+            return matchingRule == null || matchingRule == customFilter;
+        }
+
+        private void SaveCustomFilters()
+        {
+            
         }
     }    
 }
