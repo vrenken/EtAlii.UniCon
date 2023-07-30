@@ -17,6 +17,11 @@ namespace EtAlii.UniCon.Editor
         public readonly ReactiveProperty<bool> IsActive = new(true);
 
         /// <summary>
+        /// Set this property to true to indicate that the custom filter is being edited.
+        /// </summary>
+        public readonly ReactiveProperty<bool> IsEditing = new(false);
+
+        /// <summary>
         /// The expression that should be run on the stream of event signals.
         /// This gets compiled into the <see cref="CompiledExpression"/>.
         /// </summary>
