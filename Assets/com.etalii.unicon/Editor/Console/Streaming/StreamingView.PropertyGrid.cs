@@ -10,7 +10,7 @@ namespace EtAlii.UniCon.Editor
     using UnityEngine.UIElements;
     using Cursor = UnityEngine.UIElements.Cursor;
 
-    public partial class ConsoleView
+    public partial class StreamingView
     {
         private readonly Color _propertyGridActionColor;
         
@@ -60,9 +60,9 @@ namespace EtAlii.UniCon.Editor
                 evt.menu.AppendAction("Find with predecessors", _ => { }, DropdownMenuAction.Status.Disabled);
                 evt.menu.AppendAction("Find with adjacent", _ => { }, DropdownMenuAction.Status.Disabled);
                 evt.menu.AppendSeparator();
-                evt.menu.AppendAction("Seek to ±5 seconds", _ => _viewModel.AddSeekToTimeSpanToExpression.Execute((logEvent.Timestamp, TimeSpan.FromSeconds(5))));
-                evt.menu.AppendAction("Seek to ±30 seconds", _ => _viewModel.AddSeekToTimeSpanToExpression.Execute((logEvent.Timestamp, TimeSpan.FromSeconds(30))));
-                evt.menu.AppendAction("Seek to ±5 minutes", _ => _viewModel.AddSeekToTimeSpanToExpression.Execute((logEvent.Timestamp, TimeSpan.FromMinutes(5))));
+                evt.menu.AppendAction("Seek to ±5 seconds", _ => _expressionViewModel.AddSeekToTimeSpanToExpression.Execute((logEvent.Timestamp, TimeSpan.FromSeconds(5))));
+                evt.menu.AppendAction("Seek to ±30 seconds", _ => _expressionViewModel.AddSeekToTimeSpanToExpression.Execute((logEvent.Timestamp, TimeSpan.FromSeconds(30))));
+                evt.menu.AppendAction("Seek to ±5 minutes", _ => _expressionViewModel.AddSeekToTimeSpanToExpression.Execute((logEvent.Timestamp, TimeSpan.FromMinutes(5))));
                 evt.menu.AppendSeparator();
                 evt.menu.AppendAction("Search FROM timestamp", _ => { }, DropdownMenuAction.Status.Disabled);
                 evt.menu.AppendAction("Search TO timestamp", _ => { }, DropdownMenuAction.Status.Disabled);
@@ -85,8 +85,8 @@ namespace EtAlii.UniCon.Editor
             };
             RegisterContextMenu(levelDropDownButton, evt =>
             {
-                evt.menu.AppendAction("Find", _ => _viewModel.AddFindByLogLevelToExpression.Execute(logEvent.Level));
-                evt.menu.AppendAction("Exclude", _ => _viewModel.AddExcludeByLogLevelToExpression.Execute(logEvent.Level));
+                evt.menu.AppendAction("Find", _ => _expressionViewModel.AddFindByLogLevelToExpression.Execute(logEvent.Level));
+                evt.menu.AppendAction("Exclude", _ => _expressionViewModel.AddExcludeByLogLevelToExpression.Execute(logEvent.Level));
                 evt.menu.AppendAction("Set as minimum level", _ => { }, DropdownMenuAction.Status.Disabled);
             });
             headerRow.contentContainer.Add(levelDropDownButton);
@@ -107,9 +107,9 @@ namespace EtAlii.UniCon.Editor
             };
             RegisterContextMenu(typeDropDownButton, evt =>
             {
-                evt.menu.AppendAction("Find", _ => _viewModel.AddFindByEventTypeToExpression.Execute(eventIdHash));
+                evt.menu.AppendAction("Find", _ => _expressionViewModel.AddFindByEventTypeToExpression.Execute(eventIdHash));
                 evt.menu.AppendAction("Find from template", _ => { }, DropdownMenuAction.Status.Disabled);
-                evt.menu.AppendAction("Exclude", _ => _viewModel.AddExcludeByEventTypeToExpression.Execute(eventIdHash));
+                evt.menu.AppendAction("Exclude", _ => _expressionViewModel.AddExcludeByEventTypeToExpression.Execute(eventIdHash));
             });
             headerRow.contentContainer.Add(typeDropDownButton);
 
@@ -155,9 +155,9 @@ namespace EtAlii.UniCon.Editor
                 };
                 RegisterContextMenu(addIncludeToFilterButton, evt =>
                 {
-                    evt.menu.AppendAction("Find", _ => _viewModel.AddFindByPropertyToExpression.Execute(property));
+                    evt.menu.AppendAction("Find", _ => _expressionViewModel.AddFindByPropertyToExpression.Execute(property));
                     evt.menu.AppendAction("Find on this event type", _ => { }, DropdownMenuAction.Status.Disabled);
-                    evt.menu.AppendAction("Find with any value", _ => _viewModel.AddFindWithAnyPropertyValueToExpression.Execute(property.Key));
+                    evt.menu.AppendAction("Find with any value", _ => _expressionViewModel.AddFindWithAnyPropertyValueToExpression.Execute(property.Key));
                 });
                 row.contentContainer.Add(addIncludeToFilterButton);
 
@@ -182,9 +182,9 @@ namespace EtAlii.UniCon.Editor
                 };
                 RegisterContextMenu(addExcludeToFilterButton, evt =>
                 {
-                    evt.menu.AppendAction("Exclude", _ => _viewModel.AddExcludeByPropertyToExpression.Execute(property));
+                    evt.menu.AppendAction("Exclude", _ => _expressionViewModel.AddExcludeByPropertyToExpression.Execute(property));
                     evt.menu.AppendAction("Exclude on this event type", _ => { }, DropdownMenuAction.Status.Disabled);
-                    evt.menu.AppendAction("Exclude with any value", _ => _viewModel.AddExcludeWithAnyPropertyValueToExpression.Execute(property.Key));
+                    evt.menu.AppendAction("Exclude with any value", _ => _expressionViewModel.AddExcludeWithAnyPropertyValueToExpression.Execute(property.Key));
                 });
                 row.contentContainer.Add(addExcludeToFilterButton);                
                 

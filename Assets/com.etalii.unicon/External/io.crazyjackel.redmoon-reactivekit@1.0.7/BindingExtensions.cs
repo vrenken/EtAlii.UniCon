@@ -8,7 +8,6 @@ namespace RedMoon.ReactiveKit
 
     internal static class BindingExtensions
     {
-        #region Visual Element
         /// <summary>
         /// Binds Element's Enabled State to Boolean Observable
         /// </summary>
@@ -29,7 +28,10 @@ namespace RedMoon.ReactiveKit
         [MustUseReturnValue]
         public static IDisposable BindVisibility(this VisualElement element, IObservable<Visibility> observable)
         {
-            return observable.ObserveOnMainThread().DistinctUntilChanged().Subscribe(value => element.style.visibility = value);
+            return observable
+                .ObserveOnMainThread()
+                .DistinctUntilChanged()
+                .Subscribe(value => element.style.visibility = value);
         }
         
         /// <summary>
@@ -74,9 +76,7 @@ namespace RedMoon.ReactiveKit
             var d2 = element.BindCallback(command, dataForCallback);
             return StableCompositeDisposable.Create(d1, d2);
         }
-        #endregion
 
-        #region Callback Event Handler
         [MustUseReturnValue]
         public static IDisposable BindCallback<TEventType>(this CallbackEventHandler element, EventCallback<TEventType> callback, TrickleDown trickleDown = TrickleDown.NoTrickleDown) where TEventType : EventBase<TEventType>, new()
         {
@@ -103,9 +103,7 @@ namespace RedMoon.ReactiveKit
             element.RegisterCallback(callback, dataForCallback, trickleDown);
             return Disposable.Create(() => { element.UnregisterCallback(callback, trickleDown); });
         }
-        #endregion
 
-        #region Notifications
         [MustUseReturnValue]
         public static IDisposable BindValueChanged<T>(this INotifyValueChanged<T> element, IReactiveCommand<ChangeEvent<T>> command)
         {
@@ -138,7 +136,10 @@ namespace RedMoon.ReactiveKit
         [MustUseReturnValue]
         public static IDisposable BindToValueChanged<T>(this INotifyValueChanged<T> element, IObservable<T> observable)
         {
-            return observable.ObserveOnMainThread().DistinctUntilChanged().Subscribe((ev) => element.SetValueWithoutNotify(ev));
+            return observable
+                .ObserveOnMainThread()
+                .DistinctUntilChanged()
+                .Subscribe((ev) => element.SetValueWithoutNotify(ev));
         }
 
         [MustUseReturnValue]
@@ -180,7 +181,5 @@ namespace RedMoon.ReactiveKit
                 .Subscribe((ev) => element.SetValueWithoutNotify(ev));
             return StableCompositeDisposable.Create(d1, d2);
         }
-        
-        #endregion
     }
 }

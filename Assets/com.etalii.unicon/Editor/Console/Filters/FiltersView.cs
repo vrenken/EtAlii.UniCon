@@ -6,22 +6,54 @@ namespace EtAlii.UniCon.Editor
     using UniRx;
     using UnityEngine.UIElements;
 
-    public partial class ConsoleView
+    public class FiltersView
     {
+        private readonly TwoPaneSplitView _horizontalSplitPanel;
         private readonly Button _filterButton;
         private readonly VisualElement _filterPanel;
         private readonly Foldout _customFiltersFoldout;
+        private readonly Toggle _serilogSourceToggle;
+        private readonly Toggle _unitySourceToggle;
+        private readonly Toggle _verboseToggle;
+        private readonly Toggle _informationToggle;
+        private readonly Toggle _debugToggle;
+        private readonly Toggle _warningToggle;
+        private readonly Toggle _errorToggle;
+        private readonly Toggle _fatalToggle;
+        private readonly Toggle _exceptionsToggle;
+        private FiltersViewModel _viewModel;
 
-        private void BindFilter(ConsoleViewModel viewModel, CompositeDisposable disposable)
+        public FiltersView(VisualElement root)
         {
+            _horizontalSplitPanel = root.Q<TwoPaneSplitView>("horizontal-split-panel");
+
+            _filterPanel = root.Q<VisualElement>("filter-panel");
+            _filterButton = root.Q<Button>("filter-button");
+            _customFiltersFoldout = root.Q<Foldout>("custom-filters-foldout");
+            
+            _serilogSourceToggle = root.Q<Toggle>("serilog-source-toggle");
+            _unitySourceToggle = root.Q<Toggle>("unity-source-toggle");
+            _verboseToggle = root.Q<Toggle>("verbose-toggle");
+            _informationToggle = root.Q<Toggle>("information-toggle");
+            _debugToggle = root.Q<Toggle>("debug-toggle");
+            _warningToggle = root.Q<Toggle>("warning-toggle");
+            _errorToggle = root.Q<Toggle>("error-toggle");
+            _fatalToggle = root.Q<Toggle>("fatal-toggle");
+            _exceptionsToggle = root.Q<Toggle>("exceptions-toggle");
+        }
+        
+        public void Bind(FiltersViewModel viewModel, CompositeDisposable disposable)
+        {
+            _viewModel = viewModel;
+            
             _filterButton
-                .BindClick(viewModel.ToggleFilterPanel)
+                .BindClick(_viewModel.ToggleFilterPanel)
                 .AddTo(disposable);
             _viewModel.UserSettings.ShowFilterPanel
                 .Subscribe(showFilterPanel =>
                 {
                     UpdateFilterPanel();
-                    UpdateToggleButton(_filterButton, showFilterPanel);
+                    _filterButton.UpdateToggleButton(showFilterPanel);
                 })
                 .AddTo(disposable);
             _filterPanel
@@ -39,50 +71,40 @@ namespace EtAlii.UniCon.Editor
                 .AddTo(disposable);
             
             // Log sources.
-            var serilogSourceToggle = this.Q<Toggle>("serilog-source-toggle");
-            serilogSourceToggle
-                .BindTwoWayValueChanged(viewModel.UserSettings.UseSerilogSource)
+            _serilogSourceToggle
+                .BindTwoWayValueChanged(_viewModel.UserSettings.UseSerilogSource)
                 .AddTo(disposable);
             
-            var unitySourceToggle = this.Q<Toggle>("unity-source-toggle");
-            unitySourceToggle
-                .BindTwoWayValueChanged(viewModel.UserSettings.UseUnitySource)
+            _unitySourceToggle
+                .BindTwoWayValueChanged(_viewModel.UserSettings.UseUnitySource)
                 .AddTo(disposable);
 
             // Log levels.
-            var verboseToggle = this.Q<Toggle>("verbose-toggle");
-            verboseToggle
+            _verboseToggle
                 .BindTwoWayValueChanged(viewModel.UserSettings.LogLevel, LogLevel.Verbose)
                 .AddTo(disposable);
 
-            var informationToggle = this.Q<Toggle>("information-toggle");
-            informationToggle
+            _informationToggle
                 .BindTwoWayValueChanged(viewModel.UserSettings.LogLevel, LogLevel.Information)
                 .AddTo(disposable);
 
-            var debugToggle = this.Q<Toggle>("debug-toggle");
-            debugToggle
+            _debugToggle
                 .BindTwoWayValueChanged(viewModel.UserSettings.LogLevel, LogLevel.Debug)
                 .AddTo(disposable);
 
-            var warningToggle = this.Q<Toggle>("warning-toggle");
-            warningToggle
+            _warningToggle
                 .BindTwoWayValueChanged(viewModel.UserSettings.LogLevel, LogLevel.Warning)
                 .AddTo(disposable);
             
-            var errorToggle = this.Q<Toggle>("error-toggle");
-            errorToggle
+            _errorToggle
                 .BindTwoWayValueChanged(viewModel.UserSettings.LogLevel, LogLevel.Error)
                 .AddTo(disposable);
  
-            
-            var fatalToggle = this.Q<Toggle>("fatal-toggle");
-            fatalToggle
+            _fatalToggle
                 .BindTwoWayValueChanged(viewModel.UserSettings.LogLevel, LogLevel.Fatal)
                 .AddTo(disposable);
 
-            var exceptionsToggle = this.Q<Toggle>("exceptions-toggle");
-            exceptionsToggle
+            _exceptionsToggle
                 .BindTwoWayValueChanged(viewModel.UserSettings.ShowExceptions)
                 .AddTo(disposable);
 
@@ -98,6 +120,10 @@ namespace EtAlii.UniCon.Editor
                 .ObserveReset()
                 .Subscribe(ResetAllCustomFilters)
                 .AddTo(disposable);
+        }
+
+        public void Unbind()
+        {
         }
 
         private void AddCustomFilter(CollectionAddEvent<CustomFilter> evt)

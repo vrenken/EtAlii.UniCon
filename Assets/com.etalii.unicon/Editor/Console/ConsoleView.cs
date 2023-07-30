@@ -1,7 +1,5 @@
 ﻿namespace EtAlii.UniCon.Editor
 {
-    using System.Collections.Generic;
-    using Serilog.Events;
     using UniRx;
     using UnityEditor.UIElements;
     using UnityEngine;
@@ -9,26 +7,15 @@
 
     public partial class ConsoleView : VisualElement
     {
-        private readonly ListView _listView;
-
-        private readonly List<LogEvent> _items = new ();
-
-        private readonly Font _consoleFont = Resources.Load<Font>("Fonts/FiraCode-Regular");
-
-        private readonly Color _buttonNotToggledColor;
-        private readonly Color _buttonToggledColor;
-        private readonly ScrollView _listViewScrollView;
         private readonly ToolbarMenu _expressionAddButtonMenu;
 
-        private readonly Button _metricsButton;
-        
-        private float _previousScrollValue;
         private ConsoleViewModel _viewModel;
         private CompositeDisposable _disposables;
-        private readonly TwoPaneSplitView _horizontalSplitPanel;
-        private readonly TwoPaneSplitView _verticalSplitPanel;
-        private readonly ToolbarMenu _clearButtonMenu;
 
+        private readonly ExpressionView _expression;
+        private readonly FiltersView _filters;
+        private readonly StreamingView _streaming;
+        
         public new class UxmlFactory : UxmlFactory<ConsoleView, UxmlTraits>
         {
             public override VisualElement Create(IUxmlAttributes bag, CreationContext cc)
@@ -44,73 +31,22 @@
 
         public ConsoleView()
         {
-            //ColorUtility.TryParseHtmlString("#11ff1122", out var propertyGridHeaderColor);
-            _propertyGridActionColor = Color.green * 0.85f;// propertyGridHeaderColor;
-
             var visualTree = Resources.Load<VisualTreeAsset>(nameof(ConsoleView));
             visualTree.CloneTree(this);
 
-            _horizontalSplitPanel = this.Q<TwoPaneSplitView>("horizontal-split-panel");
-            _verticalSplitPanel = this.Q<TwoPaneSplitView>("vertical-split-panel");
-
-            _metricsButton = this.Q<ToolbarButton>("metrics-button");
-            _filterPanel = this.Q<VisualElement>("filter-panel");
-            _filterButton = this.Q<Button>("filter-button");
-            _customFiltersFoldout = this.Q<Foldout>("custom-filters-foldout");
+            _expression = new ExpressionView(this);
+            _filters = new FiltersView(this);
+            _streaming = new StreamingView(this);
             
-            _expressionPanel = this.Q<VisualElement>("expression-panel");
-            _expressionButton = this.Q<Button>("expression-button");
-            _expressionTextField = this.Q<TextField>("expression-textfield");
-            _expressionErrorButton = this.Q<Button>("expression-error-button");
-            _expressionSaveButton = this.Q<Button>("expression-save-button");
-            _expressionCancelButton = this.Q<Button>("expression-cancel-button");
-
-            _clearButtonMenu = this.Q<ToolbarMenu>("clear-button");
-            _clearButtonMenu.menu.AppendAction("Clear", OnClearAction, OnClearActionCallBack);
-            _clearButtonMenu.menu.AppendAction("Clear on Play", OnClearOnPlayAction, OnClearOnPlayActionCallBack);
-            _clearButtonMenu.menu.AppendAction("Clear on Build", OnClearOnBuildAction, OnClearOnBuildActionCallBack);
-            _clearButtonMenu.menu.AppendAction("Clear on Recompile", OnClearOnRecompileAction, OnClearOnRecompileActionCallBack);
-            
-            _tailButton = this.Q<Button>("tail-button");
-
-            // Let's take the color of the tail button and use that to remember the toggled and not toggled colors.
-            _buttonNotToggledColor = _tailButton.style.backgroundColor.value;
-            _buttonToggledColor = new Color(
-                0.5f - _buttonNotToggledColor.r, 
-                0.5f - _buttonNotToggledColor.g,
-                0.5f - _buttonNotToggledColor.b, 
-                0.5f - _buttonNotToggledColor.a);
-            
-            _listView = this.Q<ListView>();
-            _listViewScrollView = _listView.Q<ScrollView>();
-            _listViewScrollView.verticalScroller.valueChanged += OnScrolledVertically;
-            _listView.itemsSource = _items;
-
-            _listView.makeItem = () => new Foldout
-            {
-                style =
-                {
-                    flexGrow = 1,
-                    unityFontDefinition = StyleKeyword.Initial,
-                    unityFont = new StyleFont(_consoleFont)
-                },
-                value = false
-            };
-            _listView.bindItem = (e, i) => Bind((Foldout)e, _items[i]);
+            var clearButtonMenu = this.Q<ToolbarMenu>("clear-button");
+            clearButtonMenu.menu.AppendAction("Clear", OnClearAction, OnClearActionCallBack);
+            clearButtonMenu.menu.AppendAction("Clear on Play", OnClearOnPlayAction, OnClearOnPlayActionCallBack);
+            clearButtonMenu.menu.AppendAction("Clear on Build", OnClearOnBuildAction, OnClearOnBuildActionCallBack);
+            clearButtonMenu.menu.AppendAction("Clear on Recompile", OnClearOnRecompileAction, OnClearOnRecompileActionCallBack);
             
 #if UNICON_LIFETIME_DEBUG            
             Debug.Log($"[UNICON] {GetType().Name}.ctor()");
 #endif
-        }
-
-        private void Bind(Foldout foldout, LogEvent logEvent)
-        {
-            if (foldout.userData == logEvent) return;
-            foldout.value = false;
-            foldout.text = LogEventLine.GetMessage(logEvent);
-            foldout.contentContainer.Clear();
-            foldout.contentContainer.Add(BuildPropertyGrid(logEvent));
-            foldout.userData = logEvent;
         }
         
         public void Bind(ConsoleViewModel viewModel)
@@ -122,14 +58,9 @@
 
             _viewModel = viewModel;
 
-            BindScrolling(viewModel, _disposables);
-            BindFilter(viewModel, _disposables);
-            BindExpression(viewModel, _disposables);
-            //BindClear(viewModel, _disposables);
-            
-            _viewModel.ExpressionChanged += OnExpressionChanged;
-            _viewModel.StreamChanged += OnStreamChanged;
-            OnStreamChanged();
+            _streaming.Bind(viewModel.Streaming, viewModel.Expressions, _disposables);
+            _filters.Bind(viewModel.Filters , _disposables);
+            _expression.Bind(viewModel.Expressions, viewModel.Filters, _disposables);
         }
 
         public void Unbind()
@@ -141,15 +72,9 @@
             _disposables = new CompositeDisposable();
 
             if (_viewModel == null) return;
-            _viewModel.StreamChanged -= OnStreamChanged;
-            _viewModel.ExpressionChanged -= OnExpressionChanged;
+            _expression.Unbind();
+            _filters.Unbind();
+            _streaming.Unbind();
         }
-
-        private void UpdateToggleButton(Button button, bool isToggled)
-        {
-            button.style.backgroundColor = isToggled 
-                ? _buttonToggledColor 
-                : _buttonNotToggledColor;
-        }
-    }    
+    }
 }

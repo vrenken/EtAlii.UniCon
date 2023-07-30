@@ -3,7 +3,7 @@ namespace EtAlii.UniCon.Editor
     using System;
     using UnityEngine;
 
-    public partial class ConsoleViewModel : ScriptableObject
+    public class ConsoleViewModel : ScriptableObject
     {
         public static ConsoleViewModel Instance
         {
@@ -24,6 +24,15 @@ namespace EtAlii.UniCon.Editor
         internal ProjectSettings ProjectSettings => ProjectSettings.instance;
 
         private static ConsoleViewModel _instance;
+
+        public StreamingViewModel Streaming => _streaming;
+        private readonly StreamingViewModel _streaming = new ();
+
+        public ExpressionViewModel Expressions => _expressions;
+        private readonly ExpressionViewModel _expressions = new ();
+
+        public FiltersViewModel Filters => _filters;
+        private readonly FiltersViewModel _filters = new ();
         
         private IDisposable _logEventsSource;
 
@@ -35,11 +44,17 @@ namespace EtAlii.UniCon.Editor
             UserSettings.Bind();
             ProjectSettings.Bind();
 
-            SetupScrolling();
-            SetupFilter();
-            SetupExpression();
+            _filters.Bind(_expressions, _streaming);
+            _expressions.Bind(_filters, _streaming);
+            _streaming.Bind(_filters);
         }
 
-        public void Init() => ConfigureStream();
+        public void Init() => _streaming.ConfigureStream();
+        
+        public void Clear()
+        {
+            LogSink.Instance.Clear();
+            _streaming.ConfigureStream();
+        }
     }    
 }

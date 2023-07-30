@@ -5,9 +5,12 @@ namespace EtAlii.UniCon.Editor
     using UnityEditor;
     using UnityEngine.UIElements;
 
-    public partial class ConsoleViewModel
+    public class FiltersViewModel
     {
-        public CustomFilter SelectedCustomFilter = new();
+        internal UserSettings UserSettings => UserSettings.instance;
+        internal ProjectSettings ProjectSettings => ProjectSettings.instance;
+
+        public readonly CustomFilter SelectedCustomFilter = new();
         public readonly ReactiveCollection<CustomFilter> CustomFilters = new();
 
         public readonly ReactiveCommand<ClickEvent> ToggleFilterPanel = new();
@@ -15,8 +18,14 @@ namespace EtAlii.UniCon.Editor
         public readonly ReactiveCommand<ClickEvent> SaveFilter = new();
         public readonly ReactiveCommand<ClickEvent> CancelFilter = new();
 
-        private void SetupFilter()
+        public void Bind(ExpressionViewModel expressionViewModel, StreamingViewModel streamingViewModel)
         {
+            SelectedCustomFilter.Expression
+                .Subscribe(_ =>
+                {
+                    streamingViewModel.ConfigureStream();
+                });
+
             ToggleFilterPanel
                 .Subscribe(_ =>
                 {
@@ -24,10 +33,10 @@ namespace EtAlii.UniCon.Editor
                     UserSettings.FilterPanelWidth.Value = UserSettings.FilterPanelWidth.Value;
                 });
 
-            UserSettings.UseSerilogSource.Subscribe(_ => ConfigureStream());
-            UserSettings.UseUnitySource.Subscribe(_ => ConfigureStream());
-            UserSettings.LogLevel.Subscribe(_ => ConfigureStream());
-            UserSettings.ShowExceptions.Subscribe(_ => ConfigureStream());
+            UserSettings.UseSerilogSource.Subscribe(_ => streamingViewModel.ConfigureStream());
+            UserSettings.UseUnitySource.Subscribe(_ => streamingViewModel.ConfigureStream());
+            UserSettings.LogLevel.Subscribe(_ => streamingViewModel.ConfigureStream());
+            UserSettings.ShowExceptions.Subscribe(_ => streamingViewModel.ConfigureStream());
 
             SaveFilter
                 .Subscribe(_ =>
@@ -46,12 +55,11 @@ namespace EtAlii.UniCon.Editor
                         CustomFilters.Add(SelectedCustomFilter);
                     }
 
-                    SelectedCustomFilter = new CustomFilter();
-                    ExpressionText.Value = string.Empty;
+                    SelectedCustomFilter.Expression.Value = string.Empty;
                     
                     if (UserSettings.ShowExpressionPanel.Value)
                     {
-                        ToggleExpressionPanel.Execute(new ClickEvent());
+                        expressionViewModel.ToggleExpressionPanel.Execute(new ClickEvent());
                     }
 
                     if (UserSettings.ShowFilterPanel.Value == false)
@@ -63,12 +71,11 @@ namespace EtAlii.UniCon.Editor
             CancelFilter
                 .Subscribe(_ =>
                 {
-                    SelectedCustomFilter = new CustomFilter();
-                    ExpressionText.Value = string.Empty;
+                    SelectedCustomFilter.Expression.Value = string.Empty;
                     
                     if (UserSettings.ShowExpressionPanel.Value)
                     {
-                        ToggleExpressionPanel.Execute(new ClickEvent());
+                        expressionViewModel.ToggleExpressionPanel.Execute(new ClickEvent());
                     }
 
                     if (UserSettings.ShowFilterPanel.Value == false)
@@ -79,7 +86,7 @@ namespace EtAlii.UniCon.Editor
 
             CustomFilters
                 .ObserveAdd()
-                .Subscribe(evt => evt.Value.IsActive.Subscribe(_ => ConfigureStream()));
+                .Subscribe(evt => evt.Value.IsActive.Subscribe(_ => streamingViewModel.ConfigureStream()));
         }
 
         private bool NameIsValid(string text, CustomFilter rule)

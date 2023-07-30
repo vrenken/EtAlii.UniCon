@@ -1,29 +1,46 @@
-namespace EtAlii.UniCon.Editor
+﻿namespace EtAlii.UniCon.Editor
 {
     using System;
     using RedMoon.ReactiveKit;
     using UniRx;
     using UnityEngine.UIElements;
 
-    public partial class ConsoleView
+    public class ExpressionView
     {
+        private readonly TwoPaneSplitView _verticalSplitPanel;
+
         private readonly Button _expressionButton;
         private readonly VisualElement _expressionPanel;
         private readonly TextField _expressionTextField;
         private readonly Button _expressionErrorButton;
         private readonly Button _expressionSaveButton;
         private readonly Button _expressionCancelButton;
+        private ExpressionViewModel _viewModel;
 
-        private void BindExpression(ConsoleViewModel viewModel, CompositeDisposable disposable)
+
+        public ExpressionView(VisualElement root)
         {
+            _verticalSplitPanel = root.Q<TwoPaneSplitView>("vertical-split-panel");
+            _expressionPanel = root.Q<VisualElement>("expression-panel");
+            _expressionButton = root.Q<Button>("expression-button");
+            _expressionTextField = root.Q<TextField>("expression-textfield");
+            _expressionErrorButton = root.Q<Button>("expression-error-button");
+            _expressionSaveButton = root.Q<Button>("expression-save-button");
+            _expressionCancelButton = root.Q<Button>("expression-cancel-button");
+        }
+
+        public void Bind(ExpressionViewModel viewModel, FiltersViewModel filtersViewModel, CompositeDisposable disposable)
+        {
+            _viewModel = viewModel;
+            
             _expressionButton
                 .BindClick(viewModel.ToggleExpressionPanel)
                 .AddTo(disposable);
-            _viewModel.UserSettings.ShowExpressionPanel
+            viewModel.UserSettings.ShowExpressionPanel
                 .Subscribe(showExpressionPanel =>
                 {
                     UpdateExpressionPanel();
-                    UpdateToggleButton(_expressionButton, showExpressionPanel);
+                    _expressionButton.UpdateToggleButton(showExpressionPanel);
                 })
                 .AddTo(disposable);
             _expressionPanel
@@ -41,27 +58,30 @@ namespace EtAlii.UniCon.Editor
                 .AddTo(disposable);
             
             _expressionTextField
-                //.BindTwoWayValueChanged(viewModel.ExpressionText) // TODO: Try to apply two-way binding here. 
-                .BindValueChanged(viewModel.ExpressionText)
+                .BindTwoWayValueChanged(filtersViewModel.SelectedCustomFilter.Expression)
                 .AddTo(disposable);
 
+            filtersViewModel.SelectedCustomFilter.CompiledExpression
+                .Subscribe(_ =>
+                {
+                    _expressionTextField.value = filtersViewModel.SelectedCustomFilter.Expression.Value;
+                    var compiledExpression = filtersViewModel.SelectedCustomFilter.CompiledExpression.Value;
+                    _expressionErrorButton.text = compiledExpression != null ? "Ok" : filtersViewModel.SelectedCustomFilter.Error;
+                    _expressionSaveButton.SetEnabled(compiledExpression != null);
+                })
+                .AddTo(disposable);
+            
             _expressionSaveButton
-                .BindClick(viewModel.SaveFilter)
+                .BindClick(filtersViewModel.SaveFilter)
                 .AddTo(disposable);
 
             _expressionCancelButton
-                .BindClick(viewModel.CancelFilter)
+                .BindClick(filtersViewModel.CancelFilter)
                 .AddTo(disposable);
         }
-        
-        private void OnExpressionChanged(string settingName)
+
+        public void Unbind()
         {
-            switch (settingName)
-            {
-                case nameof(_viewModel.SelectedCustomFilter):
-                    UpdateActiveExpression(_viewModel.SelectedCustomFilter);
-                    break;
-            }
         }
 
         private void UpdateExpressionPanel()
@@ -74,12 +94,5 @@ namespace EtAlii.UniCon.Editor
             _verticalSplitPanel.fixedPaneInitialDimension = height;
             _expressionPanel.style.height = height;
         }
-
-        private void UpdateActiveExpression(CustomFilter customFilter)
-        {
-            _expressionTextField.value = customFilter.Expression;
-            _expressionErrorButton.text = customFilter.CompiledExpression != null ? "Ok" : customFilter.Error;
-            _expressionSaveButton.SetEnabled(customFilter.CompiledExpression != null);
-        }
-    }    
+    }
 }

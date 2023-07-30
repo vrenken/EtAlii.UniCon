@@ -4,21 +4,38 @@ namespace EtAlii.UniCon.Editor
     using System.Linq;
     using Serilog.Events;
     using UniRx;
+    using UnityEngine.UIElements;
 
-    public partial class ConsoleViewModel
+    public class StreamingViewModel
     {
+        internal UserSettings UserSettings => UserSettings.instance;
+        internal ProjectSettings ProjectSettings => ProjectSettings.instance;
+
         public IObservable<LogEvent> Stream;
         
+        public readonly ReactiveCommand<ClickEvent> ToggleScrollToTail = new();
+
         /// <summary>
         /// Gets raised when the stream has changed and the view needs to update itself accordingly.
         /// </summary>
         public event Action StreamChanged;
 
+        private FiltersViewModel _filtersViewModel;
+
+        public void Bind(FiltersViewModel filtersViewModel)
+        {
+            _filtersViewModel = filtersViewModel;
+            ToggleScrollToTail.Subscribe(_ =>
+            {
+                UserSettings.ScrollToTail.Value = !UserSettings.ScrollToTail.Value;
+            });
+        }
+        
         /// <summary>
         /// Reconfigure the stream with the right filtering rules applied.
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        private void ConfigureStream()
+        public void ConfigureStream()
         {
             var stream = LogSink.Instance
                 .Observe();
@@ -69,9 +86,9 @@ namespace EtAlii.UniCon.Editor
                     };
                 }).Where(logEvent =>
                 {
-                    if (CustomFilters.Any(f => f.IsActive.Value))
+                    if (_filtersViewModel.CustomFilters.Any(f => f.IsActive.Value))
                     {
-                        var hasValidFilter = CustomFilters
+                        var hasValidFilter = _filtersViewModel.CustomFilters
                             .Where(f => f.IsActive.Value)
                             .Select(f => CustomFilterIsValid(f, logEvent))
                             .Any(r => r);
@@ -81,9 +98,9 @@ namespace EtAlii.UniCon.Editor
                         }
                     }
 
-                    if (SelectedCustomFilter.CompiledExpression != null)
+                    if (_filtersViewModel.SelectedCustomFilter.CompiledExpression != null)
                     {
-                        if (!CustomFilterIsValid(SelectedCustomFilter, logEvent))
+                        if (!CustomFilterIsValid(_filtersViewModel.SelectedCustomFilter, logEvent))
                         {
                             return false;
                         }
@@ -97,7 +114,7 @@ namespace EtAlii.UniCon.Editor
 
         private bool CustomFilterIsValid(CustomFilter rule, LogEvent logEvent)
         {
-            var result = rule.CompiledExpression?.Invoke(logEvent);
+            var result = rule.CompiledExpression.Value?.Invoke(logEvent);
             if (result is not ScalarValue scalarValue)
             {
                 return false;

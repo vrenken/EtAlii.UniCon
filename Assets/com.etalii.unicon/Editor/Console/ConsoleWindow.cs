@@ -27,7 +27,8 @@ namespace EtAlii.UniCon.Editor
 
         private void OnDestroy()
         {
-            _view.Unbind();
+            _view?.Unbind();
+            _view = null;
         }
 
         public void CreateGUI()
