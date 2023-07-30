@@ -21,10 +21,12 @@ namespace EtAlii.UniCon.Editor
         public event Action StreamChanged;
 
         private FiltersViewModel _filtersViewModel;
+        private ExpressionViewModel _expressionViewModel;
 
-        public void Bind(FiltersViewModel filtersViewModel)
+        public void Bind(FiltersViewModel filtersViewModel, ExpressionViewModel expressionViewModel)
         {
             _filtersViewModel = filtersViewModel;
+            _expressionViewModel = expressionViewModel;
             ToggleScrollToTail.Subscribe(_ =>
             {
                 UserSettings.ScrollToTail.Value = !UserSettings.ScrollToTail.Value;
@@ -86,25 +88,20 @@ namespace EtAlii.UniCon.Editor
                     };
                 }).Where(logEvent =>
                 {
-                    if (_filtersViewModel.CustomFilters.Any(f => f.IsActive.Value))
+                    if(_filtersViewModel.CustomFilters.Count == 0) return true;
+                    var isMatchedByFilter = _filtersViewModel.CustomFilters
+                        .Where(f => f.IsActive.Value && !f.IsEditing.Value)
+                        .Select(f => CustomFilterIsValid(f, logEvent))
+                        .Any(r => r);
+                    return isMatchedByFilter;
+                }).Where(logEvent =>
+                {
+                    if (_expressionViewModel.ExpressionFilter.CompiledExpression.Value != null && 
+                        _expressionViewModel.ExpressionFilter.IsActive.Value)
                     {
-                        var hasValidFilter = _filtersViewModel.CustomFilters
-                            .Where(f => f.IsActive.Value)
-                            .Select(f => CustomFilterIsValid(f, logEvent))
-                            .Any(r => r);
-                        if (!hasValidFilter)
-                        {
-                            return false;
-                        }
+                        return CustomFilterIsValid(_expressionViewModel.ExpressionFilter, logEvent);
                     }
 
-                    if (_filtersViewModel.SelectedCustomFilter.CompiledExpression != null)
-                    {
-                        if (!CustomFilterIsValid(_filtersViewModel.SelectedCustomFilter, logEvent))
-                        {
-                            return false;
-                        }
-                    }
                     return true;
                 });
             
