@@ -11,8 +11,12 @@
         internal UserSettings UserSettings => UserSettings.instance;
         internal ProjectSettings ProjectSettings => ProjectSettings.instance;
 
+        public readonly CustomFilter ExpressionFilter = new();
+        public readonly ReactiveProperty<bool> HasCompiledExpression = new();
+        public readonly ReactiveProperty<string> ExpressionError = new();
+
         public readonly ReactiveCommand<ClickEvent> ToggleExpressionPanel = new();
-        // public readonly ReactiveProperty<string> ExpressionText = new();
+        public readonly ReactiveProperty<string> ExpressionText = new();
 
         // Log level.
         public readonly ReactiveCommand<LogEventLevel> AddFindByLogLevelToExpression = new();
@@ -40,50 +44,52 @@
                     UserSettings.ExpressionPanelHeight.Value = UserSettings.ExpressionPanelHeight.Value;
                 });
 
-            // ExpressionText.Subscribe(s =>
-            // {
-            //     SelectedCustomFilter.Expression = s;
-            //     ExpressionChanged?.Invoke(nameof(SelectedCustomFilter));
-            //     ConfigureStream();
-            // });
+            ExpressionFilter.CompiledExpression.Subscribe(value =>
+            {
+                HasCompiledExpression.Value = value != null;
+                streamingViewModel.ConfigureStream();
+            });
             
+            ExpressionText.Subscribe(text =>
+            {
+                ExpressionFilter.Expression.Value = text;
+                ExpressionFilter.IsActive.Value = ExpressionFilter.CompiledExpression != null;
+            });
+
             // Log level.
-            AddFindByLogLevelToExpression.Subscribe(logLevel => AddExpressionPart($"@l = '{logLevel}'", filtersViewModel, streamingViewModel));
-            AddExcludeByLogLevelToExpression.Subscribe(logLevel => AddExpressionPart($"@l <> '{logLevel}'", filtersViewModel, streamingViewModel));
+            AddFindByLogLevelToExpression.Subscribe(logLevel => AddExpressionPart($"@l = '{logLevel}'"));
+            AddExcludeByLogLevelToExpression.Subscribe(logLevel => AddExpressionPart($"@l <> '{logLevel}'"));
             
             // Event type.
             
             // Properties.
-            AddFindByEventTypeToExpression.Subscribe(eventIdHash => AddExpressionPart($"@i = 0x{eventIdHash:X8}", filtersViewModel, streamingViewModel));
-            AddExcludeByEventTypeToExpression.Subscribe(eventIdHash => AddExpressionPart($"@i <> 0x{eventIdHash:X8}", filtersViewModel, streamingViewModel));
-            AddFindByPropertyToExpression.Subscribe(property => AddExpressionPart($"{property.Key} = '{property.Value.ToString().Trim('"')}'", filtersViewModel, streamingViewModel));
-            AddFindWithAnyPropertyValueToExpression.Subscribe(propertyName => AddExpressionPart($"IsDefined({propertyName})", filtersViewModel, streamingViewModel));
-            AddExcludeWithAnyPropertyValueToExpression.Subscribe(propertyName => AddExpressionPart($"IsDefined({propertyName}) = false", filtersViewModel, streamingViewModel));
-            AddExcludeByPropertyToExpression.Subscribe(property => AddExpressionPart($"{property.Key} != '{property.Value.ToString().Trim('"')}'", filtersViewModel, streamingViewModel));
+            AddFindByEventTypeToExpression.Subscribe(eventIdHash => AddExpressionPart($"@i = 0x{eventIdHash:X8}"));
+            AddExcludeByEventTypeToExpression.Subscribe(eventIdHash => AddExpressionPart($"@i <> 0x{eventIdHash:X8}"));
+            AddFindByPropertyToExpression.Subscribe(property => AddExpressionPart($"{property.Key} = '{property.Value.ToString().Trim('"')}'"));
+            AddFindWithAnyPropertyValueToExpression.Subscribe(propertyName => AddExpressionPart($"IsDefined({propertyName})"));
+            AddExcludeWithAnyPropertyValueToExpression.Subscribe(propertyName => AddExpressionPart($"IsDefined({propertyName}) = false"));
+            AddExcludeByPropertyToExpression.Subscribe(property => AddExpressionPart($"{property.Key} != '{property.Value.ToString().Trim('"')}'"));
             AddSeekToTimeSpanToExpression.Subscribe(tuple => 
             {
                 var moment = tuple.Item1;
                 var timeSpan = tuple.Item2;
                 var low = tuple.Item1 - timeSpan;
                 var high = moment + timeSpan;
-                AddExpressionPart($"'{low}' < @t < '{high}'", filtersViewModel, streamingViewModel);
+                AddExpressionPart($"'{low}' < @t < '{high}'");
             });
         }
 
         private void AddExpressionPart(
-            string expression, 
-            FiltersViewModel filtersViewModel, 
-            StreamingViewModel streamingViewModel)
+            string expression)
         {
             if (UserSettings.ShowExpressionPanel.Value == false)
             {
                 ToggleExpressionPanel.Execute(new ClickEvent());
             }
 
-            filtersViewModel.SelectedCustomFilter.Expression.Value = string.IsNullOrWhiteSpace(filtersViewModel.SelectedCustomFilter.Expression.Value) 
+            ExpressionText.Value = string.IsNullOrWhiteSpace(ExpressionText.Value) 
                 ? $"{expression}" 
-                : $"{filtersViewModel.SelectedCustomFilter.Expression.Value.TrimEnd()}\n and {expression}";
-            streamingViewModel.ConfigureStream();
+                : $"{ExpressionText.Value.TrimEnd()}\n and {expression}";
         }
     }
 }

@@ -58,16 +58,14 @@
                 .AddTo(disposable);
             
             _expressionTextField
-                .BindTwoWayValueChanged(filtersViewModel.SelectedCustomFilter.Expression)
+                .BindTwoWayValueChanged(viewModel.ExpressionText)
                 .AddTo(disposable);
 
-            filtersViewModel.SelectedCustomFilter.CompiledExpression
-                .Subscribe(_ =>
+            viewModel.HasCompiledExpression
+                .Subscribe(hasCompiledExpression =>
                 {
-                    _expressionTextField.value = filtersViewModel.SelectedCustomFilter.Expression.Value;
-                    var compiledExpression = filtersViewModel.SelectedCustomFilter.CompiledExpression.Value;
-                    _expressionErrorButton.text = compiledExpression != null ? "Ok" : filtersViewModel.SelectedCustomFilter.Error;
-                    _expressionSaveButton.SetEnabled(compiledExpression != null);
+                    _expressionErrorButton.text = hasCompiledExpression ? "Ok" : viewModel.ExpressionError.Value;
+                    _expressionSaveButton.SetEnabled(hasCompiledExpression);
                 })
                 .AddTo(disposable);
             
