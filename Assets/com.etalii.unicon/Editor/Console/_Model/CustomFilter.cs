@@ -27,7 +27,7 @@ namespace EtAlii.UniCon.Editor
         /// </summary>
         public readonly ReactiveProperty<string> Expression = new ();
 
-        public ReactiveProperty<CompiledExpression> CompiledExpression = new ();
+        public readonly ReactiveProperty<CompiledExpression> CompiledExpression = new ();
         
         /// <summary>
         /// Any error that occurred when compiling the <see cref="Expression"/> into the <see cref="CompiledExpression"/>.
@@ -48,9 +48,13 @@ namespace EtAlii.UniCon.Editor
             try
             {
                 // Let's not start complaining if there is no expression to compile.
-                var expressionToCompile = string.IsNullOrWhiteSpace(Expression.Value)
-                    ? "true"
-                    : Expression.Value;
+                var expressionToCompile = Expression.Value;
+                if (string.IsNullOrWhiteSpace(Expression.Value))
+                {
+                    Error = null;
+                    CompiledExpression.Value = null;
+                    return;
+                }
 
                 if (SerilogExpression.TryCompile(expressionToCompile, out var compiledExpression, out var error))
                 {
@@ -63,14 +67,14 @@ namespace EtAlii.UniCon.Editor
                 {
                     // `error` describes a syntax error.
                     Error = error;
-                    CompiledExpression = null;
+                    CompiledExpression.Value = null;
                 }
                 
             }
             catch (Exception e)
             {
                 Error = e.Message;
-                CompiledExpression = null;
+                CompiledExpression.Value = null;
             }
         }
     }
