@@ -3,7 +3,7 @@
     using System;
     using UnityEngine.UIElements;
 
-    internal class ContextMenuHelper
+    internal static class ContextMenuHelper
     {
         /// <summary>
         /// Helper method to register a (left-mouse enabled) context menu for the specified visual element.
@@ -12,7 +12,8 @@
         /// </summary>
         /// <param name="visualElement"></param>
         /// <param name="evt"></param>
-        public static void Register(VisualElement visualElement, Action<ContextualMenuPopulateEvent> evt)
+        /// <param name="activationButton"></param>
+        public static void Register(VisualElement visualElement, Action<ContextualMenuPopulateEvent> evt, MouseButton activationButton = MouseButton.LeftMouse)
         {
             var manipulator = new ElementAwareContextualMenuManipulator(evt)
             {
@@ -21,7 +22,7 @@
             manipulator.activators.Clear();
             manipulator.activators.Add(new ManipulatorActivationFilter
             {
-                button = MouseButton.LeftMouse
+                button = activationButton
             });
             visualElement.AddManipulator(manipulator);
         }

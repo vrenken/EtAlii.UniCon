@@ -4,8 +4,6 @@ namespace EtAlii.UniCon.Editor
     using System.Linq;
     using RedMoon.ReactiveKit;
     using UniRx;
-    using UnityEditor;
-    using UnityEngine;
     using UnityEngine.UIElements;
 
     public class FiltersView
@@ -134,59 +132,28 @@ namespace EtAlii.UniCon.Editor
         {
             var disposables = new CompositeDisposable();
             var filter = evt.Value;
-            var line = new VisualElement
+            var filterView = new Toggle
             {
                 name = $"filter-row-{filter.Name.Value}",
                 userData = new Tuple<LogFilter, CompositeDisposable>(filter, disposables),
-                style =
-                {
-                    alignContent = Align.FlexStart, 
-                    alignItems = Align.FlexStart,
-                    flexGrow = 1, 
-                    flexDirection = FlexDirection.Row
-                }
-            };
-            var filterView = new Toggle
-            {
                 text = filter.Name.Value,
-                name = filter.Name.Value,
                 focusable = false
             };
             filterView
                 .BindTwoWayValueChanged(filter.IsActive)
                 .AddTo(disposables);
-
-            line.contentContainer.Add(filterView);
-
-            var editButton = new Button
+            filter.Name
+                .Subscribe(name => filterView.text = name)
+                .AddTo(disposables);
+            
+            ContextMenuHelper.Register(filterView, contextMenuEvent =>
             {
-                // Emoji's: ✔️❌✏️⚒️🛠️🔧⚙️🧩🪄🪛🔗🧬🖌️✒️✏️🖍️⭕⛔❓⁉️⚠️❎✅▶️⏸️⏯️⏹️⏭️⏮️⏩⏪🔀🔁🔂◀️🔼⏫🔽⏬⏏️➡️🔄️✖️✔️➕➖
-                text = "...", // \u2611 \u2713 \u002B
-                focusable = false,
-                style =
-                {
-                    cursor = CursorHelper.GetCursor(MouseCursor.ArrowPlus),
-                    fontSize = new StyleLength(new Length(15, LengthUnit.Pixel)),
-                    color = WellKnownColor.Action,
-                    marginLeft = -4, marginRight = 0, marginTop = -3,
-                    width = 14, maxWidth = 14,
-                    backgroundColor = Color.clear,
-                    paddingLeft = 0,
-                    borderBottomWidth = 0,
-                    borderLeftWidth = 0,
-                    borderTopWidth = 0,
-                    borderRightWidth = 0,
-                    unityTextAlign = TextAnchor.MiddleLeft
-                }
-            };
-            ContextMenuHelper.Register(editButton, contextMenuEvent =>
-            {
-                contextMenuEvent.menu.AppendAction("Edit", _ => { });
-                contextMenuEvent.menu.AppendAction("Delete", _ => _viewModel.CustomFilters.Remove(filter));
-            });
-            line.contentContainer.Add(editButton);
+                contextMenuEvent.menu.AppendAction("Edit", _ => _viewModel.EditFilter.Execute(filter));
+                contextMenuEvent.menu.AppendAction("Rename", _ => _viewModel.RenameFilter.Execute(filter));
+                contextMenuEvent.menu.AppendAction("Delete", _ => _viewModel.DeleteFilter.Execute(filter));
+            }, MouseButton.RightMouse);
                
-            _customFiltersFoldout.contentContainer.Add(line);
+            _customFiltersFoldout.contentContainer.Add(filterView);
         }
 
         private void RemoveCustomFilter(CollectionRemoveEvent<LogFilter> evt)

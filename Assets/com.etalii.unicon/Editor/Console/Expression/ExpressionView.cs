@@ -66,11 +66,11 @@
                 .AddTo(disposable);
             
             _expressionSaveButton
-                .BindClick(filtersViewModel.SaveFilter)
+                .BindClick(filtersViewModel.SaveEditFilter)
                 .AddTo(disposable);
 
             _expressionCancelButton
-                .BindClick(filtersViewModel.CancelFilter)
+                .BindClick(filtersViewModel.CancelEditFilter)
                 .AddTo(disposable);
         }
 

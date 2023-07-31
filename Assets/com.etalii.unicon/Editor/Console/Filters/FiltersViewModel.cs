@@ -11,8 +11,12 @@ namespace EtAlii.UniCon.Editor
 
         public readonly ReactiveCommand<ClickEvent> ToggleFilterPanel = new();
         
-        public readonly ReactiveCommand<ClickEvent> SaveFilter = new();
-        public readonly ReactiveCommand<ClickEvent> CancelFilter = new();
+        public readonly ReactiveCommand<ClickEvent> SaveEditFilter = new();
+        public readonly ReactiveCommand<ClickEvent> CancelEditFilter = new();
+        public readonly ReactiveCommand<LogFilter> RenameFilter = new();
+        public readonly ReactiveCommand<LogFilter> DeleteFilter = new();
+        public readonly ReactiveCommand<LogFilter> EditFilter = new();
+        
         private StreamingViewModel _streamingViewModel;
 
         public void Bind(ExpressionViewModel expressionViewModel, StreamingViewModel streamingViewModel)
@@ -30,7 +34,7 @@ namespace EtAlii.UniCon.Editor
             UserSettings.instance.LogLevel.Subscribe(_ => streamingViewModel.ConfigureStream());
             UserSettings.instance.ShowExceptions.Subscribe(_ => streamingViewModel.ConfigureStream());
 
-            SaveFilter
+            SaveEditFilter
                 .Subscribe(_ =>
                 {
                     var filter = CustomFilters.SingleOrDefault(f => f.IsEditing.Value);
@@ -74,17 +78,50 @@ namespace EtAlii.UniCon.Editor
                     }
                 });
 
-            CancelFilter
+            CancelEditFilter
                 .Subscribe(_ =>
                 {
                     expressionViewModel.ExpressionText.Value = string.Empty;
-
+                    var filter = CustomFilters.Single(f => f.IsEditing.Value);
+                    filter.IsEditing.Value = false;
+                    
                     if (!UserSettings.instance.ShowFilterPanel.Value)
                     {
                         ToggleFilterPanel.Execute(new ClickEvent());
                     }
                 });
 
+            
+            EditFilter
+                .Subscribe(filter =>
+                {
+                    expressionViewModel.ExpressionText.Value = filter.Expression.Value;
+                    filter.IsEditing.Value = true;
+                });
+            
+            DeleteFilter
+                .Subscribe(filter => CustomFilters.Remove(filter));
+            
+            RenameFilter
+                .Subscribe(filter =>
+                {
+                    var filterName = EditorInputDialog
+                        .Show(
+                            "Rename filter", 
+                            string.Empty, 
+                            filter.Name.Value,
+                            parentWindow: EditorWindow.GetWindow<ConsoleWindow>(),
+                            textValidation: text => NameIsValid(text, filter));
+
+                    if (filterName == null)
+                    {
+                        // If the dialog is cancelled no filter name will be specified.
+                        // In that case we cancel the whole rename.
+                        return;
+                    }
+
+                    filter.Name.Value = filterName;
+                });
             CustomFilters
                 .ObserveRemove()
                 .Subscribe(_ => OnFilterRemoved());
