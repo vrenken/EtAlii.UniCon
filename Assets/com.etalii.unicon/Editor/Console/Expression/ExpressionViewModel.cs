@@ -4,12 +4,11 @@
     using System.Collections.Generic;
     using Serilog.Events;
     using UniRx;
-    using UnityEngine;
     using UnityEngine.UIElements;
 
     public class ExpressionViewModel
     {
-        public LogFilter ExpressionFilter;
+        public LogFilter ExpressionFilter { get; private set; }
         public readonly ReactiveProperty<bool> HasCompiledExpression = new();
         public readonly ReactiveProperty<string> ExpressionError = new();
 
@@ -35,7 +34,7 @@
         
         public void Bind(StreamingViewModel streamingViewModel)
         {
-            ExpressionFilter = ScriptableObject.CreateInstance<LogFilter>();
+            ExpressionFilter = new();
             ExpressionFilter.Bind();
             
             ToggleExpressionPanel

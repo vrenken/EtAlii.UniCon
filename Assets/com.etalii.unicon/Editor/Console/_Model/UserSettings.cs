@@ -5,7 +5,7 @@ namespace EtAlii.UniCon.Editor
     using UniRx;
     using UnityEditor;
     using UnityEngine;
-
+    
     [FilePath("UserSettings/UniConSettings.asset", FilePathAttribute.Location.ProjectFolder)]
     internal class UserSettings : ScriptableSingleton<UserSettings>
     {
@@ -65,8 +65,9 @@ namespace EtAlii.UniCon.Editor
 
         private readonly TimeSpan _throttle = TimeSpan.FromMilliseconds(100);
         
-        public LogFilter[] CustomFilters { get => customFilters; set { customFilters = value; SaveWhenNeeded(); } }
-        [SerializeField] private LogFilter[] customFilters = Array.Empty<LogFilter>();
+        public LogFilter[] CustomFilters { get => _customFiltersArray; set { _customFiltersArray = value; SaveLogFilters(); } }
+        private LogFilter[] _customFiltersArray = Array.Empty<LogFilter>();
+        [SerializeField] private string[] customFilters = Array.Empty<string>();
 
         public void Bind()
         {
@@ -101,11 +102,7 @@ namespace EtAlii.UniCon.Editor
             ClearOnBuild.Subscribe(value => clearOnBuild = value ).AddTo(_disposable);
             ClearOnRecompile.Subscribe(value => clearOnRecompile = value ).AddTo(_disposable);
 
-            customFilters = customFilters.Where(c => c != null).ToArray();
-            foreach (var filter in CustomFilters)
-            {
-                filter.Bind();
-            }
+            _customFiltersArray = LoadLogFilters();
 
             Observable
                 .Merge(new[]
@@ -134,6 +131,27 @@ namespace EtAlii.UniCon.Editor
             {
                 Save(true);
             }
+        }
+
+        private void SaveLogFilters()
+        {
+            customFilters = _customFiltersArray
+                .Select(f => f.Serialize())
+                .ToArray();
+        
+            SaveWhenNeeded(); 
+        }
+
+        private LogFilter[] LoadLogFilters()
+        {
+            return customFilters
+                .Select(f =>
+                {
+                    var filter = new LogFilter();
+                    filter.Deserialize(f);
+                    return filter;
+                })
+                .ToArray();
         }
     }    
 }

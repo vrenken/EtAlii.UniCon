@@ -3,7 +3,6 @@ namespace EtAlii.UniCon.Editor
     using System.Linq;
     using UniRx;
     using UnityEditor;
-    using UnityEngine;
     using UnityEngine.UIElements;
 
     public class FiltersViewModel
@@ -40,7 +39,7 @@ namespace EtAlii.UniCon.Editor
                         .Show(
                             "Filter name", 
                             string.Empty, 
-                            (filter != null ? filter.Name.Value : null) ?? "New filter",
+                            filter?.Name.Value ?? "New filter",
                             parentWindow: EditorWindow.GetWindow<ConsoleWindow>(),
                             textValidation: text => NameIsValid(text, filterToMatch));
 
@@ -54,9 +53,8 @@ namespace EtAlii.UniCon.Editor
                     var isNew = filter == null;
                     if (isNew)
                     {
-                        filter = ScriptableObject.CreateInstance<LogFilter>();
+                        filter = new LogFilter();
                         filter.Bind();
-                        filter.IsActive.Subscribe(_ => OnCustomFiltersChanged());
                     }
                     filter.Name.Value = filterName;
                     filter.Expression.Value = expressionViewModel.ExpressionText.Value;
@@ -97,12 +95,14 @@ namespace EtAlii.UniCon.Editor
             foreach (var filter in UserSettings.instance.CustomFilters)
             {
                 CustomFilters.Add(filter);
+                
             }
         }
 
         private void OnFilterAdded(LogFilter filter)
         {
             filter.IsEditing.Subscribe(OnFilterIsEditingChanged);
+            filter.IsActive.Subscribe(_ => OnCustomFiltersChanged());
             OnCustomFiltersChanged();
         }
 

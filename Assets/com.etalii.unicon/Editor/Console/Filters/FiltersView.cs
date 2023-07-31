@@ -120,6 +120,8 @@ namespace EtAlii.UniCon.Editor
                 .ObserveReset()
                 .Subscribe(ResetAllCustomFilters)
                 .AddTo(disposable);
+
+            ResetAllCustomFilters(Unit.Default);
         }
 
         public void Unbind()

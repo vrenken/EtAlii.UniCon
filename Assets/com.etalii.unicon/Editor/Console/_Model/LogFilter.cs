@@ -1,17 +1,19 @@
 namespace EtAlii.UniCon.Editor
 {
     using System;
+    using System.IO;
     using Serilog.Expressions;
     using UniRx;
     using UnityEngine;
 
-    public class LogFilter : ScriptableObject
+    public class LogFilter
     {
         /// <summary>
         /// The name with which the custom filter should be shown in the Filter panel. 
         /// </summary>
         public readonly ReactiveProperty<string> Name = new();
-
+        private string _name;
+        
         /// <summary>
         /// Set this property to true to apply the custom filter to the stream of LogEvents.
         /// </summary>
@@ -28,7 +30,7 @@ namespace EtAlii.UniCon.Editor
         /// This gets compiled into the <see cref="CompiledExpression"/>.
         /// </summary>
         public readonly ReactiveProperty<string> Expression = new ();
-        [SerializeField] private string expression;
+        private string _expression;
         
         public readonly ReactiveProperty<CompiledExpression> CompiledExpression = new ();
         
@@ -42,7 +44,7 @@ namespace EtAlii.UniCon.Editor
         private readonly CompositeDisposable _disposable = new ();
 
         private readonly TimeSpan _throttle = TimeSpan.FromMilliseconds(100);
-        
+
         public void Bind()
         {
 #if UNICON_LIFETIME_DEBUG            
@@ -50,14 +52,13 @@ namespace EtAlii.UniCon.Editor
 
             if (_disposable.Count > 0) throw new InvalidOperationException($"{GetType().Name} already bound");
 #endif
-            hideFlags = HideFlags.HideAndDontSave;
-
+            Name.Value = _name;
             IsActive.Value = _isActive;
-            Expression.Value = expression;
+            Expression.Value = _expression;
 
-            Name.Subscribe(value => name = value).AddTo(_disposable);
+            Name.Subscribe(value => _name = value).AddTo(_disposable);
             IsActive.Subscribe(value => _isActive = value).AddTo(_disposable);
-            Expression.Subscribe(value => { expression = value; Update(); }).AddTo(_disposable);
+            Expression.Subscribe(value => { _expression = value; Update(); }).AddTo(_disposable);
 
             Observable
                 .Merge( new []
@@ -103,6 +104,34 @@ namespace EtAlii.UniCon.Editor
                 Error = e.Message;
                 CompiledExpression.Value = null;
             }
+        }
+
+        public string Serialize()
+        {
+            using var stream = new MemoryStream();
+            using var writer = new BinaryWriter(stream);
+
+            writer.Write(_name ?? string.Empty);
+            writer.Write(_expression);
+            writer.Write(_isActive);
+                    
+            writer.Flush();
+            stream.Flush();
+
+            var bytes = stream.ToArray();
+            return Convert.ToBase64String(bytes);
+        }
+
+        public void Deserialize(string f)
+        {
+            var bytes = Convert.FromBase64String(f);
+            using var stream = new MemoryStream(bytes);
+            using var reader = new BinaryReader(stream);
+
+            _name = reader.ReadString();
+            _expression = reader.ReadString();
+            _isActive = reader.ReadBoolean();
+            Bind();
         }
     }
 }
