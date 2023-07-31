@@ -3,30 +3,33 @@ namespace EtAlii.UniCon.Editor
     using System;
     using Serilog.Expressions;
     using UniRx;
+    using UnityEngine;
 
-    public class LogFilter
+    public class LogFilter : ScriptableObject
     {
         /// <summary>
         /// The name with which the custom filter should be shown in the Filter panel. 
         /// </summary>
-        public string Name { get; set; }
+        public readonly ReactiveProperty<string> Name = new();
 
         /// <summary>
         /// Set this property to true to apply the custom filter to the stream of LogEvents.
         /// </summary>
-        public readonly ReactiveProperty<bool> IsActive = new(true);
-
+        public readonly ReactiveProperty<bool> IsActive = new();
+        private bool _isActive = true;
+        
         /// <summary>
         /// Set this property to true to indicate that the custom filter is being edited.
         /// </summary>
         public readonly ReactiveProperty<bool> IsEditing = new(false);
-
+        
         /// <summary>
         /// The expression that should be run on the stream of event signals.
         /// This gets compiled into the <see cref="CompiledExpression"/>.
         /// </summary>
         public readonly ReactiveProperty<string> Expression = new ();
-
+        [SerializeField] private string expression;
+        
         public readonly ReactiveProperty<CompiledExpression> CompiledExpression = new ();
         
         /// <summary>
@@ -35,14 +38,38 @@ namespace EtAlii.UniCon.Editor
         /// </summary>
         public string Error { get; private set; }
 
-        public LogFilter()
-        {
-            Expression.Subscribe(_ =>
-            {
-                Update();
-            });
+        // ReSharper disable once NotAccessedField.Local
+        private readonly CompositeDisposable _disposable = new ();
 
+        private readonly TimeSpan _throttle = TimeSpan.FromMilliseconds(100);
+        
+        public void Bind()
+        {
+#if UNICON_LIFETIME_DEBUG            
+            Debug.Log($"STARTUP: {GetType().Name}.{nameof(Bind)}()");
+
+            if (_disposable.Count > 0) throw new InvalidOperationException($"{GetType().Name} already bound");
+#endif
+            hideFlags = HideFlags.HideAndDontSave;
+
+            IsActive.Value = _isActive;
+            Expression.Value = expression;
+
+            Name.Subscribe(value => name = value).AddTo(_disposable);
+            IsActive.Subscribe(value => _isActive = value).AddTo(_disposable);
+            Expression.Subscribe(value => { expression = value; Update(); }).AddTo(_disposable);
+
+            Observable
+                .Merge( new []
+                {
+                    Name.Select(_ => true),
+                    IsActive.Select(_ => true),
+                    Expression.Select(_ => true),
+                })
+                .Throttle(_throttle)
+                .Subscribe(_ => { if(!IsEditing.Value) UserSettings.instance.SaveWhenNeeded(); });
         }
+        
         private void Update()
         {
             try

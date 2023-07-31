@@ -129,19 +129,19 @@ namespace EtAlii.UniCon.Editor
         private void AddCustomFilter(CollectionAddEvent<LogFilter> evt)
         {
             var disposables = new CompositeDisposable();
-            var customFilter = evt.Value;
-            var customFilterView = new Toggle
+            var filter = evt.Value;
+            var filterView = new Toggle
             {
-                text = customFilter.Name,
-                name = customFilter.Name,
+                text = filter.Name.Value,
+                name = filter.Name.Value,
                 focusable = false,
-                userData = new Tuple<LogFilter, CompositeDisposable>(customFilter, disposables)
+                userData = new Tuple<LogFilter, CompositeDisposable>(filter, disposables)
             };
-            customFilterView
-                .BindTwoWayValueChanged(customFilter.IsActive)
+            filterView
+                .BindTwoWayValueChanged(filter.IsActive)
                 .AddTo(disposables);
                 
-            _customFiltersFoldout.contentContainer.Add(customFilterView);
+            _customFiltersFoldout.contentContainer.Add(filterView);
         }
 
         private void RemoveCustomFilter(CollectionRemoveEvent<LogFilter> evt)

@@ -4,11 +4,12 @@
     using System.Collections.Generic;
     using Serilog.Events;
     using UniRx;
+    using UnityEngine;
     using UnityEngine.UIElements;
 
     public class ExpressionViewModel
     {
-        public readonly LogFilter ExpressionFilter = new();
+        public LogFilter ExpressionFilter;
         public readonly ReactiveProperty<bool> HasCompiledExpression = new();
         public readonly ReactiveProperty<string> ExpressionError = new();
 
@@ -32,8 +33,11 @@
         // Time
         public readonly ReactiveCommand<(DateTimeOffset, TimeSpan)> AddSeekToTimeSpanToExpression = new();
         
-        public void Bind(FiltersViewModel filtersViewModel, StreamingViewModel streamingViewModel)
+        public void Bind(StreamingViewModel streamingViewModel)
         {
+            ExpressionFilter = ScriptableObject.CreateInstance<LogFilter>();
+            ExpressionFilter.Bind();
+            
             ToggleExpressionPanel
                 .Subscribe(_ =>
                 {
@@ -41,16 +45,15 @@
                     UserSettings.instance.ExpressionPanelHeight.Value = UserSettings.instance.ExpressionPanelHeight.Value;
                 });
 
-            ExpressionFilter.CompiledExpression.Subscribe(value =>
-            {
-                HasCompiledExpression.Value = value != null;
-                streamingViewModel.ConfigureStream();
-            });
+            ExpressionFilter.IsActive.Subscribe(_ => streamingViewModel.ConfigureStream());
+            ExpressionFilter.CompiledExpression.Subscribe(_ => streamingViewModel.ConfigureStream());
             
             ExpressionText.Subscribe(text =>
             {
                 ExpressionFilter.Expression.Value = text;
-                ExpressionFilter.IsActive.Value = ExpressionFilter.CompiledExpression != null;
+                HasCompiledExpression.Value = ExpressionFilter.CompiledExpression.Value != null;
+                ExpressionError.Value = ExpressionFilter.Error;
+                ExpressionFilter.IsActive.Value = HasCompiledExpression.Value;
             });
 
             // Log level.

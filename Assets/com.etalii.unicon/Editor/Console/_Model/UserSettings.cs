@@ -1,6 +1,7 @@
 namespace EtAlii.UniCon.Editor
 {
     using System;
+    using System.Linq;
     using UniRx;
     using UnityEditor;
     using UnityEngine;
@@ -63,25 +64,17 @@ namespace EtAlii.UniCon.Editor
         private readonly CompositeDisposable _disposable = new ();
 
         private readonly TimeSpan _throttle = TimeSpan.FromMilliseconds(100);
+        
+        public LogFilter[] CustomFilters { get => customFilters; set { customFilters = value; SaveWhenNeeded(); } }
+        [SerializeField] private LogFilter[] customFilters = Array.Empty<LogFilter>();
 
         public void Bind()
         {
 #if UNICON_LIFETIME_DEBUG            
             Debug.Log($"STARTUP: {GetType().Name}.{nameof(Bind)}()");
-#endif
-            LogLevel.Throttle(_throttle).Subscribe(value => { logLevel = value; SaveWhenNeeded(); }).AddTo(_disposable);
-            ShowExceptions.Throttle(_throttle).Subscribe(value => { showExceptions = value; SaveWhenNeeded(); }).AddTo(_disposable);
-            UseSerilogSource.Throttle(_throttle).Subscribe(value => { useSerilogSource = value; SaveWhenNeeded(); }).AddTo(_disposable);
-            UseUnitySource.Throttle(_throttle).Subscribe(value => { useUnitySource = value; SaveWhenNeeded(); }).AddTo(_disposable);
-            ScrollToTail.Throttle(_throttle).Subscribe(value => { scrollToTail = value; SaveWhenNeeded(); }).AddTo(_disposable);
-            ShowFilterPanel.Throttle(_throttle).Subscribe(value => { showFilterPanel = value; SaveWhenNeeded(); }).AddTo(_disposable);
-            FilterPanelWidth.Throttle(_throttle).Subscribe(value => { filterPanelWidth = value; SaveWhenNeeded(); }).AddTo(_disposable);
-            ShowExpressionPanel.Throttle(_throttle).Subscribe(value => { showExpressionPanel = value; SaveWhenNeeded(); }).AddTo(_disposable);
-            ExpressionPanelHeight.Throttle(_throttle).Subscribe(value => { expressionPanelHeight = value; SaveWhenNeeded(); }).AddTo(_disposable);
-            ClearOnPlay.Throttle(_throttle).Subscribe(value => { clearOnPlay = value; SaveWhenNeeded(); }).AddTo(_disposable);
-            ClearOnBuild.Throttle(_throttle).Subscribe(value => { clearOnBuild = value; SaveWhenNeeded(); }).AddTo(_disposable);
-            ClearOnRecompile.Throttle(_throttle).Subscribe(value => { clearOnRecompile = value; SaveWhenNeeded(); }).AddTo(_disposable);
 
+            if (_disposable.Count > 0) throw new InvalidOperationException($"{GetType().Name} already bound");
+#endif
             LogLevel.Value = logLevel;
             ShowExceptions.Value = showExceptions;
             UseSerilogSource.Value = useSerilogSource;
@@ -94,9 +87,48 @@ namespace EtAlii.UniCon.Editor
             ClearOnPlay.Value = clearOnPlay;
             ClearOnBuild.Value = clearOnBuild;
             ClearOnRecompile.Value = clearOnRecompile;
+            
+            LogLevel.Subscribe(value => logLevel = value ).AddTo(_disposable);
+            ShowExceptions.Subscribe(value => showExceptions = value ).AddTo(_disposable);
+            UseSerilogSource.Subscribe(value => useSerilogSource = value ).AddTo(_disposable);
+            UseUnitySource.Subscribe(value => useUnitySource = value ).AddTo(_disposable);
+            ScrollToTail.Subscribe(value => scrollToTail = value ).AddTo(_disposable);
+            ShowFilterPanel.Subscribe(value => showFilterPanel = value ).AddTo(_disposable);
+            FilterPanelWidth.Subscribe(value => filterPanelWidth = value ).AddTo(_disposable);
+            ShowExpressionPanel.Subscribe(value => showExpressionPanel = value ).AddTo(_disposable);
+            ExpressionPanelHeight.Subscribe(value => expressionPanelHeight = value ).AddTo(_disposable);
+            ClearOnPlay.Subscribe(value => clearOnPlay = value ).AddTo(_disposable);
+            ClearOnBuild.Subscribe(value => clearOnBuild = value ).AddTo(_disposable);
+            ClearOnRecompile.Subscribe(value => clearOnRecompile = value ).AddTo(_disposable);
+
+            customFilters = customFilters.Where(c => c != null).ToArray();
+            foreach (var filter in CustomFilters)
+            {
+                filter.Bind();
+            }
+
+            Observable
+                .Merge(new[]
+                {
+                    LogLevel.Select(_ => true),
+                    ShowExceptions.Select(_ => true),
+                    UseSerilogSource.Select(_ => true),
+                    UseUnitySource.Select(_ => true),
+                    ScrollToTail.Select(_ => true),
+                    ShowFilterPanel.Select(_ => true),
+                    FilterPanelWidth.Select(_ => true),
+                    ShowExpressionPanel.Select(_ => true),
+                    ExpressionPanelHeight.Select(_ => true),
+                    ClearOnPlay.Select(_ => true),
+                    ClearOnBuild.Select(_ => true),
+                    ClearOnRecompile.Select(_ => true),
+                })
+                .Throttle(_throttle)
+                .Subscribe(_ => SaveWhenNeeded())
+                .AddTo(_disposable);
         }
 
-        private void SaveWhenNeeded()
+        public void SaveWhenNeeded()
         {
             if (!EditorUtility.IsPersistent(this))
             {

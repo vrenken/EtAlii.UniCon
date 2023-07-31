@@ -3,6 +3,7 @@ namespace EtAlii.UniCon.Editor
     using System.Linq;
     using UniRx;
     using UnityEditor;
+    using UnityEngine;
     using UnityEngine.UIElements;
 
     public class FiltersViewModel
@@ -13,9 +14,11 @@ namespace EtAlii.UniCon.Editor
         
         public readonly ReactiveCommand<ClickEvent> SaveFilter = new();
         public readonly ReactiveCommand<ClickEvent> CancelFilter = new();
+        private StreamingViewModel _streamingViewModel;
 
         public void Bind(ExpressionViewModel expressionViewModel, StreamingViewModel streamingViewModel)
         {
+            _streamingViewModel = streamingViewModel;
             ToggleFilterPanel
                 .Subscribe(_ =>
                 {
@@ -37,7 +40,7 @@ namespace EtAlii.UniCon.Editor
                         .Show(
                             "Filter name", 
                             string.Empty, 
-                            filter?.Name ?? "New filter",
+                            (filter != null ? filter.Name.Value : null) ?? "New filter",
                             parentWindow: EditorWindow.GetWindow<ConsoleWindow>(),
                             textValidation: text => NameIsValid(text, filterToMatch));
 
@@ -49,26 +52,23 @@ namespace EtAlii.UniCon.Editor
                     }
 
                     var isNew = filter == null;
-                    filter = new LogFilter
+                    if (isNew)
                     {
-                        Name = filterName,
-                        Expression = { Value = expressionViewModel.ExpressionText.Value },
-                        IsActive = { Value = true },
-                        IsEditing = { Value = false }
-                    };
+                        filter = ScriptableObject.CreateInstance<LogFilter>();
+                        filter.Bind();
+                        filter.IsActive.Subscribe(_ => OnCustomFiltersChanged());
+                    }
+                    filter.Name.Value = filterName;
+                    filter.Expression.Value = expressionViewModel.ExpressionText.Value;
+                    filter.IsActive.Value = true;
+                    filter.IsEditing.Value = false;
                     if (isNew)
                     {
                         CustomFilters.Add(filter);
                     }
-
-                    SaveCustomFilters();
+                    OnCustomFiltersChanged();
 
                     expressionViewModel.ExpressionText.Value = string.Empty;
-                    
-                    // if (UserSettings.instance.ShowExpressionPanel.Value)
-                    // {
-                    //     expressionViewModel.ToggleExpressionPanel.Execute(new ClickEvent());
-                    // }
 
                     if (!UserSettings.instance.ShowFilterPanel.Value)
                     {
@@ -80,11 +80,6 @@ namespace EtAlii.UniCon.Editor
                 .Subscribe(_ =>
                 {
                     expressionViewModel.ExpressionText.Value = string.Empty;
-                    
-                    // if (UserSettings.instance.ShowExpressionPanel.Value)
-                    // {
-                    //     expressionViewModel.ToggleExpressionPanel.Execute(new ClickEvent());
-                    // }
 
                     if (!UserSettings.instance.ShowFilterPanel.Value)
                     {
@@ -93,28 +88,46 @@ namespace EtAlii.UniCon.Editor
                 });
 
             CustomFilters
+                .ObserveRemove()
+                .Subscribe(_ => OnFilterRemoved());
+            CustomFilters
                 .ObserveAdd()
-                .Subscribe(evt =>
-                {
-                    evt.Value.IsActive.Subscribe(_ =>
-                    {
-                        SaveCustomFilters();
-                        streamingViewModel.ConfigureStream();
-                    });
-                });
+                .Subscribe(evt => OnFilterAdded(evt.Value));
+
+            foreach (var filter in UserSettings.instance.CustomFilters)
+            {
+                CustomFilters.Add(filter);
+            }
+        }
+
+        private void OnFilterAdded(LogFilter filter)
+        {
+            filter.IsEditing.Subscribe(OnFilterIsEditingChanged);
+            OnCustomFiltersChanged();
+        }
+
+        private void OnFilterIsEditingChanged(bool isEditing)
+        {
+            OnCustomFiltersChanged();
+        }
+
+        private void OnFilterRemoved()
+        {
+            OnCustomFiltersChanged();
         }
 
         private bool NameIsValid(string text, LogFilter logFilter)
         {
             if (string.IsNullOrWhiteSpace(text)) return false;
 
-            var matchingRule = CustomFilters.SingleOrDefault(r => r.Name == text);
+            var matchingRule = CustomFilters.SingleOrDefault(r => r.Name.Value == text);
             return matchingRule == null || matchingRule == logFilter;
         }
 
-        private void SaveCustomFilters()
+        private void OnCustomFiltersChanged()
         {
-            
+            UserSettings.instance.CustomFilters = CustomFilters.ToArray();
+            _streamingViewModel.ConfigureStream();
         }
     }    
 }
