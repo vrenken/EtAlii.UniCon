@@ -90,7 +90,7 @@ namespace EtAlii.UniCon.Editor
                         .ToArray();
                     if(!filters.Any()) return true;
                     var isMatchedByFilter = filters
-                        .Select(f => CustomFilterIsValid(f, logEvent))
+                        .Select(f => LogFilterIsValid(f, logEvent))
                         .Any(r => r);
                     return isMatchedByFilter;
                 }).Where(logEvent =>
@@ -98,7 +98,7 @@ namespace EtAlii.UniCon.Editor
                     if (_expressionViewModel.ExpressionFilter.CompiledExpression.Value != null && 
                         _expressionViewModel.ExpressionFilter.IsActive.Value)
                     {
-                        return CustomFilterIsValid(_expressionViewModel.ExpressionFilter, logEvent);
+                        return LogFilterIsValid(_expressionViewModel.ExpressionFilter, logEvent);
                     }
 
                     return true;
@@ -108,7 +108,7 @@ namespace EtAlii.UniCon.Editor
             StreamChanged?.Invoke();            
         }
 
-        private bool CustomFilterIsValid(CustomFilter rule, LogEvent logEvent)
+        private bool LogFilterIsValid(LogFilter rule, LogEvent logEvent)
         {
             var result = rule.CompiledExpression.Value?.Invoke(logEvent);
             if (result is not ScalarValue scalarValue)

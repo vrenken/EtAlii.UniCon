@@ -8,7 +8,7 @@
 
     public class ExpressionViewModel
     {
-        public readonly CustomFilter ExpressionFilter = new();
+        public readonly LogFilter ExpressionFilter = new();
         public readonly ReactiveProperty<bool> HasCompiledExpression = new();
         public readonly ReactiveProperty<string> ExpressionError = new();
 

@@ -4,7 +4,7 @@ namespace EtAlii.UniCon.Editor
     using Serilog.Expressions;
     using UniRx;
 
-    public class CustomFilter
+    public class LogFilter
     {
         /// <summary>
         /// The name with which the custom filter should be shown in the Filter panel. 
@@ -35,7 +35,7 @@ namespace EtAlii.UniCon.Editor
         /// </summary>
         public string Error { get; private set; }
 
-        public CustomFilter()
+        public LogFilter()
         {
             Expression.Subscribe(_ =>
             {

@@ -126,7 +126,7 @@ namespace EtAlii.UniCon.Editor
         {
         }
 
-        private void AddCustomFilter(CollectionAddEvent<CustomFilter> evt)
+        private void AddCustomFilter(CollectionAddEvent<LogFilter> evt)
         {
             var disposables = new CompositeDisposable();
             var customFilter = evt.Value;
@@ -135,7 +135,7 @@ namespace EtAlii.UniCon.Editor
                 text = customFilter.Name,
                 name = customFilter.Name,
                 focusable = false,
-                userData = new Tuple<CustomFilter, CompositeDisposable>(customFilter, disposables)
+                userData = new Tuple<LogFilter, CompositeDisposable>(customFilter, disposables)
             };
             customFilterView
                 .BindTwoWayValueChanged(customFilter.IsActive)
@@ -144,14 +144,14 @@ namespace EtAlii.UniCon.Editor
             _customFiltersFoldout.contentContainer.Add(customFilterView);
         }
 
-        private void RemoveCustomFilter(CollectionRemoveEvent<CustomFilter> evt)
+        private void RemoveCustomFilter(CollectionRemoveEvent<LogFilter> evt)
         {
             var customFilter = evt.Value;
             var (view, _, disposables) = _customFiltersFoldout.contentContainer
                 .Children()
                 .Select(v =>
                 {
-                    var (cf, disposables) = (Tuple<CustomFilter, CompositeDisposable>)v.userData ;
+                    var (cf, disposables) = (Tuple<LogFilter, CompositeDisposable>)v.userData ;
                     return (v, cf, disposables);
                 })
                 .Single(c => c.cf == customFilter);
@@ -164,16 +164,16 @@ namespace EtAlii.UniCon.Editor
             var visibleCustomFilters = _customFiltersFoldout.contentContainer
                 .Children()
                 .Select(c => c.userData)
-                .Cast<CustomFilter>()
+                .Cast<LogFilter>()
                 .ToArray();
             foreach (var customFilter in visibleCustomFilters)
             {
-                RemoveCustomFilter(new CollectionRemoveEvent<CustomFilter>(-1, customFilter));
+                RemoveCustomFilter(new CollectionRemoveEvent<LogFilter>(-1, customFilter));
             }
 
             for (var i = 0; i < _viewModel.CustomFilters.Count; i++)
             {
-                AddCustomFilter(new CollectionAddEvent<CustomFilter>(i, _viewModel.CustomFilters[i]));
+                AddCustomFilter(new CollectionAddEvent<LogFilter>(i, _viewModel.CustomFilters[i]));
             }
         }
 

@@ -7,7 +7,7 @@ namespace EtAlii.UniCon.Editor
 
     public class FiltersViewModel
     {
-        public readonly ReactiveCollection<CustomFilter> CustomFilters = new();
+        public readonly ReactiveCollection<LogFilter> CustomFilters = new();
 
         public readonly ReactiveCommand<ClickEvent> ToggleFilterPanel = new();
         
@@ -49,7 +49,7 @@ namespace EtAlii.UniCon.Editor
                     }
 
                     var isNew = filter == null;
-                    filter = new CustomFilter
+                    filter = new LogFilter
                     {
                         Name = filterName,
                         Expression = { Value = expressionViewModel.ExpressionText.Value },
@@ -104,12 +104,12 @@ namespace EtAlii.UniCon.Editor
                 });
         }
 
-        private bool NameIsValid(string text, CustomFilter customFilter)
+        private bool NameIsValid(string text, LogFilter logFilter)
         {
             if (string.IsNullOrWhiteSpace(text)) return false;
 
             var matchingRule = CustomFilters.SingleOrDefault(r => r.Name == text);
-            return matchingRule == null || matchingRule == customFilter;
+            return matchingRule == null || matchingRule == logFilter;
         }
 
         private void SaveCustomFilters()
