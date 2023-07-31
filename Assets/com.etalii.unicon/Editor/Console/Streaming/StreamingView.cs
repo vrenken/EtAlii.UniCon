@@ -27,9 +27,6 @@ namespace EtAlii.UniCon.Editor
 
         public StreamingView(VisualElement root)
         {
-            //ColorUtility.TryParseHtmlString("#11ff1122", out var propertyGridHeaderColor);
-            _propertyGridActionColor = Color.green * 0.85f;// propertyGridHeaderColor;
-
             _metricsButton = root.Q<ToolbarButton>("metrics-button");
 
             _tailButton = root.Q<Button>("tail-button");

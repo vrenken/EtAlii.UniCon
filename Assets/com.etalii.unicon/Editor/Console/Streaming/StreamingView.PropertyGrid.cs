@@ -2,18 +2,14 @@ namespace EtAlii.UniCon.Editor
 {
     using System;
     using System.Linq;
-    using System.Reflection;
     using Serilog.Events;
     using Serilog.Expressions.Compilation.Linq;
     using UnityEditor;
     using UnityEngine;
     using UnityEngine.UIElements;
-    using Cursor = UnityEngine.UIElements.Cursor;
 
     public partial class StreamingView
     {
-        private readonly Color _propertyGridActionColor;
-        
         private VisualElement BuildPropertyGrid(LogEvent logEvent)
         {
             var grid = new VisualElement
@@ -47,14 +43,14 @@ namespace EtAlii.UniCon.Editor
                 focusable = false,
                 style =
                 {
-                    cursor = GetCursor(MouseCursor.ArrowPlus),
+                    cursor = CursorHelper.GetCursor(MouseCursor.ArrowPlus),
                     //unityFontStyleAndWeight = FontStyle.Bold,
-                    color = _propertyGridActionColor,
+                    color = WellKnownColor.Action,
                     borderBottomWidth = 0, borderLeftWidth = 0, borderTopWidth = 0, borderRightWidth = 0,
                     backgroundColor = Color.clear,
                 }
             };
-            RegisterContextMenu(eventDropDownButton, evt =>
+            ContextMenuHelper.Register(eventDropDownButton, evt =>
             {
                 evt.menu.AppendAction("Find just this", _ => { }, DropdownMenuAction.Status.Disabled);
                 evt.menu.AppendAction("Find with predecessors", _ => { }, DropdownMenuAction.Status.Disabled);
@@ -76,14 +72,14 @@ namespace EtAlii.UniCon.Editor
                 focusable = false,
                 style =
                 {
-                    cursor = GetCursor(MouseCursor.ArrowPlus),
+                    cursor = CursorHelper.GetCursor(MouseCursor.ArrowPlus),
                     //unityFontStyleAndWeight = FontStyle.Bold,
-                    color = _propertyGridActionColor,
+                    color = WellKnownColor.Action,
                     borderBottomWidth = 0, borderLeftWidth = 0, borderTopWidth = 0, borderRightWidth = 0,
                     backgroundColor = Color.clear,
                 }
             };
-            RegisterContextMenu(levelDropDownButton, evt =>
+            ContextMenuHelper.Register(levelDropDownButton, evt =>
             {
                 evt.menu.AppendAction("Find", _ => _expressionViewModel.AddFindByLogLevelToExpression.Execute(logEvent.Level));
                 evt.menu.AppendAction("Exclude", _ => _expressionViewModel.AddExcludeByLogLevelToExpression.Execute(logEvent.Level));
@@ -98,14 +94,14 @@ namespace EtAlii.UniCon.Editor
                 focusable = false,
                 style =
                 {
-                    cursor = GetCursor(MouseCursor.ArrowPlus),
+                    cursor = CursorHelper.GetCursor(MouseCursor.ArrowPlus),
                     //unityFontStyleAndWeight = FontStyle.Bold,
-                    color = _propertyGridActionColor,
+                    color = WellKnownColor.Action,
                     borderBottomWidth = 0, borderLeftWidth = 0, borderTopWidth = 0, borderRightWidth = 0,
                     backgroundColor = Color.clear,
                 }
             };
-            RegisterContextMenu(typeDropDownButton, evt =>
+            ContextMenuHelper.Register(typeDropDownButton, evt =>
             {
                 evt.menu.AppendAction("Find", _ => _expressionViewModel.AddFindByEventTypeToExpression.Execute(eventIdHash));
                 evt.menu.AppendAction("Find from template", _ => { }, DropdownMenuAction.Status.Disabled);
@@ -140,9 +136,9 @@ namespace EtAlii.UniCon.Editor
                     focusable = false,
                     style =
                     {
-                        cursor = GetCursor(MouseCursor.ArrowPlus),
+                        cursor = CursorHelper.GetCursor(MouseCursor.ArrowPlus),
                         fontSize = new StyleLength(new Length(15, LengthUnit.Pixel)),
-                        color = _propertyGridActionColor,
+                        color = WellKnownColor.Action,
                         marginLeft = 4, marginRight = 6, marginTop = -4,
                         width = 14, maxWidth = 14,
                         backgroundColor = Color.clear,
@@ -153,7 +149,7 @@ namespace EtAlii.UniCon.Editor
                         unityTextAlign = TextAnchor.MiddleLeft
                     }
                 };
-                RegisterContextMenu(addIncludeToFilterButton, evt =>
+                ContextMenuHelper.Register(addIncludeToFilterButton, evt =>
                 {
                     evt.menu.AppendAction("Find", _ => _expressionViewModel.AddFindByPropertyToExpression.Execute(property));
                     evt.menu.AppendAction("Find on this event type", _ => { }, DropdownMenuAction.Status.Disabled);
@@ -167,9 +163,9 @@ namespace EtAlii.UniCon.Editor
                     focusable = false,
                     style =
                     {
-                        cursor = GetCursor(MouseCursor.ArrowPlus),
+                        cursor = CursorHelper.GetCursor(MouseCursor.ArrowPlus),
                         fontSize = new StyleLength(new Length(15, LengthUnit.Pixel)),
-                        color = _propertyGridActionColor,
+                        color = WellKnownColor.Action,
                         marginLeft = 0, marginRight = 10, marginTop = -4,
                         width = 14, maxWidth = 14,
                         backgroundColor = Color.clear,
@@ -180,7 +176,7 @@ namespace EtAlii.UniCon.Editor
                         unityTextAlign = TextAnchor.MiddleLeft
                     }
                 };
-                RegisterContextMenu(addExcludeToFilterButton, evt =>
+                ContextMenuHelper.Register(addExcludeToFilterButton, evt =>
                 {
                     evt.menu.AppendAction("Exclude", _ => _expressionViewModel.AddExcludeByPropertyToExpression.Execute(property));
                     evt.menu.AppendAction("Exclude on this event type", _ => { }, DropdownMenuAction.Status.Disabled);
@@ -243,38 +239,6 @@ namespace EtAlii.UniCon.Editor
             return grid;
         }
 
-        /// <summary>
-        /// Helper method to register a (left-mouse enabled) context menu for the specified visual element.
-        /// Please note that the ElementAwareContextualMenuManipulator does some nifty layout magic to ensure
-        /// that the context menu shows up below the visual element.
-        /// </summary>
-        /// <param name="visualElement"></param>
-        /// <param name="evt"></param>
-        private void RegisterContextMenu(VisualElement visualElement, Action<ContextualMenuPopulateEvent> evt)
-        {
-            var manipulator = new ElementAwareContextualMenuManipulator(evt)
-            {
-                target = visualElement
-            };
-            manipulator.activators.Clear();
-            manipulator.activators.Add(new ManipulatorActivationFilter
-            {
-                button = MouseButton.LeftMouse
-            });
-            visualElement.AddManipulator(manipulator);
-        }
-        
-        /// <summary>
-        /// A helper method to quickly assign a cursor to a visual element when it is hovered over by the mouse.  
-        /// </summary>
-        /// <param name="cursor"></param>
-        /// <returns></returns>
-        private StyleCursor GetCursor(MouseCursor cursor)
-        {
-            object cursorInstance = new Cursor();
-            var fields = typeof(Cursor).GetProperty("defaultCursorId", BindingFlags.NonPublic | BindingFlags.Instance)!;
-            fields.SetValue(cursorInstance, (int)cursor);
-            return new StyleCursor((Cursor)cursorInstance);
-        }
-    }    
+
+    }
 }
