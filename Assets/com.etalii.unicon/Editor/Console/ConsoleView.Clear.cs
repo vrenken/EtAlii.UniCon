@@ -13,39 +13,39 @@ namespace EtAlii.UniCon.Editor
 
         private void OnClearOnPlayAction(DropdownMenuAction action)
         {
-            _viewModel.UserSettings.ClearOnPlay.Value = !_viewModel.UserSettings.ClearOnPlay.Value;
+            UserSettings.instance.ClearOnPlay.Value = !UserSettings.instance.ClearOnPlay.Value;
             action.UpdateActionStatus(action.eventInfo);
         }
 
         private DropdownMenuAction.Status OnClearOnPlayActionCallBack(DropdownMenuAction arg)
         {
-            return _viewModel.UserSettings.ClearOnPlay.Value
+            return UserSettings.instance.ClearOnPlay.Value
                 ? DropdownMenuAction.Status.Checked | DropdownMenuAction.Status.Disabled
                 : DropdownMenuAction.Status.Normal | DropdownMenuAction.Status.Disabled;
         }
 
         private void OnClearOnBuildAction(DropdownMenuAction action)
         {
-            _viewModel.UserSettings.ClearOnBuild.Value = !_viewModel.UserSettings.ClearOnBuild.Value;
+            UserSettings.instance.ClearOnBuild.Value = !UserSettings.instance.ClearOnBuild.Value;
             action.UpdateActionStatus(action.eventInfo);
         }
 
         private DropdownMenuAction.Status OnClearOnBuildActionCallBack(DropdownMenuAction arg)
         {
-            return _viewModel.UserSettings.ClearOnBuild.Value
+            return UserSettings.instance.ClearOnBuild.Value
                 ? DropdownMenuAction.Status.Checked | DropdownMenuAction.Status.Disabled
                 : DropdownMenuAction.Status.Normal | DropdownMenuAction.Status.Disabled;
         }
 
         private void OnClearOnRecompileAction(DropdownMenuAction action)
         {
-            _viewModel.UserSettings.ClearOnRecompile.Value = !_viewModel.UserSettings.ClearOnRecompile.Value;
+            UserSettings.instance.ClearOnRecompile.Value = !UserSettings.instance.ClearOnRecompile.Value;
             action.UpdateActionStatus(action.eventInfo);
         }
         
         private DropdownMenuAction.Status OnClearOnRecompileActionCallBack(DropdownMenuAction arg)
         {
-            return _viewModel.UserSettings.ClearOnRecompile.Value
+            return UserSettings.instance.ClearOnRecompile.Value
                 ? DropdownMenuAction.Status.Checked | DropdownMenuAction.Status.Disabled
                 : DropdownMenuAction.Status.Normal | DropdownMenuAction.Status.Disabled;
         }

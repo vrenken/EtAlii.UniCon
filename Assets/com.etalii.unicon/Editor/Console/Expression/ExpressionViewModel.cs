@@ -8,9 +8,6 @@
 
     public class ExpressionViewModel
     {
-        internal UserSettings UserSettings => UserSettings.instance;
-        internal ProjectSettings ProjectSettings => ProjectSettings.instance;
-
         public readonly CustomFilter ExpressionFilter = new();
         public readonly ReactiveProperty<bool> HasCompiledExpression = new();
         public readonly ReactiveProperty<string> ExpressionError = new();
@@ -40,8 +37,8 @@
             ToggleExpressionPanel
                 .Subscribe(_ =>
                 {
-                    UserSettings.ShowExpressionPanel.Value = !UserSettings.ShowExpressionPanel.Value;
-                    UserSettings.ExpressionPanelHeight.Value = UserSettings.ExpressionPanelHeight.Value;
+                    UserSettings.instance.ShowExpressionPanel.Value = !UserSettings.instance.ShowExpressionPanel.Value;
+                    UserSettings.instance.ExpressionPanelHeight.Value = UserSettings.instance.ExpressionPanelHeight.Value;
                 });
 
             ExpressionFilter.CompiledExpression.Subscribe(value =>
@@ -82,7 +79,7 @@
         private void AddExpressionPart(
             string expression)
         {
-            if (UserSettings.ShowExpressionPanel.Value == false)
+            if (UserSettings.instance.ShowExpressionPanel.Value == false)
             {
                 ToggleExpressionPanel.Execute(new ClickEvent());
             }

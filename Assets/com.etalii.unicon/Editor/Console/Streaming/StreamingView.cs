@@ -62,7 +62,7 @@ namespace EtAlii.UniCon.Editor
             _tailButton
                 .BindClick(viewModel.ToggleScrollToTail)
                 .AddTo(disposable);
-            _viewModel.UserSettings.ScrollToTail
+            UserSettings.instance.ScrollToTail
                 .Subscribe(onNext: scrollToTail =>
                 {
                     _tailButton.UpdateToggleButton(scrollToTail);
@@ -133,7 +133,7 @@ namespace EtAlii.UniCon.Editor
         
         private void ScrollWhenNeeded()
         {
-            if (_viewModel.UserSettings.ScrollToTail.Value)
+            if (UserSettings.instance.ScrollToTail.Value)
             {
                 _listView.ScrollToItem(-1);
                 _listViewScrollView.verticalScroller.value = _listViewScrollView.verticalScroller.highValue;
@@ -148,12 +148,12 @@ namespace EtAlii.UniCon.Editor
         /// <param name="value"></param>
         private void OnScrolledVertically(float value)
         {
-            if (!_viewModel.UserSettings.ScrollToTail.Value) return;
+            if (!UserSettings.instance.ScrollToTail.Value) return;
             if(_previousScrollValue == 0) return;
             if (_previousScrollValue <= _listViewScrollView.verticalScroller.value) return;
             
-            _viewModel.UserSettings.ScrollToTail.Value = false;
-            _tailButton.UpdateToggleButton(_viewModel.UserSettings.ScrollToTail.Value);
+            UserSettings.instance.ScrollToTail.Value = false;
+            _tailButton.UpdateToggleButton(UserSettings.instance.ScrollToTail.Value);
         }
 
     }    

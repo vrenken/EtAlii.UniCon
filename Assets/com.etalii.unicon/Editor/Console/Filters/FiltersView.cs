@@ -49,7 +49,7 @@ namespace EtAlii.UniCon.Editor
             _filterButton
                 .BindClick(_viewModel.ToggleFilterPanel)
                 .AddTo(disposable);
-            _viewModel.UserSettings.ShowFilterPanel
+            UserSettings.instance.ShowFilterPanel
                 .Subscribe(showFilterPanel =>
                 {
                     UpdateFilterPanel();
@@ -61,51 +61,51 @@ namespace EtAlii.UniCon.Editor
                 {
                     if (_filterPanel.visible && _filterPanel.contentRect.width > 0)
                     {
-                        _viewModel.UserSettings.FilterPanelWidth.Value = _filterPanel.contentRect.width;
+                        UserSettings.instance.FilterPanelWidth.Value = _filterPanel.contentRect.width;
                     }
                 })
                 .AddTo(disposable);
-            _viewModel.UserSettings.FilterPanelWidth
+            UserSettings.instance.FilterPanelWidth
                 .Throttle(TimeSpan.FromMilliseconds(300))
                 .Subscribe(_ => UpdateFilterPanel())
                 .AddTo(disposable);
             
             // Log sources.
             _serilogSourceToggle
-                .BindTwoWayValueChanged(_viewModel.UserSettings.UseSerilogSource)
+                .BindTwoWayValueChanged(UserSettings.instance.UseSerilogSource)
                 .AddTo(disposable);
             
             _unitySourceToggle
-                .BindTwoWayValueChanged(_viewModel.UserSettings.UseUnitySource)
+                .BindTwoWayValueChanged(UserSettings.instance.UseUnitySource)
                 .AddTo(disposable);
 
             // Log levels.
             _verboseToggle
-                .BindTwoWayValueChanged(viewModel.UserSettings.LogLevel, LogLevel.Verbose)
+                .BindTwoWayValueChanged(UserSettings.instance.LogLevel, LogLevel.Verbose)
                 .AddTo(disposable);
 
             _informationToggle
-                .BindTwoWayValueChanged(viewModel.UserSettings.LogLevel, LogLevel.Information)
+                .BindTwoWayValueChanged(UserSettings.instance.LogLevel, LogLevel.Information)
                 .AddTo(disposable);
 
             _debugToggle
-                .BindTwoWayValueChanged(viewModel.UserSettings.LogLevel, LogLevel.Debug)
+                .BindTwoWayValueChanged(UserSettings.instance.LogLevel, LogLevel.Debug)
                 .AddTo(disposable);
 
             _warningToggle
-                .BindTwoWayValueChanged(viewModel.UserSettings.LogLevel, LogLevel.Warning)
+                .BindTwoWayValueChanged(UserSettings.instance.LogLevel, LogLevel.Warning)
                 .AddTo(disposable);
             
             _errorToggle
-                .BindTwoWayValueChanged(viewModel.UserSettings.LogLevel, LogLevel.Error)
+                .BindTwoWayValueChanged(UserSettings.instance.LogLevel, LogLevel.Error)
                 .AddTo(disposable);
  
             _fatalToggle
-                .BindTwoWayValueChanged(viewModel.UserSettings.LogLevel, LogLevel.Fatal)
+                .BindTwoWayValueChanged(UserSettings.instance.LogLevel, LogLevel.Fatal)
                 .AddTo(disposable);
 
             _exceptionsToggle
-                .BindTwoWayValueChanged(viewModel.UserSettings.ShowExceptions)
+                .BindTwoWayValueChanged(UserSettings.instance.ShowExceptions)
                 .AddTo(disposable);
 
             _viewModel.CustomFilters
@@ -179,10 +179,10 @@ namespace EtAlii.UniCon.Editor
 
         private void UpdateFilterPanel()
         {
-            _filterPanel.visible = _viewModel.UserSettings.ShowFilterPanel.Value;
+            _filterPanel.visible = UserSettings.instance.ShowFilterPanel.Value;
             
             var width = _filterPanel.visible
-                ? _viewModel.UserSettings.FilterPanelWidth.Value
+                ? UserSettings.instance.FilterPanelWidth.Value
                 : 0f;
             _horizontalSplitPanel.fixedPaneInitialDimension = width;
             _filterPanel.style.width = width;

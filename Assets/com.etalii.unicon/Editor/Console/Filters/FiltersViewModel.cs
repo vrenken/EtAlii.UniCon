@@ -7,9 +7,6 @@ namespace EtAlii.UniCon.Editor
 
     public class FiltersViewModel
     {
-        internal UserSettings UserSettings => UserSettings.instance;
-        internal ProjectSettings ProjectSettings => ProjectSettings.instance;
-
         public readonly ReactiveCollection<CustomFilter> CustomFilters = new();
 
         public readonly ReactiveCommand<ClickEvent> ToggleFilterPanel = new();
@@ -22,14 +19,14 @@ namespace EtAlii.UniCon.Editor
             ToggleFilterPanel
                 .Subscribe(_ =>
                 {
-                    UserSettings.ShowFilterPanel.Value = !UserSettings.ShowFilterPanel.Value;
-                    UserSettings.FilterPanelWidth.Value = UserSettings.FilterPanelWidth.Value;
+                    UserSettings.instance.ShowFilterPanel.Value = !UserSettings.instance.ShowFilterPanel.Value;
+                    UserSettings.instance.FilterPanelWidth.Value = UserSettings.instance.FilterPanelWidth.Value;
                 });
 
-            UserSettings.UseSerilogSource.Subscribe(_ => streamingViewModel.ConfigureStream());
-            UserSettings.UseUnitySource.Subscribe(_ => streamingViewModel.ConfigureStream());
-            UserSettings.LogLevel.Subscribe(_ => streamingViewModel.ConfigureStream());
-            UserSettings.ShowExceptions.Subscribe(_ => streamingViewModel.ConfigureStream());
+            UserSettings.instance.UseSerilogSource.Subscribe(_ => streamingViewModel.ConfigureStream());
+            UserSettings.instance.UseUnitySource.Subscribe(_ => streamingViewModel.ConfigureStream());
+            UserSettings.instance.LogLevel.Subscribe(_ => streamingViewModel.ConfigureStream());
+            UserSettings.instance.ShowExceptions.Subscribe(_ => streamingViewModel.ConfigureStream());
 
             SaveFilter
                 .Subscribe(_ =>
@@ -68,12 +65,12 @@ namespace EtAlii.UniCon.Editor
 
                     expressionViewModel.ExpressionText.Value = string.Empty;
                     
-                    // if (UserSettings.ShowExpressionPanel.Value)
+                    // if (UserSettings.instance.ShowExpressionPanel.Value)
                     // {
                     //     expressionViewModel.ToggleExpressionPanel.Execute(new ClickEvent());
                     // }
 
-                    if (!UserSettings.ShowFilterPanel.Value)
+                    if (!UserSettings.instance.ShowFilterPanel.Value)
                     {
                         ToggleFilterPanel.Execute(new ClickEvent());
                     }
@@ -84,12 +81,12 @@ namespace EtAlii.UniCon.Editor
                 {
                     expressionViewModel.ExpressionText.Value = string.Empty;
                     
-                    // if (UserSettings.ShowExpressionPanel.Value)
+                    // if (UserSettings.instance.ShowExpressionPanel.Value)
                     // {
                     //     expressionViewModel.ToggleExpressionPanel.Execute(new ClickEvent());
                     // }
 
-                    if (!UserSettings.ShowFilterPanel.Value)
+                    if (!UserSettings.instance.ShowFilterPanel.Value)
                     {
                         ToggleFilterPanel.Execute(new ClickEvent());
                     }

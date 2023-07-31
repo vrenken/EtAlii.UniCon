@@ -8,9 +8,6 @@ namespace EtAlii.UniCon.Editor
 
     public class StreamingViewModel
     {
-        internal UserSettings UserSettings => UserSettings.instance;
-        internal ProjectSettings ProjectSettings => ProjectSettings.instance;
-
         public IObservable<LogEvent> Stream;
         
         public readonly ReactiveCommand<ClickEvent> ToggleScrollToTail = new();
@@ -29,7 +26,7 @@ namespace EtAlii.UniCon.Editor
             _expressionViewModel = expressionViewModel;
             ToggleScrollToTail.Subscribe(_ =>
             {
-                UserSettings.ScrollToTail.Value = !UserSettings.ScrollToTail.Value;
+                UserSettings.instance.ScrollToTail.Value = !UserSettings.instance.ScrollToTail.Value;
             });
         }
         
@@ -45,7 +42,7 @@ namespace EtAlii.UniCon.Editor
             stream = stream
                 .Where(logEvent =>
                 {
-                    if (UserSettings.UseSerilogSource.Value)
+                    if (UserSettings.instance.UseSerilogSource.Value)
                     {
                         // Only the availability of the property is already sufficient.
                         if(!logEvent.Properties.TryGetValue(WellKnownProperties.IsUnityLogEvent, out _))
@@ -53,7 +50,7 @@ namespace EtAlii.UniCon.Editor
                             return true;
                         }
                     }
-                    if (UserSettings.UseUnitySource.Value)
+                    if (UserSettings.instance.UseUnitySource.Value)
                     {
                         // Only the absence of the property is already sufficient.
                         if(logEvent.Properties.TryGetValue(WellKnownProperties.IsUnityLogEvent, out _))
@@ -66,24 +63,24 @@ namespace EtAlii.UniCon.Editor
                 })
                 .Where(logEvent =>
                 {
-                    if (UserSettings.LogLevel.Value == LogLevel.None && !UserSettings.ShowExceptions.Value)
+                    if (UserSettings.instance.LogLevel.Value == LogLevel.None && !UserSettings.instance.ShowExceptions.Value)
                     {
                         return true;
                     }
 
-                    if (UserSettings.ShowExceptions.Value && logEvent.Exception != null)
+                    if (UserSettings.instance.ShowExceptions.Value && logEvent.Exception != null)
                     {
                         return true;
                     }
 
                     return logEvent.Level switch
                     {
-                        LogEventLevel.Verbose => UserSettings.LogLevel.Value.HasFlag(LogLevel.Verbose),
-                        LogEventLevel.Information => UserSettings.LogLevel.Value.HasFlag(LogLevel.Information),
-                        LogEventLevel.Debug => UserSettings.LogLevel.Value.HasFlag(LogLevel.Debug),
-                        LogEventLevel.Warning => UserSettings.LogLevel.Value.HasFlag(LogLevel.Warning),
-                        LogEventLevel.Error => UserSettings.LogLevel.Value.HasFlag(LogLevel.Error),
-                        LogEventLevel.Fatal => UserSettings.LogLevel.Value.HasFlag(LogLevel.Fatal),
+                        LogEventLevel.Verbose => UserSettings.instance.LogLevel.Value.HasFlag(LogLevel.Verbose),
+                        LogEventLevel.Information => UserSettings.instance.LogLevel.Value.HasFlag(LogLevel.Information),
+                        LogEventLevel.Debug => UserSettings.instance.LogLevel.Value.HasFlag(LogLevel.Debug),
+                        LogEventLevel.Warning => UserSettings.instance.LogLevel.Value.HasFlag(LogLevel.Warning),
+                        LogEventLevel.Error => UserSettings.instance.LogLevel.Value.HasFlag(LogLevel.Error),
+                        LogEventLevel.Fatal => UserSettings.instance.LogLevel.Value.HasFlag(LogLevel.Fatal),
                         _ => throw new ArgumentOutOfRangeException(nameof(logEvent.Level))
                     };
                 }).Where(logEvent =>

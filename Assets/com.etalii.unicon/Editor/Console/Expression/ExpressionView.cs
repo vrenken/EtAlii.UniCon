@@ -15,8 +15,6 @@
         private readonly Button _expressionErrorButton;
         private readonly Button _expressionSaveButton;
         private readonly Button _expressionCancelButton;
-        private ExpressionViewModel _viewModel;
-
 
         public ExpressionView(VisualElement root)
         {
@@ -31,12 +29,10 @@
 
         public void Bind(ExpressionViewModel viewModel, FiltersViewModel filtersViewModel, CompositeDisposable disposable)
         {
-            _viewModel = viewModel;
-            
             _expressionButton
                 .BindClick(viewModel.ToggleExpressionPanel)
                 .AddTo(disposable);
-            viewModel.UserSettings.ShowExpressionPanel
+            UserSettings.instance.ShowExpressionPanel
                 .Subscribe(showExpressionPanel =>
                 {
                     UpdateExpressionPanel();
@@ -48,11 +44,11 @@
                 {
                     if (_expressionPanel.visible && _expressionPanel.contentRect.height > 0)
                     {
-                        _viewModel.UserSettings.ExpressionPanelHeight.Value = _expressionPanel.contentRect.height;
+                        UserSettings.instance.ExpressionPanelHeight.Value = _expressionPanel.contentRect.height;
                     }
                 })
                 .AddTo(disposable);
-            _viewModel.UserSettings.ExpressionPanelHeight
+            UserSettings.instance.ExpressionPanelHeight
                 .Throttle(TimeSpan.FromMilliseconds(300))
                 .Subscribe(_ => UpdateExpressionPanel())
                 .AddTo(disposable);
@@ -84,10 +80,10 @@
 
         private void UpdateExpressionPanel()
         {
-            _expressionPanel.visible = _viewModel.UserSettings.ShowExpressionPanel.Value; 
+            _expressionPanel.visible = UserSettings.instance.ShowExpressionPanel.Value; 
             
             var height = _expressionPanel.visible
-                ? _viewModel.UserSettings.ExpressionPanelHeight.Value
+                ? UserSettings.instance.ExpressionPanelHeight.Value
                 : 0f;
             _verticalSplitPanel.fixedPaneInitialDimension = height;
             _expressionPanel.style.height = height;

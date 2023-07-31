@@ -19,9 +19,6 @@ namespace EtAlii.UniCon.Editor
                 return _instance;
             }
         }
-        
-        internal UserSettings UserSettings => UserSettings.instance;
-        internal ProjectSettings ProjectSettings => ProjectSettings.instance;
 
         private static ConsoleViewModel _instance;
 
@@ -41,8 +38,8 @@ namespace EtAlii.UniCon.Editor
 #if UNICON_LIFETIME_DEBUG            
             Debug.Log($"[UNICON] {GetType().Name}.{nameof(Awake)}()");
 #endif
-            UserSettings.Bind();
-            ProjectSettings.Bind();
+            UserSettings.instance.Bind();
+            ProjectSettings.instance.Bind();
 
             _filters.Bind(_expressions, _streaming);
             _expressions.Bind(_filters, _streaming);
