@@ -39,7 +39,7 @@ namespace EtAlii.UniCon.Editor
             // Import UXML
             _view = new ConsoleView();
             _viewModel = ConsoleViewModel.Instance;
-            _viewModel.Init();
+            _viewModel.Initialize();
             rootVisualElement.Add(_view);
             _view.Bind(_viewModel);
             _view.StretchToParentSize();
