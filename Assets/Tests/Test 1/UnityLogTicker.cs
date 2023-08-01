@@ -36,7 +36,7 @@
                         // For this we create a unique correlationId and pass it through all involved systems.
                         using (Debug.unityLogger.BeginCorrelationScope("CorrelationId", Environment.TickCount.ToString(), false))
                         {
-                            UnityLogEntryWriter.WriteEntry(gameObject);
+                            UnityLogEntryWriter.WriteEntry(this);
                             leftHandController.DoLogEntry();
                         }
                         break;
@@ -46,12 +46,12 @@
                         // For this we create a unique correlationId and pass it through all involved systems.
                         using (Debug.unityLogger.BeginCorrelationScope("CorrelationId", false))
                         {
-                            UnityLogEntryWriter.WriteEntry(gameObject);
+                            UnityLogEntryWriter.WriteEntry(this);
                             leftHandController.DoLogEntry();
                         }
                         break;
                     default:
-                        UnityLogEntryWriter.WriteEntry(gameObject);
+                        UnityLogEntryWriter.WriteEntry(this);
                         break;
                 }
             }
