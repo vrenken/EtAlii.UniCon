@@ -118,5 +118,5 @@ namespace EtAlii.UniCon.Editor
 
             return scalarValue.Value is not false;
         }
-    }    
+    }
 }
