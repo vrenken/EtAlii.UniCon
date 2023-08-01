@@ -1,7 +1,7 @@
 {
     "name": "EtAlii.UniCon.Sample",
     "rootNamespace": "EtAlii.UniCon.Sample",
-    "autoReferenced": false,
+    "autoReferenced": true,
     "noEngineReferences": false,
     "allowUnsafeCode": false,
     "overrideReferences": true,
