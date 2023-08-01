@@ -11,10 +11,10 @@ namespace EtAlii.UniCon.Editor
             {
                 if (_instance == null)
                 {
-#if UNICON_LIFETIME_DEBUG            
-                    Debug.Log($"[UNICON] {nameof(ConsoleViewModel)}.{nameof(Instance)}");
-#endif
                     _instance = CreateInstance<ConsoleViewModel>();
+#if UNICON_LIFETIME_DEBUG            
+                    Debug.Log($"[UNICON] {nameof(ConsoleViewModel)}.{nameof(Instance)}", _instance);
+#endif
                 }
                 return _instance;
             }
@@ -36,7 +36,7 @@ namespace EtAlii.UniCon.Editor
         private void Awake()
         {
 #if UNICON_LIFETIME_DEBUG            
-            Debug.Log($"[UNICON] {GetType().Name}.{nameof(Awake)}()");
+            Debug.Log($"[UNICON] {GetType().Name}.{nameof(Awake)}()", this);
 #endif
             UserSettings.instance.Bind();
             ProjectSettings.instance.Bind();

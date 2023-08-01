@@ -4,7 +4,6 @@ namespace EtAlii.UniCon.Editor
     using System.IO;
     using Serilog.Expressions;
     using UniRx;
-    using UnityEngine;
 
     public class LogFilter
     {
@@ -48,7 +47,7 @@ namespace EtAlii.UniCon.Editor
         public void Bind()
         {
 #if UNICON_LIFETIME_DEBUG            
-            Debug.Log($"STARTUP: {GetType().Name}.{nameof(Bind)}()");
+            Debug.Log($"[UNICON] {GetType().Name}.{nameof(Bind)}()");
 
             if (_disposable.Count > 0) throw new InvalidOperationException($"{GetType().Name} already bound");
 #endif

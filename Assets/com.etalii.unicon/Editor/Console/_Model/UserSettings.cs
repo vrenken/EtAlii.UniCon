@@ -72,7 +72,7 @@ namespace EtAlii.UniCon.Editor
         public void Bind()
         {
 #if UNICON_LIFETIME_DEBUG            
-            Debug.Log($"STARTUP: {GetType().Name}.{nameof(Bind)}()");
+            Debug.Log($"[UNICON] {GetType().Name}.{nameof(Bind)}()", this);
 
             if (_disposable.Count > 0) throw new InvalidOperationException($"{GetType().Name} already bound");
 #endif
