@@ -10,7 +10,7 @@ namespace Tests
 
         public void DoLogEntry()
         {
-            LogEntryWriter.WriteEntry(_logger);
+            SerilogLogEntryWriter.WriteEntry(_logger);
             _networking.DoLogEntry();
         }
     }

@@ -50,7 +50,7 @@
                         // For this we create a unique correlationId and pass it through all involved systems.
                         using (_logger.BeginCorrelationScope("CorrelationId", Environment.TickCount.ToString(), false))
                         {
-                            LogEntryWriter.WriteEntry(logger);
+                            SerilogLogEntryWriter.WriteEntry(logger);
                             _avatarSystem.DoLogEntry();
                         }
                         break;
@@ -58,14 +58,14 @@
                         // We want to be able to track method calls throughout the whole application stack.
                         // Including across network and process boundaries.
                         // For this we create a unique correlationId and pass it through all involved systems.
-                        using (_logger.BeginCorrelationScope("ShortGuidCorrelationId", false))
+                        using (_logger.BeginCorrelationScope("CorrelationId", false))
                         {
-                            LogEntryWriter.WriteEntry(logger);
+                            SerilogLogEntryWriter.WriteEntry(logger);
                             _avatarSystem.DoLogEntry();
                         }
                         break;
                     default:
-                        LogEntryWriter.WriteEntry(logger);
+                        SerilogLogEntryWriter.WriteEntry(logger);
                         break;
                 }
             }

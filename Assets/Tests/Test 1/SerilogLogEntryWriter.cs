@@ -5,7 +5,7 @@
     using Serilog;
     using Random = UnityEngine.Random;
 
-    public static class LogEntryWriter
+    public static class SerilogLogEntryWriter
     {
         private static readonly Lorem Lorem = new();
 

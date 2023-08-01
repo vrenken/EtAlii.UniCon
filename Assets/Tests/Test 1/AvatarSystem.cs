@@ -10,7 +10,7 @@
 
         public void DoLogEntry()
         {
-            LogEntryWriter.WriteEntry(_logger);
+            SerilogLogEntryWriter.WriteEntry(_logger);
             _holographicMenu.DoLogEntry();
         }
     }
