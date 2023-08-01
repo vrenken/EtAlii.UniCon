@@ -1,4 +1,4 @@
-namespace Tests
+namespace EtAlii.UniCon.Sample
 {
     using System;
 

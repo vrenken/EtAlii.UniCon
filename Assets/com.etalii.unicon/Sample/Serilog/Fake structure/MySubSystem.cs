@@ -1,4 +1,4 @@
-﻿namespace Tests
+﻿namespace EtAlii.UniCon.Sample
 {
     // ReSharper disable all
     // We do not want to push too much conventions in this example.

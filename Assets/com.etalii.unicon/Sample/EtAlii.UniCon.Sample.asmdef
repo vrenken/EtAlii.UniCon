@@ -1,0 +1,24 @@
+{
+    "name": "EtAlii.UniCon.Sample",
+    "rootNamespace": "EtAlii.UniCon.Sample",
+    "autoReferenced": false,
+    "noEngineReferences": false,
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "references": [
+        "UnityEditor.UI",
+        "EtAlii.UniCon.Runtime",
+        "EtAlii.UniCon.External.Serilog.Sinks.Unity3D",
+        "EtAlii.UniCon.External.UniRx",
+        "EtAlii.UniCon.External.RedMoon.ReactiveKit"
+    ],
+    "includePlatforms": [ "Editor" ],
+    "excludePlatforms": [],
+    "precompiledReferences": [
+        "Bogus.dll",
+        "Serilog.dll",
+        "Serilog.Expressions.dll"
+    ],
+    "defineConstraints": [],
+    "versionDefines": []
+}
