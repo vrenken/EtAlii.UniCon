@@ -12,15 +12,15 @@
 - Out of the box support for (AsyncLocal based) [Correlation ID's](https://www.rapid7.com/blog/post/2016/12/23/the-value-of-correlation-ids/).
 - Extensible so that other Serilog sinks can be configured as well (file based or even centralized logging using for example Seq). 
 - All dependencies are internalized to avoid conflicts and provide developers an easy start:
-  - [Serilog](https://github.com/serilog/serilog): 3.0.1
-  - [Serilog.Expressions](https://github.com/serilog/serilog-expressions): 3.4.2
-  - [Serilog.Enrichers.Memory](https://github.com/serilog-contrib/serilog-enrichers-memory): 1.0.4
-  - [Serilog.Enrichers.Thread](https://github.com/serilog/serilog-enrichers-thread): 3.2.0
-  - [com.serilog.sinks.unity3d](https://github.com/KuraiAndras/Serilog.Sinks.Unity3D): 3.0.0
-  - [system.collections.immutable](https://www.nuget.org/packages/System.Collections.Immutable/): 7.0.0
-  - [io.crazyjackel.redmoon-reactivekit](https://openupm.com/packages/io.crazyjackel.redmoon-reactivekit/): 1.0.7
-  - [com.neuecc.unirx](https://github.com/neuecc/UniRx): 7.1.0
-
+  - [Serilog](https://github.com/serilog/serilog): 3.0.1 (Apache-2.0)
+  - [Serilog.Expressions](https://github.com/serilog/serilog-expressions): 3.4.2 (Apache-2.0)
+  - [Serilog.Enrichers.Memory](https://github.com/serilog-contrib/serilog-enrichers-memory): 1.0.4 (Apache-2.0)
+  - [Serilog.Enrichers.Thread](https://github.com/serilog/serilog-enrichers-thread): 3.2.0 (Apache-2.0)
+  - [com.serilog.sinks.unity3d](https://github.com/KuraiAndras/Serilog.Sinks.Unity3D): 3.0.0 (MIT)
+  - [system.collections.immutable](https://www.nuget.org/packages/System.Collections.Immutable/): 7.0.0 (MIT)
+  - [io.crazyjackel.redmoon-reactivekit](https://openupm.com/packages/io.crazyjackel.redmoon-reactivekit/): 1.0.7 (MIT)
+  - [com.neuecc.unirx](https://github.com/neuecc/UniRx): 7.1.0 (MIT)
+  - [Bogus](this): 34.0.12 (MIT) 
 
 ## Getting started
 Usage is simple:
