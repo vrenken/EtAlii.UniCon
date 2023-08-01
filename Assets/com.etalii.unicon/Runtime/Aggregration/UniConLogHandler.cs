@@ -1,6 +1,7 @@
 namespace EtAlii.UniCon
 {
     using System;
+    using System.Text.RegularExpressions;
     using UnityEngine;
     using Object = UnityEngine.Object;
     
@@ -17,17 +18,27 @@ namespace EtAlii.UniCon
         
         public void LogFormat(LogType logType, Object context, string format, params object[] args)
         {
-            _originalLogHandler.LogFormat(logType, context, format, args);
+            if (format == "{0}" && args.Length == 1)
+            {
+                format = args[0].ToString();
+                args = Array.Empty<object>();
+            }
+
+            var index = 0;
+            var evaluator = new MatchEvaluator(m => m.Result($"\"{{{index++}}}\""));
+            
+            var unityLogFormat = Regex.Replace(format, "({{?)([A-Za-z_][A-Za-z0-9_]+)(}}?)", evaluator);
+            _originalLogHandler.LogFormat(logType, context, unityLogFormat, args);
 
             var logger = ExpandLoggerForUnity(_logger, context);
             switch (logType)
             {
                 // ReSharper disable TemplateIsNotCompileTimeConstantProblem
-                case LogType.Log: logger.Information(string.Format(format, args)); break;
-                case LogType.Error: logger.Error(string.Format(format, args)); break;
-                case LogType.Exception: logger.Error(string.Format(format, args)); break;
-                case LogType.Assert: logger.Error(string.Format(format, args)); break;
-                case LogType.Warning: logger.Warning(string.Format(format, args)); break;
+                case LogType.Log: logger.Information(format, args); break;
+                case LogType.Error: logger.Error(format, args); break;
+                case LogType.Exception: logger.Error(format, args); break;
+                case LogType.Assert: logger.Error(format, args); break;
+                case LogType.Warning: logger.Warning(format, args); break;
                 default: throw new ArgumentOutOfRangeException(nameof(logType), logType, null);
                 // ReSharper restore TemplateIsNotCompileTimeConstantProblem
             }
