@@ -34,7 +34,25 @@ Usage is simple:
    Alternatively use the default `CTRL+Shift+C` shortcut key to open up the console. UniCon replaces the original Console so a confirmation message might pop up to change the shortcut. 
 
 
-3. Decorate your classes with Serilog Logger instances. For example:
+3. a. Write log entries as you were (hopefully) already doing. For example:
+    ```csharp
+    using Serilog;
+     
+    public class MySubSystem
+    {
+       private string _objectName = "BuyMeACoffee";
+       private string _url = "https://www.buymeacoffee.com/vrenken";
+        
+       public void DoSomething()
+       {
+          Debug.Log("Done something on {ObjectName} at {ObjectUrl}", _objectName, _url);
+       }
+    } 
+    ```
+   ⚠️ **Remark:** Do honor the structured logging [message template convention](https://github.com/serilog/serilog/wiki/Writing-Log-Events) to make the best use of both UniCon, Serilog and structured logging approaches in general.
+
+
+3. b. Alternatively, decorate your classes with Serilog Logger instances. For example:
    ```csharp
    using Serilog;
     
@@ -61,7 +79,7 @@ Usage is simple:
    }    
    ```
 
-4. Write debug/information/verbose/fatal/error log entries as you were (hopefully) already doing.
+   Write debug/information/verbose/fatal/error log entries as you were (hopefully) doing with the Unity Debug.Log methods.
     ```csharp
     using Serilog;
      
@@ -76,7 +94,7 @@ Usage is simple:
        }
     } 
     ```
-   ⚠️ **Remark:** Do honor the structured logging [message template convention](https://github.com/serilog/serilog/wiki/Writing-Log-Events) to make the best use of both UniCon, Serilog and structured logging approaches in general.
+   ⚠️ **Remark:** Also with Serilog log statements do honor the structured logging [message template convention](https://github.com/serilog/serilog/wiki/Writing-Log-Events) to make the best use of both UniCon, Serilog and structured logging approaches in general.
 
 
 5. Start your application for debugging (by entering play mode)  and inspect the UniCon debug console. It should show you the list of all log entries that get provided by both Serilog as well as Unity.<br/>
@@ -103,13 +121,13 @@ Usage is simple:
 9. These are just simple examples. The method of using structured log messages and filtering them on the fly provides you with amazing debugging super skills. But the true power comes from the custom filters that you and your team can come up with and share to make inspecting log entries a true 'engineered' activity.
 
 ## Known issues
-- [ ] In case of MonoBehaviours you need to for now assign the logger in the awake method.
+- [ ] When using Serilog then in case of MonoBehaviours you need to assign the logger in the awake method, and not in the constructor.
 - [ ] Not all expression building options are implemented - the primary ones are though.
 - [ ] Time based filters are not yet implemented.
 - [ ] The UI Toolkit Listview is at some times flaky - especially when visual elements change their heights. 
   This can occasionally result in some weird looking log entries or no visual log entries at all.
   Just toggle the trail on/off to get the items to show up correctly.
-- [ ] Custom filters and settings are not persisted yet. 
+- [X] Custom filters and settings are not persisted yet. 
 
 ## Thanks & issue reporting 
 If this package help you in your everyday work please let me know (or buy me a [coffee/beer](https://www.buymeacoffee.com/vrenken)). Same also goes for the splendid folks behind [Serilog](https://github.com/serilog/serilog), [Seq](https://datalust.co/seq), [UniRx](https://github.com/neuecc/UniRx) and all other devs that spend their heart in making our work easier.
