@@ -74,7 +74,7 @@
                 var timeSpan = tuple.Item2;
                 var low = tuple.Item1 - timeSpan;
                 var high = moment + timeSpan;
-                AddExpressionPart($"'{low}' < @t < '{high}'");
+                AddExpressionPart($"Between(@t, '{low:yyyy-MM-dd HH:mm:ss.fffffff}', '{high:yyyy-MM-dd HH:mm:ss.fffffff}')");
             });
         }
 

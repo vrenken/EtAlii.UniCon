@@ -4,7 +4,9 @@ namespace EtAlii.UniCon.Editor
     using System.IO;
     using Serilog.Expressions;
     using UniRx;
-
+#if UNICON_LIFETIME_DEBUG            
+    using UnityEngine;
+#endif
     public class LogFilter
     {
         /// <summary>
@@ -41,6 +43,8 @@ namespace EtAlii.UniCon.Editor
 
         // ReSharper disable once NotAccessedField.Local
         private readonly CompositeDisposable _disposable = new ();
+
+        private readonly StaticMemberNameResolver _helperMethodNameResolver = new(typeof(ExpressionHelpers));
 
         private readonly TimeSpan _throttle = TimeSpan.FromMilliseconds(100);
 
@@ -83,7 +87,13 @@ namespace EtAlii.UniCon.Editor
                     return;
                 }
 
-                if (SerilogExpression.TryCompile(expressionToCompile, out var compiledExpression, out var error))
+
+                if (SerilogExpression.TryCompile(
+                        expression: expressionToCompile, 
+                        nameResolver: _helperMethodNameResolver, 
+                        result: out var compiledExpression, 
+                        error: out var error,
+                        formatProvider: null))
                 {
                     // `compiledExpression` is a function that can be executed against `LogEvent`s:
                     // `result` will contain a `LogEventPropertyValue`, or `null` if the result of evaluating the
