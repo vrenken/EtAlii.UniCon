@@ -21,6 +21,7 @@ public static partial class UniConStartup
             loggerConfiguration = loggerConfiguration
                 .Enrich.FromLogContext()
                 .Enrich.WithThreadId()
+                .Enrich.WithProperty(WellKnownProperty.LogSource, WellKnownPropertyValue.SerilogLogSource)
                 //.Enrich.WithThreadName()
                 .Enrich.WithMemoryUsage();
 

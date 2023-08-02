@@ -60,7 +60,7 @@ namespace EtAlii.UniCon
         private Serilog.ILogger ExpandLoggerForUnity(Serilog.ILogger logger, Object context)
         {
             logger = logger
-                .ForContext(WellKnownProperties.IsUnityLogEvent, true);
+                .ForContext(WellKnownProperty.LogSource, WellKnownPropertyValue.UnityLogSource);
 
             if (context != null)
             {
