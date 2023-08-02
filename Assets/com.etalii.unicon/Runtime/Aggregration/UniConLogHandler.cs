@@ -26,8 +26,8 @@ namespace EtAlii.UniCon
 
             var index = 0;
             var evaluator = new MatchEvaluator(m => m.Result($"\"{{{index++}}}\""));
-            
-            var unityLogFormat = Regex.Replace(format, "({{?)([A-Za-z_][A-Za-z0-9_]+)(}}?)", evaluator);
+
+            var unityLogFormat = Regex.Replace(format, "({{?)([A-Za-z_][A-Za-z0-9_]*)(}}?)", evaluator);
             _originalLogHandler.LogFormat(logType, context, unityLogFormat, args);
 
             var logger = ExpandLoggerForUnity(_logger, context);
