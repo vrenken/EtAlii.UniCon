@@ -12,7 +12,7 @@
         "EtAlii.UniCon.External.UniRx",
         "EtAlii.UniCon.External.RedMoon.ReactiveKit"
     ],
-    "includePlatforms": [ "Editor" ],
+    "includePlatforms": [],
     "excludePlatforms": [],
     "precompiledReferences": [
         "Bogus.dll",
