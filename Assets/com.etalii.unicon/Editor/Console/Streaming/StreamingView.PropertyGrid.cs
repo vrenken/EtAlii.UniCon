@@ -68,7 +68,7 @@ namespace EtAlii.UniCon.Editor
             var levelDropDownButton = new Button
             {
                 name = $"{eventIdHash:X8}-level-dropdown",
-                text = "Level (Information) ∨",
+                text = $"Level ({logEvent.Level}) ∨",
                 focusable = false,
                 style =
                 {
@@ -115,9 +115,6 @@ namespace EtAlii.UniCon.Editor
             //foreach (var property in logEvent.Properties.OrderBy(p => p.Key))
             foreach (var property in logEvent.Properties.OrderBy(p => p.Key))
             {
-                // Let's skip all internal properties.
-                if (property.Key.StartsWith(WellKnownProperties.Prefix)) continue;
-                
                 var row = new VisualElement
                 {
                     name = $"row-{property.Key}",
