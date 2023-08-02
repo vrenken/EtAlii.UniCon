@@ -41,9 +41,9 @@ namespace EtAlii.UniCon.Editor
             UserSettings.instance.Bind();
             ProjectSettings.instance.Bind();
 
+            _streaming.Bind(_filters, _expressions);
             _expressions.Bind(_streaming);
             _filters.Bind(_expressions, _streaming);
-            _streaming.Bind(_filters, _expressions);
         }
 
         public void Initialize() => _streaming.ConfigureStream();
