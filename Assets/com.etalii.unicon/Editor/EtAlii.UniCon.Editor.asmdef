@@ -16,7 +16,8 @@
     "excludePlatforms": [],
     "precompiledReferences": [
         "Serilog.dll",
-        "Serilog.Expressions.dll"
+        "Serilog.Expressions.dll",
+        "System.Threading.Tasks.Dataflow.dll"
     ],
     "defineConstraints": [],
     "versionDefines": []
