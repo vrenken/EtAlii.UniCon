@@ -1,5 +1,4 @@
-﻿#nullable enable
-using Serilog.Core;
+﻿using Serilog.Core;
 using Serilog.Events;
 using Serilog.Formatting;
 using System;
