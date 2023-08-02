@@ -20,7 +20,7 @@
             // In MonoBehaviours the Logger needs to be configured in the Awake method.
             _logger = Log
                 .ForContext<SerilogLogTicker>()
-                .ForContext("UniConSource", "Serilog");
+                .ForContext("Example Property", "Example value");
         }
 
         private void OnEnable()
