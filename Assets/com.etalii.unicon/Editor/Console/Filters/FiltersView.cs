@@ -12,8 +12,11 @@ namespace EtAlii.UniCon.Editor
         private readonly Button _filterButton;
         private readonly VisualElement _filterPanel;
         private readonly Foldout _customFiltersFoldout;
+
         private readonly Toggle _serilogSourceToggle;
         private readonly Toggle _unitySourceToggle;
+        private readonly Toggle _microsoftSourceToggle;
+        
         private readonly Toggle _verboseToggle;
         private readonly Toggle _informationToggle;
         private readonly Toggle _debugToggle;
@@ -33,6 +36,8 @@ namespace EtAlii.UniCon.Editor
             
             _serilogSourceToggle = root.Q<Toggle>("serilog-source-toggle");
             _unitySourceToggle = root.Q<Toggle>("unity-source-toggle");
+            _microsoftSourceToggle = root.Q<Toggle>("microsoft-source-toggle");
+            
             _verboseToggle = root.Q<Toggle>("verbose-toggle");
             _informationToggle = root.Q<Toggle>("information-toggle");
             _debugToggle = root.Q<Toggle>("debug-toggle");

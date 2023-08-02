@@ -31,7 +31,13 @@ namespace EtAlii.UniCon.Editor
         /// Set this value to true to show all log events that are gathered by the default Unity debug logs. 
         /// </summary>
         public readonly ReactiveProperty<bool> UseUnitySource = new();
-        [SerializeField] private bool useUnitySource;
+        [SerializeField] private bool useUnitySource = true;
+
+        /// <summary>
+        /// Set this value to true to show all log events that are gathered by the default Microsoft loggers. 
+        /// </summary>
+        public readonly ReactiveProperty<bool> UseMicrosoftSource = new();
+        [SerializeField] private bool useMicrosoftSource = true;
 
         /// <summary>
         /// Set this property to true to keep scrolling to any new log events received.
@@ -78,8 +84,11 @@ namespace EtAlii.UniCon.Editor
 #endif
             LogLevel.Value = logLevel;
             ShowExceptions.Value = showExceptions;
+            
             UseSerilogSource.Value = useSerilogSource;
             UseUnitySource.Value = useUnitySource;
+            UseMicrosoftSource.Value = useMicrosoftSource;
+            
             ScrollToTail.Value = scrollToTail;
             ShowFilterPanel.Value = showFilterPanel;
             FilterPanelWidth.Value = filterPanelWidth;
@@ -91,8 +100,11 @@ namespace EtAlii.UniCon.Editor
             
             LogLevel.Subscribe(value => logLevel = value ).AddTo(_disposable);
             ShowExceptions.Subscribe(value => showExceptions = value ).AddTo(_disposable);
+            
             UseSerilogSource.Subscribe(value => useSerilogSource = value ).AddTo(_disposable);
             UseUnitySource.Subscribe(value => useUnitySource = value ).AddTo(_disposable);
+            UseMicrosoftSource.Subscribe(value => useMicrosoftSource = value ).AddTo(_disposable);
+            
             ScrollToTail.Subscribe(value => scrollToTail = value ).AddTo(_disposable);
             ShowFilterPanel.Subscribe(value => showFilterPanel = value ).AddTo(_disposable);
             FilterPanelWidth.Subscribe(value => filterPanelWidth = value ).AddTo(_disposable);
@@ -111,6 +123,7 @@ namespace EtAlii.UniCon.Editor
                     ShowExceptions.Select(_ => true),
                     UseSerilogSource.Select(_ => true),
                     UseUnitySource.Select(_ => true),
+                    UseMicrosoftSource.Select(_ => true),
                     ScrollToTail.Select(_ => true),
                     ShowFilterPanel.Select(_ => true),
                     FilterPanelWidth.Select(_ => true),

@@ -25,6 +25,7 @@
                 <ui:Foldout text=" Log source" name="source-foldout" style="width: 100%;">
                     <ui:Toggle focusable="false" text="Serilog" value="true" name="serilog-source-toggle" tooltip="Toggle to show all log events that are gathered by Serilog." />
                     <ui:Toggle focusable="false" text="Unity" value="true" name="unity-source-toggle" tooltip="Toggle to show all log events that are gathered by the default Unity debug logs." />
+                    <ui:Toggle focusable="false" text="Microsoft" value="true" name="microsoft-source-toggle" tooltip="Toggle to show all log events that are gathered by the default Microsoft loggers." />
                 </ui:Foldout>
                 <ui:Foldout text="Log levels" name="log-level-foldout" style="width: 100%;">
                     <ui:Toggle focusable="false" text="&lt;color=#5A5A5A&gt;\u25CF&lt;/color&gt; Verbose" name="verbose-toggle" value="true" />
