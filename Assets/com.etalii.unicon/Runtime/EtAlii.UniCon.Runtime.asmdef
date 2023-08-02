@@ -13,7 +13,8 @@
     "precompiledReferences": [
         "Serilog.dll",
         "Serilog.Enrichers.Thread.dll",
-        "Serilog.Enrichers.Memory.dll"
+        "Serilog.Enrichers.Memory.dll",
+        "System.Threading.Tasks.Dataflow.dll"
     ],
     "autoReferenced": true,
     "defineConstraints": [],

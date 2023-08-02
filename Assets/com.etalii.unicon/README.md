@@ -18,6 +18,7 @@
   - [Serilog.Enrichers.Thread](https://github.com/serilog/serilog-enrichers-thread): 3.2.0 (Apache-2.0)
   - [com.serilog.sinks.unity3d](https://github.com/KuraiAndras/Serilog.Sinks.Unity3D): 3.0.0 (MIT)
   - [system.collections.immutable](https://www.nuget.org/packages/System.Collections.Immutable/): 7.0.0 (MIT)
+  - [system.threading.tasks.dataflow](https://www.nuget.org/packages/System.Threading.Tasks.Dataflow): 7.0.0 (MIT)
   - [io.crazyjackel.redmoon-reactivekit](https://openupm.com/packages/io.crazyjackel.redmoon-reactivekit/): 1.0.7 (MIT)
   - [com.neuecc.unirx](https://github.com/neuecc/UniRx): 7.1.0 (MIT)
   - [Bogus](this): 34.0.12 (MIT) 
