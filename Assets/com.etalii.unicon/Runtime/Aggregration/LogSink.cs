@@ -1,7 +1,6 @@
 ﻿namespace EtAlii.UniCon
 {
     using System;
-    using System.Collections.Concurrent;
     using Serilog.Events;
     using UniRx;
 
@@ -9,51 +8,31 @@
     {
         public TimeSpan Window = TimeSpan.FromHours(1);
         public static readonly LogSink Instance = new();
-        private readonly ConcurrentQueue<LogEvent> _logEvents = new();
-        private readonly Subject<LogEvent> _subject = new();
+
+        private ReplaySubject<LogEvent> _subject;
 
         public int EventCount { get; private set; }
-        
-        private LogSink() { }
+
+        private LogSink()
+        {
+            Clear();
+        }
 
         public void Clear()
         {
-            _logEvents.Clear();
+            _subject = new ReplaySubject<LogEvent>(Window);
             EventCount = 0;
         }
         
         public void Add(LogEvent logEvent)
         {
-            _logEvents.Enqueue(logEvent);
             EventCount += 1;
             _subject.OnNext(logEvent);
-            do
-            {
-                if (!_logEvents.TryPeek(out var peek))
-                {
-                    break;
-                }
-
-                if (peek.Timestamp < DateTimeOffset.Now - Window)
-                {
-                    if (!_logEvents.TryDequeue(out _))
-                    {
-                        break;
-                    }
-                    EventCount -= 1;
-                }
-                else
-                {
-                    break;
-                }
-            } while (true);
         }
 
         public IObservable<LogEvent> Observe()
         {
-             return _logEvents
-                 .ToObservable()
-                .Concat(_subject);
+            return _subject;
         }
     }
 }

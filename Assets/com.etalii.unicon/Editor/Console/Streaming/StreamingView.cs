@@ -53,7 +53,6 @@ namespace EtAlii.UniCon.Editor
         public void Bind(StreamingViewModel viewModel, ExpressionViewModel expressionViewModel, CompositeDisposable disposable)
         {
             _viewModel = viewModel;
-            viewModel.StreamChanged += OnStreamChanged;
 
             _expressionViewModel = expressionViewModel;
             _tailButton
@@ -66,14 +65,26 @@ namespace EtAlii.UniCon.Editor
                     ScrollWhenNeeded();
                 })
                 .AddTo(disposable);
+            _viewModel.Stream
+                .Subscribe(stream =>
+                {
+                    _streamSubscription?.Dispose();
 
-            
-            OnStreamChanged();
+                    _items.Clear();
+                    _listView.Rebuild();
+
+                    UpdateMetrics();
+                    
+                    _streamSubscription = stream
+                        .ObserveOnMainThread()
+                        //.SubscribeOnMainThread()
+                        .Subscribe(onNext: Add);
+                })
+                .AddTo(disposable);
         }
 
         public void Unbind()
         {
-            _viewModel.StreamChanged -= OnStreamChanged;
         }
 
         private void BindFoldout(Foldout foldout, LogEvent logEvent)
@@ -84,21 +95,6 @@ namespace EtAlii.UniCon.Editor
             foldout.contentContainer.Clear();
             foldout.contentContainer.Add(BuildPropertyGrid(logEvent));
             foldout.userData = logEvent;
-        }
-
-        private void OnStreamChanged()
-        {
-            if (_streamSubscription != null)
-            {
-                _streamSubscription.Dispose();
-                _streamSubscription = null;
-            }
-
-            _items.Clear();
-            _listView.Rebuild();
-
-            _streamSubscription = _viewModel.Stream
-                .Subscribe(onNext: Add);
         }
 
         private void Add(LogEvent logEvent)
@@ -152,6 +148,5 @@ namespace EtAlii.UniCon.Editor
             UserSettings.instance.ScrollToTail.Value = false;
             _tailButton.UpdateToggleButton(UserSettings.instance.ScrollToTail.Value);
         }
-
     }    
 }
