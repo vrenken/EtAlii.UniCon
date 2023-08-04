@@ -4,6 +4,27 @@
   <img src="https://img.shields.io/npm/v/com.etalii.unicon?label=openupm&amp;registry_uri=https://package.openupm.com" />
 </a>
 
+## Listview bug reproduce actions.
+- Download the _bug/listview-stackoverflowexception_ branch.
+- Open up the project in Unity. The bug is reproducible using version 2022.3.4f1. 
+- Attach to Unity with either Visual Studio or Rider. The bug has been replicated using Jebrains Rider v2023.2.
+- Open up the _Combined tests.unity scene_, located in _/Assets/com.etalii.unicon/Tests_. 
+- open up the UniCon log console CTRL+SHIFT+C or Main menu -> Window -> General -> UniCon console.
+- Enter play mode.
+- See the log entries show up in the UniCon Editor Window. The top right bar indicates roughly how much 
+log entries are tracked.
+  <img src="Documentation~/Bug Screenshot 1.png" width=700>
+If no interaction with Unity is done, the item tracking can easily consume up to more than 800K log entries.
+- Start interacting with the the UniCon log list view, at around 20K entries, for example by collapsing and expanding items, or starting/stopping the tail tracking (button in top-left).
+- After a while Visual Studio or Rider will break with a StackOverflowException, which seems to happen in _DynamicHeightVirtualizationController<ReusableListViewitem>.GetContentHeightForIndex()_.
+As can be seen in the below screenshot the _GetContentHeightForIndex_ method keeps calling itself over and over.
+  <img src="Documentation~/Bug Screenshot 2.png" width=700>
+
+
+
+
+<hr/>
+
 ## Features
 - Build using the great [Serilog](https://github.com/serilog/serilog) structured logging framework.
 - Compatible with normal Unity debug log messages.
