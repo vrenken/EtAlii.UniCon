@@ -82,12 +82,15 @@ namespace EtAlii.UniCon.Editor
                 .Subscribe(_ =>
                 {
                     expressionViewModel.ExpressionText.Value = string.Empty;
-                    var filter = CustomFilters.Single(f => f.IsEditing.Value);
-                    filter.IsEditing.Value = false;
-                    
-                    if (!UserSettings.instance.ShowFilterPanel.Value)
+                    var filter = CustomFilters.SingleOrDefault(f => f.IsEditing.Value);
+                    if (filter != null)
                     {
-                        ToggleFilterPanel.Execute(new ClickEvent());
+                        filter.IsEditing.Value = false;
+                    
+                        if (!UserSettings.instance.ShowFilterPanel.Value)
+                        {
+                            ToggleFilterPanel.Execute(new ClickEvent());
+                        }
                     }
                 });
 
