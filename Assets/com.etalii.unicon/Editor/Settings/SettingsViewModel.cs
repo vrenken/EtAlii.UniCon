@@ -14,10 +14,6 @@ namespace EtAlii.UniCon.Editor
         }
         private static SettingsViewModel _instance;
         
-        // public SettingsViewModel()
-        // {
-        // }
-
         public void Init()
         {
             
