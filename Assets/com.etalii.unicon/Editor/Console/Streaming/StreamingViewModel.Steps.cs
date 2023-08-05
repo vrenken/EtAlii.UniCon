@@ -2,23 +2,24 @@ namespace EtAlii.UniCon.Editor
 {
     using System;
     using System.Linq;
+    using EtAlii.Unicon;
     using Serilog.Events;
 
     public partial class StreamingViewModel
     {
-        private PipelineItem FilterBySource(PipelineItem item)
+        private LogEntry FilterBySource(LogEntry entry)
         {
-            var logEvent = item.LogEvent;
+            var logEvent = entry.LogEvent;
             if (!logEvent.Properties.TryGetValue(WellKnownProperty.LogSource, out var propertyValue))
             {
-                item.LogEvent = null;
-                return item;
+                entry.LogEvent = null;
+                return entry;
             }
 
             if (propertyValue is not ScalarValue { Value: string logSource })
             {
-                item.LogEvent = null;
-                return item;
+                entry.LogEvent = null;
+                return entry;
             }
 
             var isValid = logSource switch
@@ -30,27 +31,27 @@ namespace EtAlii.UniCon.Editor
             };
             if (!isValid)
             {
-                item.LogEvent = null;
+                entry.LogEvent = null;
             }
 
-            return item;
+            return entry;
         }
 
-        private PipelineItem FilterByLogLevel(PipelineItem item)
+        private LogEntry FilterByLogLevel(LogEntry entry)
         {
-            if (item.LogEvent == null) return item;
+            if (entry.LogEvent == null) return entry;
 
-            var logEvent = item.LogEvent;
+            var logEvent = entry.LogEvent;
 
             if (UserSettings.instance.LogLevel.Value == LogLevel.None &&
                 !UserSettings.instance.ShowExceptions.Value)
             {
-                return item;
+                return entry;
             }
 
             if (UserSettings.instance.ShowExceptions.Value && logEvent.Exception != null)
             {
-                return item;
+                return entry;
             }
 
             var isValid = logEvent.Level switch
@@ -65,38 +66,38 @@ namespace EtAlii.UniCon.Editor
             };
             if (!isValid)
             {
-                item.LogEvent = null;
+                entry.LogEvent = null;
             }
 
-            return item;
+            return entry;
         }
 
-        private PipelineItem FilterByCustomFilter(PipelineItem item)
+        private LogEntry FilterByCustomFilter(LogEntry entry)
         {
-            if (item.LogEvent == null) return item;
+            if (entry.LogEvent == null) return entry;
 
-            var logEvent = item.LogEvent;
+            var logEvent = entry.LogEvent;
 
             var filters = _filtersViewModel.CustomFilters
                 .Where(f => f.IsActive.Value && !f.IsEditing.Value)
                 .ToArray();
-            if (!filters.Any()) return item;
+            if (!filters.Any()) return entry;
             var isMatchedByFilter = filters
                 .Select(f => LogFilterIsValid(f, logEvent))
                 .Any(r => r);
             if (!isMatchedByFilter)
             {
-                item.LogEvent = null;
+                entry.LogEvent = null;
             }
 
-            return item;
+            return entry;
         }
 
-        private PipelineItem FilterByExpression(PipelineItem item)
+        private LogEntry FilterByExpression(LogEntry entry)
         {
-            if (item.LogEvent == null) return item;
+            if (entry.LogEvent == null) return entry;
 
-            var logEvent = item.LogEvent;
+            var logEvent = entry.LogEvent;
 
             if (_expressionViewModel.ExpressionFilter.CompiledExpression.Value != null && 
                 _expressionViewModel.ExpressionFilter.IsActive.Value)
@@ -104,18 +105,18 @@ namespace EtAlii.UniCon.Editor
                 var isValid = LogFilterIsValid(_expressionViewModel.ExpressionFilter, logEvent);
                 if (!isValid)
                 {
-                    item.LogEvent = null;
+                    entry.LogEvent = null;
                 }
             }
 
-            return item;
+            return entry;
         }
 
-        private void OutputLogEvent(PipelineItem item)
+        private void OutputLogEvent(LogEntry entry)
         {
-            if (item.LogEvent != null)
+            if (entry.LogEvent != null)
             {
-                _subject.OnNext(item.LogEvent);
+                _subject.OnNext(entry.LogEvent);
             }
         }
     }

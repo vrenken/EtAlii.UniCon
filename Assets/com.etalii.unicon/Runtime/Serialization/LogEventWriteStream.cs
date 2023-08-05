@@ -18,6 +18,8 @@ namespace EtAlii.UniCon
 
         public static readonly object LockObject = new object();
 
+        private long _index;
+        
         public LogEventWriteStream()
         {
             _indexWriteStream = new FileStream($"{LogFileNameWithoutExtension}.index", FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
@@ -34,7 +36,8 @@ namespace EtAlii.UniCon
             Monitor.Enter(LockObject);
             try
             {
-                LogEventSerialization.Serialize(logEvent, _dataWriter);
+                var entry = new LogEntry { Index = _index++, LogEvent = logEvent };
+                LogEntrySerialization.Serialize(entry, _dataWriter);
                 _dataWriter.Flush();
                 _dataWriteStream.Flush();
                 _indexWriter.Write(_dataWriteStream.Position);

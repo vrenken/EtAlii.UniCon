@@ -4,13 +4,14 @@ namespace EtAlii.UniCon.Editor
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Threading.Tasks.Dataflow;
+    using EtAlii.Unicon;
     using Serilog.Events;
     using UniRx;
     using UnityEngine.UIElements;
 
     public partial class StreamingViewModel
     {
-        public ReactiveProperty<IObservable<LogEvent>> Stream = new();
+        public readonly ReactiveProperty<IObservable<LogEvent>> Stream = new();
         private ReplaySubject<LogEvent> _subject;
         
         public readonly ReactiveCommand<ClickEvent> ToggleScrollToTail = new();
@@ -49,15 +50,15 @@ namespace EtAlii.UniCon.Editor
             _subject = new ReplaySubject<LogEvent>();
 
             var index = 0;
-            var input = new BufferBlock<PipelineItem>(blockOptions);
+            var input = new BufferBlock<LogEntry>(blockOptions);
 
-            var filterBySource = new TransformBlock<PipelineItem, PipelineItem>(FilterBySource, blockOptions);
-            var filterByLogLevel = new TransformBlock<PipelineItem, PipelineItem>(FilterByLogLevel, blockOptions);
-            var filterByCustomFilter = new TransformBlock<PipelineItem, PipelineItem>(FilterByCustomFilter, blockOptions);
-            var filterByExpression = new TransformBlock<PipelineItem, PipelineItem>(FilterByExpression, blockOptions);
-            var sortEvents = CreateRestoreOrderBlock<PipelineItem>(item => item.Index);
+            var filterBySource = new TransformBlock<LogEntry, LogEntry>(FilterBySource, blockOptions);
+            var filterByLogLevel = new TransformBlock<LogEntry, LogEntry>(FilterByLogLevel, blockOptions);
+            var filterByCustomFilter = new TransformBlock<LogEntry, LogEntry>(FilterByCustomFilter, blockOptions);
+            var filterByExpression = new TransformBlock<LogEntry, LogEntry>(FilterByExpression, blockOptions);
+            var sortEvents = CreateRestoreOrderBlock<LogEntry>(item => item.Index);
             
-            var output = new ActionBlock<PipelineItem>(OutputLogEvent);
+            var output = new ActionBlock<LogEntry>(OutputLogEvent);
 
             _pipeline = new CompositeDisposable
             (
@@ -70,11 +71,11 @@ namespace EtAlii.UniCon.Editor
             );
             
             _subscription = LogSink.Instance
-                .Observe()
+                .ObserveForward(0)
                 //.SubscribeOnMainThread()
                 .ObserveOn(Scheduler.ThreadPool)
                 .SubscribeOn(Scheduler.ThreadPool)
-                .Subscribe(logEvent => input.Post(new PipelineItem { Index = index++, LogEvent = logEvent }));
+                .Subscribe(logEntry => input.Post(logEntry));
             
             Stream.Value = _subject.AsObservable();
         }

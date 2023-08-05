@@ -4,8 +4,7 @@ namespace EtAlii.UniCon
     using System.IO;
     using System.Threading;
     using EtAlii.Unicon;
-    using Serilog.Events;
-
+    
     public sealed class LogEventReadStream : IDisposable
     {
         private readonly FileStream _dataReadStream;
@@ -16,7 +15,7 @@ namespace EtAlii.UniCon
 
         public bool HasMoreData => _dataReadStream.Position < _dataReadStream.Length;// Interlocked.Read(ref LogEventWriteStream.LogEventCounter);
 
-        public LogEventReadStream()
+        public LogEventReadStream(long position)
         {
             _indexReadStream = new FileStream($"{LogEventWriteStream.LogFileNameWithoutExtension}.index", FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             _indexReadStream.Seek(0, SeekOrigin.Begin);
@@ -27,13 +26,12 @@ namespace EtAlii.UniCon
             _dataReader = new BinaryReader(_dataReadStream);
         }
         
-        public LogEvent ReadNext()
+        public LogEntry ReadNext()
         {
             Monitor.Enter(LogEventWriteStream.LockObject);
             try
             {
-                var logEvent = LogEventSerialization.Deserialize(_dataReader);
-                return logEvent;
+                return LogEntrySerialization.Deserialize(_dataReader);
             }
             finally
             {
@@ -41,7 +39,7 @@ namespace EtAlii.UniCon
             }
         }
 
-        public LogEvent ReadPrevious()
+        public LogEntry ReadPrevious()
         {
             Monitor.Enter(LogEventWriteStream.LockObject);
             try
@@ -49,9 +47,9 @@ namespace EtAlii.UniCon
                 _indexReadStream.Seek(sizeof(long), SeekOrigin.Current);
                 var readPosition = _indexReader.ReadInt64();
                 _dataReadStream.Seek(readPosition, SeekOrigin.Begin);
-                var logEvent = LogEventSerialization.Deserialize(_dataReader);
+                var logEntry = LogEntrySerialization.Deserialize(_dataReader);
                 _dataReadStream.Seek(readPosition, SeekOrigin.Begin);
-                return logEvent;
+                return logEntry;
             }
             finally
             {

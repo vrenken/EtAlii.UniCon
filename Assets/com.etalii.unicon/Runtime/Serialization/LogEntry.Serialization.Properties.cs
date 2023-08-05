@@ -6,7 +6,7 @@ namespace EtAlii.Unicon
     using System.IO;
     using Serilog.Events;
 
-    public static partial class LogEventSerialization
+    public static partial class LogEntrySerialization
     {
         
         private static void SerializeProperties(IReadOnlyDictionary<string, LogEventPropertyValue> logEventProperties, BinaryWriter writer)
