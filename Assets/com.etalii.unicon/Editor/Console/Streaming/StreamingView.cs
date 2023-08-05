@@ -2,6 +2,8 @@ namespace EtAlii.UniCon.Editor
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
+    using EtAlii.Unicon;
     using RedMoon.ReactiveKit;
     using Serilog.Events;
     using UniRx;
@@ -14,7 +16,7 @@ namespace EtAlii.UniCon.Editor
         private readonly Font _consoleFont = Resources.Load<Font>("Fonts/FiraCode-Regular");
 
         private readonly ListView _listView;
-        private readonly List<LogEvent> _items = new ();
+        private readonly LinkedList<LogEntry> _items = new ();
         private readonly ScrollView _listViewScrollView;
         private readonly Button _metricsButton;
         private IDisposable _streamSubscription;
@@ -36,7 +38,7 @@ namespace EtAlii.UniCon.Editor
             _listView = root.Q<ListView>();
             _listViewScrollView = _listView.Q<ScrollView>();
             _listViewScrollView.verticalScroller.valueChanged += OnScrolledVertically;
-            _listView.itemsSource = _items;
+            _listView.itemsSource = new LinkedListWrapper(_items);
             _listView.makeItem = () => new Foldout
             {
                 style =
@@ -47,7 +49,7 @@ namespace EtAlii.UniCon.Editor
                 },
                 value = false
             };
-            _listView.bindItem = (e, i) => BindFoldout((Foldout)e, _items[i]);
+            _listView.bindItem = (e, i) => BindFoldout((Foldout)e, _items.Skip(i).First().LogEvent);
         }
         
         public void Bind(StreamingViewModel viewModel, ExpressionViewModel expressionViewModel, CompositeDisposable disposable)
@@ -97,9 +99,9 @@ namespace EtAlii.UniCon.Editor
             foldout.userData = logEvent;
         }
 
-        private void Add(LogEvent logEvent)
+        private void Add(LogEntry logEntry)
         {
-            _items.Add(logEvent);
+            _items.AddLast(logEntry);
             _listView.RefreshItems();
 
             UpdateMetrics();

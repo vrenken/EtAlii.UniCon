@@ -116,7 +116,7 @@ namespace EtAlii.UniCon.Editor
         {
             if (entry.LogEvent != null)
             {
-                _subject.OnNext(entry.LogEvent);
+                _subject.OnNext(entry);
             }
         }
     }

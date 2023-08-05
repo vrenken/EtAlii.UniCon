@@ -11,8 +11,8 @@ namespace EtAlii.UniCon.Editor
 
     public partial class StreamingViewModel
     {
-        public readonly ReactiveProperty<IObservable<LogEvent>> Stream = new();
-        private ReplaySubject<LogEvent> _subject;
+        public readonly ReactiveProperty<IObservable<LogEntry>> Stream = new();
+        private ReplaySubject<LogEntry> _subject;
         
         public readonly ReactiveCommand<ClickEvent> ToggleScrollToTail = new();
         
@@ -47,9 +47,8 @@ namespace EtAlii.UniCon.Editor
             };
             var linkOptions = new DataflowLinkOptions { PropagateCompletion = false };
 
-            _subject = new ReplaySubject<LogEvent>();
+            _subject = new ReplaySubject<LogEntry>();
 
-            var index = 0;
             var input = new BufferBlock<LogEntry>(blockOptions);
 
             var filterBySource = new TransformBlock<LogEntry, LogEntry>(FilterBySource, blockOptions);
