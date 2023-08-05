@@ -6,11 +6,11 @@ namespace EtAlii.UniCon.Editor
     using System.Linq;
     using EtAlii.Unicon;
 
-    public class LinkedListWrapper : IList
+    public class LogEntryLinkedListWrapper : IList
     {
         private readonly LinkedList<LogEntry> _linkedList;
 
-        public LinkedListWrapper(LinkedList<LogEntry> linkedList)
+        public LogEntryLinkedListWrapper(LinkedList<LogEntry> linkedList)
         {
             _linkedList = linkedList;
         }

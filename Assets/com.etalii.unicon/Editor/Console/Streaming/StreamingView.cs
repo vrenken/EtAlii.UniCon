@@ -38,7 +38,7 @@ namespace EtAlii.UniCon.Editor
             _listView = root.Q<ListView>();
             _listViewScrollView = _listView.Q<ScrollView>();
             _listViewScrollView.verticalScroller.valueChanged += OnScrolledVertically;
-            _listView.itemsSource = new LinkedListWrapper(_items);
+            _listView.itemsSource = new LogEntryLinkedListWrapper(_items);
             _listView.makeItem = () => new Foldout
             {
                 style =
