@@ -11,7 +11,7 @@ namespace EtAlii.UniCon.Editor
 
     internal static class MarkerMessageTemplateRenderer
     {
-        private const string MarkerTag = "<mark=#11ff1122>";
+        private static readonly string MarkerTag = $"<mark={WellKnownColor.MarkerTagHexColor}>";
         private static readonly JsonValueFormatter JsonValueFormatter = new("$type");
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

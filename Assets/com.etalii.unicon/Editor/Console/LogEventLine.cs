@@ -9,12 +9,12 @@
         {
             var color = logEvent.Level switch
             {
-                LogEventLevel.Verbose => "<color=#5A5A5A>",
-                LogEventLevel.Information => "<color=white>",
-                LogEventLevel.Debug => "<color=#808080>",
-                LogEventLevel.Warning => "<color=yellow>",
-                LogEventLevel.Error => "<color=red>",
-                LogEventLevel.Fatal => "<color=red>",
+                LogEventLevel.Verbose => $"<color={WellKnownColor.LogIconVerboseHexColor}>",
+                LogEventLevel.Information => $"<color={WellKnownColor.LogIconInformationHexColor}>",
+                LogEventLevel.Debug => $"<color={WellKnownColor.LogIconDebugHexColor}>",
+                LogEventLevel.Warning => $"<color={WellKnownColor.LogIconWarningHexColor}>",
+                LogEventLevel.Error => $"<color={WellKnownColor.LogIconErrorHexColor}>",
+                LogEventLevel.Fatal => $"<color={WellKnownColor.LogIconFatalHexColor}>",
                 _ => throw new ArgumentOutOfRangeException(nameof(logEvent.Level))
             };
             return $"{logEvent.Timestamp:yyyy-MM-dd HH:mm:ss.fffffff} {color}\u25CF</color> " + MarkerMessageTemplateRenderer.Render(logEvent.MessageTemplate, logEvent.Properties);
