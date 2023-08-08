@@ -25,9 +25,13 @@ namespace EtAlii.UniCon
             }
 
             var index = 0;
-            var evaluator = new MatchEvaluator(m => m.Result($"\"{{{index++}}}\""));
+            var evaluator = new MatchEvaluator(m => m.Result($"<b><color={WellKnownColor.UnityMarkerTagColor}>{m.Value.TrimStart('{').TrimEnd('}')} (=\"{{{index++}}}\")</color></b>"));
 
             var unityLogFormat = Regex.Replace(format, "({{?)([A-Za-z_][A-Za-z0-9_]*)(}}?)", evaluator);
+            if (context != null && !string.IsNullOrWhiteSpace(context.name))
+            {
+                unityLogFormat = $"<b><color={WellKnownColor.UnityHeaderHexColor}>[{context.name}]</color></b> {unityLogFormat}";
+            }
             _originalLogHandler.LogFormat(logType, context, unityLogFormat, args);
 
             var logger = ExpandLoggerForUnity(_logger, context);
