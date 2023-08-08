@@ -58,7 +58,7 @@
 
             _viewModel = viewModel;
 
-            _streaming.Bind(viewModel.Streaming, viewModel.Expressions, _disposables);
+            _streaming.Bind(viewModel.Streaming, viewModel.Expressions, viewModel.DataStreamer, _disposables);
             _filters.Bind(viewModel.Filters , _disposables);
             _expression.Bind(viewModel.Expressions, viewModel.Filters, _disposables);
         }

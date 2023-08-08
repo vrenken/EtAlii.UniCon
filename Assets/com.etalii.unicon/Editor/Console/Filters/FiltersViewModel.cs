@@ -17,11 +17,15 @@ namespace EtAlii.UniCon.Editor
         public readonly ReactiveCommand<LogFilter> DeleteFilter = new();
         public readonly ReactiveCommand<LogFilter> EditFilter = new();
         
-        private StreamingViewModel _streamingViewModel;
+        private readonly DataWindowStreamer _dataWindowStreamer;
 
-        public void Bind(ExpressionViewModel expressionViewModel, StreamingViewModel streamingViewModel)
+        public FiltersViewModel(DataWindowStreamer dataWindowStreamer)
         {
-            _streamingViewModel = streamingViewModel;
+            _dataWindowStreamer = dataWindowStreamer;
+        }
+        
+        public void Bind(ExpressionViewModel expressionViewModel)
+        {
             ToggleFilterPanel
                 .Subscribe(_ =>
                 {
@@ -29,10 +33,10 @@ namespace EtAlii.UniCon.Editor
                     UserSettings.instance.FilterPanelWidth.Value = UserSettings.instance.FilterPanelWidth.Value;
                 });
 
-            UserSettings.instance.UseSerilogSource.Subscribe(_ => streamingViewModel.ConfigureStream());
-            UserSettings.instance.UseUnitySource.Subscribe(_ => streamingViewModel.ConfigureStream());
-            UserSettings.instance.LogLevel.Subscribe(_ => streamingViewModel.ConfigureStream());
-            UserSettings.instance.ShowExceptions.Subscribe(_ => streamingViewModel.ConfigureStream());
+            UserSettings.instance.UseSerilogSource.Subscribe(_ => _dataWindowStreamer.Configure());
+            UserSettings.instance.UseUnitySource.Subscribe(_ => _dataWindowStreamer.Configure());
+            UserSettings.instance.LogLevel.Subscribe(_ => _dataWindowStreamer.Configure());
+            UserSettings.instance.ShowExceptions.Subscribe(_ => _dataWindowStreamer.Configure());
 
             SaveEditFilter
                 .Subscribe(_ =>
@@ -167,7 +171,7 @@ namespace EtAlii.UniCon.Editor
         private void OnCustomFiltersChanged()
         {
             UserSettings.instance.CustomFilters = CustomFilters.ToArray();
-            _streamingViewModel.ConfigureStream();
+            _dataWindowStreamer.Configure();
         }
     }    
 }
