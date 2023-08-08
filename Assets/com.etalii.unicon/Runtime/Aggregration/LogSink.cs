@@ -58,7 +58,7 @@
 
                 do
                 {
-                    while (readStream.HasMoreData && !_forwardCancellationTokenSource.IsCancellationRequested)
+                    while (readStream.HasMoreDataAhead && !_forwardCancellationTokenSource.IsCancellationRequested)
                     {
                         var entry = readStream.ReadNext();
                         subject.OnNext(entry);
@@ -90,14 +90,11 @@
 
                 do
                 {
-                    while (readStream.HasMoreData && !_backwardCancellationTokenSource.IsCancellationRequested)
-                    {
-                        var entry = readStream.ReadPrevious();
-                        subject.OnNext(entry);
-                    }
+                    var entry = readStream.ReadPrevious();
+                    subject.OnNext(entry);
 
-                    Task.Delay(_interval).Wait();
-                } while (!_backwardCancellationTokenSource.IsCancellationRequested);
+                    Task.Delay(_interval / 10).Wait();
+                } while (readStream.HasMoreDataBehind && !_backwardCancellationTokenSource.IsCancellationRequested);
 
             }, _backwardCancellationTokenSource.Token);
             return subject;

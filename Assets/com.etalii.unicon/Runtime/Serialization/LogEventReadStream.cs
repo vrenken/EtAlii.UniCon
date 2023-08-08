@@ -13,7 +13,8 @@ namespace EtAlii.UniCon
         private readonly FileStream _indexReadStream;
         private readonly BinaryReader _indexReader;
 
-        public bool HasMoreData => _dataReadStream.Position < _dataReadStream.Length;// Interlocked.Read(ref LogEventWriteStream.LogEventCounter);
+        public bool HasMoreDataAhead => _dataReadStream.Position < _dataReadStream.Length;// Interlocked.Read(ref LogEventWriteStream.LogEventCounter);
+        public bool HasMoreDataBehind => _dataReadStream.Position > 0;// Interlocked.Read(ref LogEventWriteStream.LogEventCounter);
 
         public LogEventReadStream(long position)
         {
