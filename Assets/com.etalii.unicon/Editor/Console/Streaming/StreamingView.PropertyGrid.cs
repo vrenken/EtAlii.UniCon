@@ -232,10 +232,7 @@ namespace EtAlii.UniCon.Editor
                 };
                 grid.contentContainer.Add(exceptionLabel);
             }
-
             return grid;
         }
-
-
     }
 }
