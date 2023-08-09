@@ -16,6 +16,7 @@ namespace EtAlii.UniCon
             _logger = logger;
         }
         
+        [HideInCallstack]
         public void LogFormat(LogType logType, Object context, string format, params object[] args)
         {
             if (format == "{0}" && args.Length == 1)
@@ -48,6 +49,7 @@ namespace EtAlii.UniCon
             }
         }
 
+        [HideInCallstack]
         public void LogException(Exception exception, Object context)
         {
             _originalLogHandler.LogException(exception, context);
