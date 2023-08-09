@@ -9,6 +9,12 @@ namespace EtAlii.UniCon
     {
         private readonly ILogHandler _originalLogHandler;
         private readonly Serilog.ILogger _logger;
+
+        private readonly Regex _namedMatching = new (@"([A-Za-z_][A-Za-z0-9_]*)=\{([0-9]*)\}", RegexOptions.Compiled);
+        private readonly Regex _interpolatedMatching = new (@"\{[A-Za-z_][A-Za-z0-9_]*\}", RegexOptions.Compiled);
+        private readonly MatchEvaluator _namedSerilogMatchEvaluator = m => m.Result($"{{{m.Groups[1]}}}");
+        private readonly MatchEvaluator _namedUnityMatchEvaluator = m => m.Result($"<b><color={WellKnownColor.UnityMarkerTagColor}>{m.Value}</color></b>");
+
         
         public UniConLogHandler(ILogHandler originalLogHandler, Serilog.ILogger logger)
         {
@@ -24,10 +30,20 @@ namespace EtAlii.UniCon
                 args = Array.Empty<object>();
             }
 
-            var index = 0;
-            var evaluator = new MatchEvaluator(m => m.Result($"<b><color={WellKnownColor.UnityMarkerTagColor}>{m.Value.TrimStart('{').TrimEnd('}')} (=\"{{{index++}}}\")</color></b>"));
-
-            var unityLogFormat = Regex.Replace(format, "({{?)([A-Za-z_][A-Za-z0-9_]*)(}}?)", evaluator);
+            var unityLogFormat = format;
+            var namedMatches = _namedMatching.Matches(unityLogFormat);
+            if (namedMatches.Count > 0)
+            {
+                format = _namedMatching.Replace(format, _namedSerilogMatchEvaluator);
+                unityLogFormat = _namedMatching.Replace(unityLogFormat, _namedUnityMatchEvaluator);
+            }
+            else
+            {
+                var index = 0;
+                var unityEvaluator = new MatchEvaluator(m => m.Result($"<b><color={WellKnownColor.UnityMarkerTagColor}>{m.Value.TrimStart('{').TrimEnd('}')} (=\"{{{index++}}}\")</color></b>"));
+                unityLogFormat = _interpolatedMatching.Replace(unityLogFormat, unityEvaluator);
+            }
+            
             if (context != null && !string.IsNullOrWhiteSpace(context.name))
             {
                 unityLogFormat = $"<b><color={WellKnownColor.UnityHeaderHexColor}>[{context.name}]</color></b> {unityLogFormat}";

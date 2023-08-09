@@ -50,6 +50,9 @@
                             leftHandController.DoLogEntry();
                         }
                         break;
+                    case 3:
+                        Debug.LogFormat(LogType.Log, LogOption.None, this, "This is my special Log Entry Key={0}, Value={1}", Environment.TickCount, DateTime.Now);
+                        break;
                     default:
                         UnityLogEntryWriter.WriteEntry(this);
                         break;
