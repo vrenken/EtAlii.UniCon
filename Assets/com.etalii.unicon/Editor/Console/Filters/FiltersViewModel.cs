@@ -17,11 +17,11 @@ namespace EtAlii.UniCon.Editor
         public readonly ReactiveCommand<LogFilter> DeleteFilter = new();
         public readonly ReactiveCommand<LogFilter> EditFilter = new();
         
-        private readonly DataWindowStreamer _dataWindowStreamer;
+        private readonly DataStreamer _dataStreamer;
 
-        public FiltersViewModel(DataWindowStreamer dataWindowStreamer)
+        public FiltersViewModel(DataStreamer dataStreamer)
         {
-            _dataWindowStreamer = dataWindowStreamer;
+            _dataStreamer = dataStreamer;
         }
         
         public void Bind(ExpressionViewModel expressionViewModel)
@@ -33,10 +33,10 @@ namespace EtAlii.UniCon.Editor
                     UserSettings.instance.FilterPanelWidth.Value = UserSettings.instance.FilterPanelWidth.Value;
                 });
 
-            UserSettings.instance.UseSerilogSource.Subscribe(_ => _dataWindowStreamer.Configure());
-            UserSettings.instance.UseUnitySource.Subscribe(_ => _dataWindowStreamer.Configure());
-            UserSettings.instance.LogLevel.Subscribe(_ => _dataWindowStreamer.Configure());
-            UserSettings.instance.ShowExceptions.Subscribe(_ => _dataWindowStreamer.Configure());
+            UserSettings.instance.UseSerilogSource.Subscribe(_ => _dataStreamer.Configure());
+            UserSettings.instance.UseUnitySource.Subscribe(_ => _dataStreamer.Configure());
+            UserSettings.instance.LogLevel.Subscribe(_ => _dataStreamer.Configure());
+            UserSettings.instance.ShowExceptions.Subscribe(_ => _dataStreamer.Configure());
 
             SaveEditFilter
                 .Subscribe(_ =>
@@ -171,7 +171,7 @@ namespace EtAlii.UniCon.Editor
         private void OnCustomFiltersChanged()
         {
             UserSettings.instance.CustomFilters = CustomFilters.ToArray();
-            _dataWindowStreamer.Configure();
+            _dataStreamer.Configure();
         }
     }    
 }

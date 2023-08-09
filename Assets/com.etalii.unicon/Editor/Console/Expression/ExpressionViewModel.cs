@@ -32,11 +32,11 @@
         // Time
         public readonly ReactiveCommand<(DateTimeOffset, TimeSpan)> AddSeekToTimeSpanToExpression = new();
         
-        private readonly DataWindowStreamer _dataWindowStreamer;
+        private readonly DataStreamer _dataStreamer;
 
-        public ExpressionViewModel(DataWindowStreamer dataWindowStreamer)
+        public ExpressionViewModel(DataStreamer dataStreamer)
         {
-            _dataWindowStreamer = dataWindowStreamer;
+            _dataStreamer = dataStreamer;
         }
         
         public void Bind()
@@ -51,8 +51,8 @@
                     UserSettings.instance.ExpressionPanelHeight.Value = UserSettings.instance.ExpressionPanelHeight.Value;
                 });
 
-            ExpressionFilter.IsActive.Subscribe(_ => _dataWindowStreamer.Configure());
-            ExpressionFilter.CompiledExpression.Subscribe(_ => _dataWindowStreamer.Configure());
+            ExpressionFilter.IsActive.Subscribe(_ => _dataStreamer.Configure());
+            ExpressionFilter.CompiledExpression.Subscribe(_ => _dataStreamer.Configure());
             
             ExpressionText.Subscribe(text =>
             {
