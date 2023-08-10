@@ -19,11 +19,17 @@ namespace EtAlii.UniCon
         public LogEventReadStream(long position)
         {
             _indexReadStream = new FileStream($"{LogEventWriteStream.LogFileNameWithoutExtension}.index", FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            _indexReadStream.Seek(0, SeekOrigin.Begin);
+            _indexReadStream.Seek(position, SeekOrigin.Begin);
             _indexReader = new BinaryReader(_indexReadStream);
 
             _dataReadStream = new FileStream($"{LogEventWriteStream.LogFileNameWithoutExtension}.bin", FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            _dataReadStream.Seek(0, SeekOrigin.Begin);
+
+            if (_indexReadStream.Length > sizeof(long))
+            {
+                var dataPosition = _indexReader.ReadInt64();
+                _dataReadStream.Seek(dataPosition, SeekOrigin.Begin);
+            }
+
             _dataReader = new BinaryReader(_dataReadStream);
         }
         
@@ -45,7 +51,7 @@ namespace EtAlii.UniCon
             Monitor.Enter(LogEventWriteStream.LockObject);
             try
             {
-                _indexReadStream.Seek(sizeof(long), SeekOrigin.Current);
+                _indexReadStream.Seek(-sizeof(long), SeekOrigin.Current);
                 var readPosition = _indexReader.ReadInt64();
                 _dataReadStream.Seek(readPosition, SeekOrigin.Begin);
                 var logEntry = LogEntrySerialization.Deserialize(_dataReader);

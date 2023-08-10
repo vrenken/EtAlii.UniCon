@@ -88,13 +88,13 @@
             {
                 using var readStream = new LogEventReadStream(position);
 
-                do
+                while (readStream.HasMoreDataBehind && !_backwardCancellationTokenSource.IsCancellationRequested)
                 {
                     var entry = readStream.ReadPrevious();
                     subject.OnNext(entry);
 
                     Task.Delay(_interval / 10).Wait();
-                } while (readStream.HasMoreDataBehind && !_backwardCancellationTokenSource.IsCancellationRequested);
+                }
 
             }, _backwardCancellationTokenSource.Token);
             return subject;
