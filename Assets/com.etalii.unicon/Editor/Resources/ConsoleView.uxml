@@ -15,6 +15,7 @@
                 <ui:TextField name="expression-textfield" multiline="true" focusable="true" style="flex-direction: column; flex-grow: 1; margin-left: -1px; margin-right: 0; margin-top: 0; margin-bottom: 0; -unity-font: resource(&apos;Fonts/FiraCode-Regular&apos;); -unity-font-definition: initial; white-space: normal;" />
                 <uie:Toolbar style="border-top-width: 0; border-bottom-width: 0;">
                     <uie:ToolbarButton name="expression-error-button" display-tooltip-when-elided="true" focusable="false" picking-mode="Ignore" class="toolbar-button" style="flex-grow: 1; border-right-width: 0; -unity-text-align: middle-left; text-overflow: ellipsis; -unity-font-style: italic;" />
+                    <uie:ToolbarButton text="" name="debug-button" display-tooltip-when-elided="true" focusable="false" class="toolbar-button-right" style="width: 300px; min-width: 300px; max-width: 300px;" />
                     <uie:ToolbarButton text="Cancel" name="expression-cancel-button" display-tooltip-when-elided="true" focusable="false" class="toolbar-button-right" style="width: 75px; min-width: 75px; max-width: 75px;" />
                     <uie:ToolbarButton text="Save" name="expression-save-button" display-tooltip-when-elided="true" focusable="false" class="toolbar-button-right" style="width: 75px; min-width: 75px; max-width: 75px;" />
                 </uie:Toolbar>

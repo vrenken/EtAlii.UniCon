@@ -26,9 +26,18 @@ namespace EtAlii.UniCon.Editor
 
         private float _previousScrollValue;
         private ExpressionViewModel _expressionViewModel;
-
+#if UNICON_STREAM_DEBUGGING        
+        private readonly ToolbarButton _debugButton;
+#endif
         public StreamingView(VisualElement root)
         {
+#if UNICON_STREAM_DEBUGGING
+            _debugButton = root.Q<ToolbarButton>("debug-button");
+#else 
+            var debugButton = root.Q<ToolbarButton>("debug-button");
+            debugButton.style.display = DisplayStyle.None;
+#endif
+            
             _metricsButton = root.Q<ToolbarButton>("metrics-button");
 
             _tailButton = root.Q<Button>("tail-button");
@@ -143,6 +152,14 @@ namespace EtAlii.UniCon.Editor
         /// <param name="value"></param>
         private void OnScrolledVertically(float value)
         {
+#if UNICON_STREAM_DEBUGGING            
+            var relativePosition = _listViewScrollView.verticalScroller.value / _listViewScrollView.verticalScroller.highValue;
+            var position = (int)(_linkedList.Count * relativePosition);
+            var index = _list[position].Index;
+            
+            _debugButton.text = $"Index: {index} Position: {position} / {_linkedList.Count} Percentage: {(int)(relativePosition * 100)}";
+#endif
+            
             if (!UserSettings.instance.ScrollToTail.Value) return;
             if(_previousScrollValue == 0) return;
             if (_previousScrollValue <= _listViewScrollView.verticalScroller.value) return;
