@@ -7,47 +7,61 @@ namespace EtAlii.UniCon.Editor
     using EtAlii.Unicon;
     using Serilog.Events;
     using UniRx;
-    using UnityEngine.UIElements;
 
-    public partial class StreamingViewModel
+    public partial class DataStreamer : IDisposable
     {
-        public readonly ReactiveProperty<IObservable<LogEntry>> Stream = new();
-        private ReplaySubject<LogEntry> _subject;
+        public readonly ReactiveProperty<(LogEntryList List, LinkedList<LogEntry> LinkedList, bool HasAdditions, long index)> ForwardData = new();
+        public readonly ReactiveProperty<(LogEntryList List, LinkedList<LogEntry> LinkedList, bool HasAdditions, long index)> BackwardData = new();
         
-        public readonly ReactiveCommand<ClickEvent> ToggleScrollToTail = new();
-        
-        private FiltersViewModel _filtersViewModel;
         private ExpressionViewModel _expressionViewModel;
-        private CompositeDisposable _pipeline;
-        private IDisposable _subscription;
+        private CompositeDisposable _forwardPipeline;
+        private CompositeDisposable _backwardPipeline;
+        private readonly LinkedList<LogEntry> _linkedList;
+        private readonly LogEntryList _list;
 
-        public void Bind(FiltersViewModel filtersViewModel, ExpressionViewModel expressionViewModel)
+        public DataStreamer()
         {
-            _filtersViewModel = filtersViewModel;
-            _expressionViewModel = expressionViewModel;
-            ToggleScrollToTail.Subscribe(_ =>
-            {
-                UserSettings.instance.ScrollToTail.Value = !UserSettings.instance.ScrollToTail.Value;
-            });
+            _linkedList = new LinkedList<LogEntry>();
+            _list = new LogEntryList(_linkedList);
         }
-        
+        public void Bind(ExpressionViewModel expressionViewModel)
+        {
+            _expressionViewModel = expressionViewModel;
+        }
         /// <summary>
         /// Reconfigure the stream with the right filtering rules applied.
+        /// The hard variant clears the current items and starts from scratch.
         /// </summary>
-        public void ConfigureStream()
+        public void ConfigureHard()
         {
-            _pipeline?.Dispose();
-            _subscription?.Dispose();
+            _forwardPipeline?.Dispose();
+            _backwardPipeline?.Dispose();
 
+            _linkedList.Clear();
+            var handleForwardEntry = new Action<LogEntry>(entry => 
+            {
+                _linkedList.AddLast(entry);
+                ForwardData.Value = new(_list, _linkedList, true, entry.Index);
+            });
+            CreatePipeline(LogSink.Instance.ObserveForward(0), handleForwardEntry, out _forwardPipeline);
+            
+            var handleBackwardEntry = new Action<LogEntry>(entry => 
+            {
+                _linkedList.AddFirst(entry);
+                BackwardData.Value = new(_list, _linkedList, true, entry.Index);
+            });
+            CreatePipeline(LogSink.Instance.ObserveBackward(0), handleBackwardEntry, out _backwardPipeline);
+        }
+
+        private void CreatePipeline(IObservable<LogEntry> directionalStream, Action<LogEntry> handleEntry, out CompositeDisposable pipeline)
+        {
             var blockOptions = new ExecutionDataflowBlockOptions
             {
-                TaskScheduler = TaskScheduler.Default, 
+                TaskScheduler = TaskScheduler.Default,
                 EnsureOrdered = false,
                 MaxDegreeOfParallelism = Environment.ProcessorCount * 2,
             };
             var linkOptions = new DataflowLinkOptions { PropagateCompletion = false };
-
-            _subject = new ReplaySubject<LogEntry>();
 
             var input = new BufferBlock<LogEntry>(blockOptions);
 
@@ -56,10 +70,10 @@ namespace EtAlii.UniCon.Editor
             var filterByCustomFilter = new TransformBlock<LogEntry, LogEntry>(FilterByCustomFilter, blockOptions);
             var filterByExpression = new TransformBlock<LogEntry, LogEntry>(FilterByExpression, blockOptions);
             var sortEvents = CreateRestoreOrderBlock<LogEntry>(item => item.Index);
-            
-            var output = new ActionBlock<LogEntry>(OutputLogEvent);
 
-            _pipeline = new CompositeDisposable
+            var output = new ActionBlock<LogEntry>(entry => { if (entry.LogEvent != null) handleEntry(entry); });
+            
+            pipeline = new CompositeDisposable
             (
                 input.LinkTo(filterBySource, linkOptions),
                 filterBySource.LinkTo(filterByLogLevel, linkOptions),
@@ -69,14 +83,11 @@ namespace EtAlii.UniCon.Editor
                 sortEvents.LinkTo(output)
             );
             
-            _subscription = LogSink.Instance
-                .ObserveForward(0)
-                //.SubscribeOnMainThread()
+            var forwardSubscription = directionalStream
                 .ObserveOn(Scheduler.ThreadPool)
                 .SubscribeOn(Scheduler.ThreadPool)
                 .Subscribe(logEntry => input.Post(logEntry));
-            
-            Stream.Value = _subject.AsObservable();
+            pipeline.Add(forwardSubscription);
         }
 
         private bool LogFilterIsValid(LogFilter rule, LogEvent logEvent)
@@ -89,7 +100,7 @@ namespace EtAlii.UniCon.Editor
 
             return scalarValue.Value is not false;
         }
-        
+
         /// <summary>Creates a dataflow block that restores the order of
         /// a shuffled pipeline.</summary>
         private static IPropagatorBlock<T, T> CreateRestoreOrderBlock<T>(
@@ -132,6 +143,12 @@ namespace EtAlii.UniCon.Editor
             // Ideally the assertion buffer.Count == 0 should be checked on the completion
             // of the block.
             return new TransformManyBlock<T, T>(i => Transform(i), executionOptions);
+        }
+
+        public void Dispose()
+        {
+            _forwardPipeline?.Dispose();
+            _backwardPipeline?.Dispose();
         }
     }
 }
