@@ -51,8 +51,8 @@
                     UserSettings.instance.ExpressionPanelHeight.Value = UserSettings.instance.ExpressionPanelHeight.Value;
                 });
 
-            ExpressionFilter.IsActive.Subscribe(_ => _dataStreamer.Configure());
-            ExpressionFilter.CompiledExpression.Subscribe(_ => _dataStreamer.Configure());
+            ExpressionFilter.IsActive.Subscribe(_ => _dataStreamer.ConfigureHard());
+            ExpressionFilter.CompiledExpression.Subscribe(_ => _dataStreamer.ConfigureHard());
             
             ExpressionText.Subscribe(text =>
             {

@@ -33,10 +33,10 @@ namespace EtAlii.UniCon.Editor
                     UserSettings.instance.FilterPanelWidth.Value = UserSettings.instance.FilterPanelWidth.Value;
                 });
 
-            UserSettings.instance.UseSerilogSource.Subscribe(_ => _dataStreamer.Configure());
-            UserSettings.instance.UseUnitySource.Subscribe(_ => _dataStreamer.Configure());
-            UserSettings.instance.LogLevel.Subscribe(_ => _dataStreamer.Configure());
-            UserSettings.instance.ShowExceptions.Subscribe(_ => _dataStreamer.Configure());
+            UserSettings.instance.UseSerilogSource.Subscribe(_ => _dataStreamer.ConfigureHard());
+            UserSettings.instance.UseUnitySource.Subscribe(_ => _dataStreamer.ConfigureHard());
+            UserSettings.instance.LogLevel.Subscribe(_ => _dataStreamer.ConfigureHard());
+            UserSettings.instance.ShowExceptions.Subscribe(_ => _dataStreamer.ConfigureHard());
 
             SaveEditFilter
                 .Subscribe(_ =>
@@ -171,7 +171,7 @@ namespace EtAlii.UniCon.Editor
         private void OnCustomFiltersChanged()
         {
             UserSettings.instance.CustomFilters = CustomFilters.ToArray();
-            _dataStreamer.Configure();
+            _dataStreamer.ConfigureHard();
         }
     }    
 }

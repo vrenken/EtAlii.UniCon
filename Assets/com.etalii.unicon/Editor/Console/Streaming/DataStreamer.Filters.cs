@@ -5,7 +5,7 @@ namespace EtAlii.UniCon.Editor
     using EtAlii.Unicon;
     using Serilog.Events;
 
-    public partial class StreamingViewModel
+    public partial class DataStreamer
     {
         private LogEntry FilterBySource(LogEntry entry)
         {
@@ -78,7 +78,7 @@ namespace EtAlii.UniCon.Editor
 
             var logEvent = entry.LogEvent;
 
-            var filters = _filtersViewModel.CustomFilters
+            var filters = UserSettings.instance.CustomFilters
                 .Where(f => f.IsActive.Value && !f.IsEditing.Value)
                 .ToArray();
             if (!filters.Any()) return entry;
@@ -110,14 +110,6 @@ namespace EtAlii.UniCon.Editor
             }
 
             return entry;
-        }
-
-        private void OutputLogEvent(LogEntry entry)
-        {
-            if (entry.LogEvent != null)
-            {
-                _subject.OnNext(entry);
-            }
         }
     }
 }

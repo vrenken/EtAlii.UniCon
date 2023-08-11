@@ -1,7 +1,9 @@
 namespace EtAlii.UniCon.Editor
 {
     using System;
+    using UniRx;
     using UnityEngine;
+    using UnityEngine.UIElements;
 
     public class ConsoleViewModel : ScriptableObject
     {
@@ -22,9 +24,6 @@ namespace EtAlii.UniCon.Editor
 
         private static ConsoleViewModel _instance;
 
-        public StreamingViewModel Streaming => _streaming;
-        private readonly StreamingViewModel _streaming;
-
         /// <summary>
         /// provides access to the expression view model - which assists with visualizing the expression panel below the log list.
         /// </summary>
@@ -41,17 +40,18 @@ namespace EtAlii.UniCon.Editor
         /// An instance of the data streamer class that is able to provide
         /// both forward and backward filtered streaming. 
         /// </summary>
-        public DataWindowStreamer DataStreamer => _dataWindowStreamer;
-        private readonly DataWindowStreamer _dataWindowStreamer;
+        public DataStreamer DataStreamer => _dataStreamer;
+        private readonly DataStreamer _dataStreamer;
         
+        public readonly ReactiveCommand<ClickEvent> ToggleScrollToTail = new();
+
         private IDisposable _logEventsSource;
 
         public ConsoleViewModel()
         {
-            _dataWindowStreamer = new DataWindowStreamer();
-            _filters = new(_dataWindowStreamer);
-            _streaming = new StreamingViewModel();
-            _expressions = new (_dataWindowStreamer);
+            _dataStreamer = new DataStreamer();
+            _filters = new(_dataStreamer);
+            _expressions = new (_dataStreamer);
         }
         
         private void Awake()
@@ -62,18 +62,22 @@ namespace EtAlii.UniCon.Editor
             UserSettings.instance.Bind();
             ProjectSettings.instance.Bind();
 
-            _dataWindowStreamer.Bind(_expressions);
-            _streaming.Bind();
+            ToggleScrollToTail.Subscribe(_ =>
+            {
+                UserSettings.instance.ScrollToTail.Value = !UserSettings.instance.ScrollToTail.Value;
+            });
+
+            _dataStreamer.Bind(_expressions);
             _expressions.Bind();
             _filters.Bind(_expressions);
         }
 
-        public void Initialize() => _dataWindowStreamer.Configure();
+        public void Initialize() => _dataStreamer.ConfigureHard();
         
         public void Clear()
         {
             LogSink.Instance.Clear();
-            _dataWindowStreamer.Configure();
+            _dataStreamer.ConfigureHard();
         }
     }    
 }
