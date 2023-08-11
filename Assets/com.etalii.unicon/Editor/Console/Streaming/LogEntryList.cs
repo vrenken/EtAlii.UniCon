@@ -6,11 +6,11 @@ namespace EtAlii.UniCon.Editor
     using System.Linq;
     using EtAlii.Unicon;
 
-    public class LogEntryLinkedListWrapper : IList
+    public class LogEntryList : IList
     {
         private readonly LinkedList<LogEntry> _linkedList;
 
-        public LogEntryLinkedListWrapper(LinkedList<LogEntry> linkedList)
+        public LogEntryList(LinkedList<LogEntry> linkedList)
         {
             _linkedList = linkedList;
         }
@@ -70,7 +70,9 @@ namespace EtAlii.UniCon.Editor
         public bool IsSynchronized => false;
         public object SyncRoot { get; } = new ();
         public bool IsReadOnly => false;
-        
+
+        public LogEntry this[int index] => ((IList)this)[index] as LogEntry;
+
         object IList.this[int index]
         {
             get
