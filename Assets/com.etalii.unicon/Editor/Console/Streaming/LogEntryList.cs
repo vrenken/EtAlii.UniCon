@@ -6,6 +6,7 @@ namespace EtAlii.UniCon.Editor
     using System.Linq;
     using EtAlii.Unicon;
 
+    // ReSharper disable once InconsistentNaming
     public class LogEntryList : IList
     {
         private readonly LinkedList<LogEntry> _linkedList;

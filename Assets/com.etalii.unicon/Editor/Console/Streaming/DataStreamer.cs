@@ -90,6 +90,7 @@ namespace EtAlii.UniCon.Editor
             pipeline.Add(forwardSubscription);
         }
 
+        // ReSharper disable once InconsistentNaming
         private bool LogFilterIsValid(LogFilter rule, LogEvent logEvent)
         {
             var result = rule.CompiledExpression.Value?.Invoke(logEvent);

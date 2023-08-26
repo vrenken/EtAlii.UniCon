@@ -12,6 +12,7 @@ namespace EtAlii.UniCon.Editor
         /// <summary>
         /// The log level(s) that should be visualized. if no log levels are specified no filtering on log levels will happen.  
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public readonly ReactiveProperty<LogLevel> LogLevel = new();
         [SerializeField] private LogLevel logLevel = EtAlii.UniCon.Editor.LogLevel.None;
         

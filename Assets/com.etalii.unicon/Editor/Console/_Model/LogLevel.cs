@@ -6,6 +6,7 @@ namespace EtAlii.UniCon.Editor
     /// The Serilog <see cref="Serilog.Events.LogEventLevel"/> is not a flagged enumeration, hence we need to introduce our own.
     /// </summary>
     [Flags]
+    // ReSharper disable once InconsistentNaming
     public enum LogLevel
     {
         None = 0,

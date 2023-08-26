@@ -3,6 +3,7 @@
     using System;
     using Serilog.Events;
 
+    // ReSharper disable once InconsistentNaming
     public static class LogEventLine
     {
         public static string GetMessage(LogEvent logEvent)

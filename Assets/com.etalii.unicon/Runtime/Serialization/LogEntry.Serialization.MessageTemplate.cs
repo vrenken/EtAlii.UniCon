@@ -6,6 +6,7 @@ namespace EtAlii.Unicon
     using Serilog.Events;
     using Serilog.Parsing;
 
+    // ReSharper disable once InconsistentNaming
     public static partial class LogEntrySerialization
     {
         private static void SerializeMessageTemplate(MessageTemplate messageTemplate, BinaryWriter writer)

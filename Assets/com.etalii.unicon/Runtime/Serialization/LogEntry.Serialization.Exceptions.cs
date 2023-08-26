@@ -6,6 +6,7 @@ namespace EtAlii.Unicon
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
 
+    // ReSharper disable once InconsistentNaming
     public static partial class LogEntrySerialization
     {
         [SuppressMessage("ReSharper", "UnusedParameter.Local")]

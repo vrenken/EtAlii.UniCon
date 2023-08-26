@@ -6,8 +6,10 @@ namespace EtAlii.UniCon
     using EtAlii.Unicon;
     using Serilog.Events;
 
+    // ReSharper disable once InconsistentNaming
     public sealed class LogEventWriteStream : IDisposable
     {
+        // ReSharper disable once InconsistentNaming
         public const string LogFileNameWithoutExtension = "Logs/unicon-log";
         
         private readonly FileStream _dataWriteStream;

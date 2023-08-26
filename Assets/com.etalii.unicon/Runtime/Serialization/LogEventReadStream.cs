@@ -5,6 +5,7 @@ namespace EtAlii.UniCon
     using System.Threading;
     using EtAlii.Unicon;
     
+    // ReSharper disable once InconsistentNaming
     public sealed class LogEventReadStream : IDisposable
     {
         private readonly FileStream _dataReadStream;

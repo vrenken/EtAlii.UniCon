@@ -7,6 +7,7 @@
     using Serilog.Events;
     using UniRx;
     
+    // ReSharper disable once InconsistentNaming
     public class LogSink
     {
         public TimeSpan Window = TimeSpan.FromHours(1);

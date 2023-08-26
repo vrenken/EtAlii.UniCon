@@ -7,6 +7,7 @@ namespace EtAlii.UniCon.Editor
 #if UNICON_LIFETIME_DEBUG            
     using UnityEngine;
 #endif
+    // ReSharper disable once InconsistentNaming
     public class LogFilter
     {
         /// <summary>
